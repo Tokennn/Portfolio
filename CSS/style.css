@@ -16,6 +16,14 @@ body{
     font-size: 14px;
 }
 
+.image-style {
+    position: relative;
+    top: -450px;
+    left: -75px;
+    width: 250px;
+    height: 200px;
+  }
+  
 header{
     width: 100%;
     height: 100vh;
