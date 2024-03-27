@@ -14,16 +14,25 @@
     <header>
         <div id="particles"></div>
         <div class="info-text">
-            
+      
           <h1>Tokennn</h1>
-          <!-- <a href="#about" class="scroll"> -->
-            <a href="#about" class="ios-switch">
-                <input type="checkbox">
-                <span class="slider"></span>
-            </a>
-          <!-- </a> -->
+          <label class="ios-switch">
+            <input type="checkbox" id="switch">
+            <span class="slider"></span>
+          </label>
+      
         </div>
       </header>
+      
+      <script>
+        document.getElementById('switch').addEventListener('click', function() {
+          if (this.checked) {
+            window.location.href = '#about';
+          }
+        });
+      </script>
+      
+      
 
     <section id="about">
         <div class="header">
