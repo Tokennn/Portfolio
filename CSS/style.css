@@ -169,21 +169,28 @@ header .info-text .scroll::before{
     align-items: flex-start;
 }
 
-#about .card .info h1, #features .card .info h1{
-    margin-bottom: 10px;
+/* #about .card .info h1, #features .card .info h1{
+    margin-bottom: 0px;
     color: #fff;
     font-size: 1.7rem;
     font-weight: bold;
     font-family: 'Ubuntu';
-    margin-left: 25%;
-    
-}
+} */
 
 #about .card .info p, #features .card .info p{
     color: #ccc;
     font-size: 1.1rem;
     line-height: 1.8rem;
-    
+    margin-top: 10%;
+}
+
+#about .card .info p1, #features .card .info p1{
+    margin-bottom: 0px;
+    color: #fff;
+    font-size: 1.7rem;
+    font-weight: bold;
+    font-family: 'Ubuntu';
+    margin-left: 25%;
 }
 
 #features .feature-cards{
@@ -264,4 +271,3 @@ header .info-text .scroll::before{
     }
 
 }
-
