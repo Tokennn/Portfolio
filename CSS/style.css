@@ -130,6 +130,13 @@ header .info-text .scroll::before{
 
 }
 
+#about .card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
 #about .card, #features .card{
     padding: 30px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.35);
@@ -150,25 +157,25 @@ header .info-text .scroll::before{
 }
 
 #about .card img{
-    max-width: 200px;
-    max-height: 200px;
+    width: 120px;
+    height: 120px;
+    border-radius: 20%;
+
 }
 
 #about .card .info{
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    justify-content: center;
-    
-
 }
 
 #about .card .info h1, #features .card .info h1{
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     color: #fff;
     font-size: 1.7rem;
     font-weight: bold;
     font-family: 'Ubuntu';
+    margin-left: 25%;
     
 }
 
@@ -257,3 +264,4 @@ header .info-text .scroll::before{
     }
 
 }
+
