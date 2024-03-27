@@ -45,7 +45,6 @@ header .info-text h1{
     font-size: 5rem;
     font-weight: 500;
     font-family: 'Ubuntu';
-    
 }
 
 header .info-text h3{
@@ -220,7 +219,7 @@ header .info-text .scroll::before{
 
 #features .feature-cards .card .info h1{
     text-align: center;
-    
+    color: #fff;
 }
 
 #features .feature-cards .card .info p{
