@@ -319,5 +319,22 @@ header .info-text .scroll:hover{
 .ios-switch input:checked + .slider:before {
     transform: translateX(52px);
   }
+
+  .linkedin-icon {
+    position: relative;
+    bottom: 0px; 
+    left: 550px;
+    color: #fff;
+    font-size: 5em;
+}
+  
+  .github-icon {
+    position: relative; 
+    bottom: 70px; 
+    right: 400px; 
+
+    color : #fff;
+    font-size: 5em;
+  }
   
   
