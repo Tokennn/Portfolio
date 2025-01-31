@@ -14,6 +14,23 @@ function App() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  const [scrollProgress, setScrollProgress] = useState(0);
+
+useEffect(() => {
+  const handleScroll = () => {
+    const scrollTop = window.scrollY;
+    const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const progress = (scrollTop / scrollHeight) * 100;
+    setScrollProgress(progress);
+  };
+
+  window.addEventListener("scroll", handleScroll);
+  return () => window.removeEventListener("scroll", handleScroll);
+
+}, []);
+
+
+
   if (!entered) {
     return (
       <div className="fixed inset-0 bg-black flex flex-col items-center justify-center">
@@ -54,8 +71,16 @@ function App() {
     }
   ];
 
+
   return (
     <div className="min-h-screen">
+    {/* Scroll Progress Bar */}
+      <div className="fixed bottom-6 right-6 w-24 h-1 bg-gray-300 rounded-full overflow-hidden">
+        <div
+          className="h-full bg-black transition-all duration-150"
+          style={{ width: `${scrollProgress}%` }}
+        />
+      </div>
       {/* Navigation */}
       <nav className={`fixed w-full z-50 transition-all duration-300 ${scrolled ? 'bg-white/80 backdrop-blur-sm shadow-lg' : 'bg-transparent'}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
