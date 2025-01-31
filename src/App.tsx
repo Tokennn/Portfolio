@@ -38,13 +38,13 @@ function App() {
       title: "Project One",
       description: "Design & Development",
       image: "https://images.unsplash.com/photo-1508921912186-1d1a45ebb3c1?auto=format&fit=crop&q=80&w=1000",
-      link: "#"
+      link: "https://github.com/Tokennn/hangman-web"
     },
     {
       title: "Project Two",
       description: "UI/UX Design",
       image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=1000",
-      link: "#"
+      link: "https://github.com/Tokennn/Pokemon.WPF"
     },
     {
       title: "Project Three",
@@ -163,13 +163,13 @@ function App() {
                 Intéressé par une collaboration ? N'hésitez pas à me contacter pour discuter de votre projet.
               </p>
               <div className="flex space-x-6">
-                <a href="#" className="text-gray-600 hover:text-gray-900">
+                <a href="https://github.com/Tokennn" className="text-gray-600 hover:text-gray-900">
                   <Github size={24} />
                 </a>
-                <a href="#" className="text-gray-600 hover:text-gray-900">
+                <a href="https://www.linkedin.com/in/quentin-c-752996294/" className="text-gray-600 hover:text-gray-900">
                   <Linkedin size={24} />
                 </a>
-                <a href="mailto:contact@example.com" className="text-gray-600 hover:text-gray-900">
+                <a href="mailto:quentin.contreau@ynov.com" className="text-gray-600 hover:text-gray-900">
                   <Mail size={24} />
                 </a>
               </div>
