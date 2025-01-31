@@ -36,21 +36,21 @@ function App() {
   const projects = [
     {
       title: "Project One",
-      description: "Design & Development",
-      image: "https://images.unsplash.com/photo-1508921912186-1d1a45ebb3c1?auto=format&fit=crop&q=80&w=1000",
+      description: "Hangman Game",
+      image: "https://cdn.midjourney.com/ed41544b-cd96-4c62-a377-9f77d113b439/0_0.png",
       link: "https://github.com/Tokennn/hangman-web"
     },
     {
       title: "Project Two",
-      description: "UI/UX Design",
-      image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=1000",
+      description: "WPF Application",
+      image: "https://cdn.midjourney.com/ee56211d-a3ae-49b4-b414-26dc2aa6a69a/0_0.png",
       link: "https://github.com/Tokennn/Pokemon.WPF"
     },
     {
       title: "Project Three",
-      description: "Web Development",
-      image: "https://images.unsplash.com/photo-1534972195531-d756b9bfa9f2?auto=format&fit=crop&q=80&w=1000",
-      link: "#"
+      description: "Chess Game",
+      image: "https://cdn.midjourney.com/9015e525-1601-4ddd-93c9-77ceb097abbd/0_1.png",
+      link: "https://github.com/Tokennn/ChessGame"
     }
   ];
 
