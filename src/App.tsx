@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Menu, X, ArrowRight, Github, Linkedin, Mail } from 'lucide-react';
+import gsap from 'gsap';
+
 
 function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -35,8 +37,24 @@ useEffect(() => {
     return (
       <div className="fixed inset-0 bg-black flex flex-col items-center justify-center">
         <button
-          onClick={() => setEntered(true)}
-          className="group relative w-48 h-48"
+  onClick={() => {
+    gsap.to(".enter-button", {
+      scale: 0.8,
+      opacity: 0,
+      duration: 1,
+      ease: "power2.out",
+      onComplete: () => {
+        setEntered(true); 
+        gsap.from(".main-content", {
+          opacity: 0,
+          y: 100,
+          duration: 1,
+          ease: "power2.out"
+        });
+      }
+    });
+  }}
+  className="enter-button group relative w-48 h-48"
         >
           <div className="absolute inset-0 border border-white/20 rounded-full transition-transform duration-700 group-hover:scale-110" />
           <div className="absolute inset-0 border border-white/20 rounded-full transition-transform duration-700 group-hover:scale-125" />
@@ -74,6 +92,7 @@ useEffect(() => {
 
   return (
     <div className="min-h-screen">
+      
     {/* Scroll Progress Bar */}
       <div className="fixed bottom-6 right-6 w-24 h-1 bg-gray-300 rounded-full overflow-hidden">
         <div
@@ -85,7 +104,7 @@ useEffect(() => {
       <nav className={`fixed w-full z-50 transition-all duration-300 ${scrolled ? 'bg-white/80 backdrop-blur-sm shadow-lg' : 'bg-transparent'}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
-            <span className="text-2xl font-bold">Quentin-C.</span>
+            <span className="text-2xl font-bold">QuentinC.</span>
             <div className="hidden md:flex space-x-8">
               <a href="#work" className="text-gray-800 hover:text-gray-600">Work</a>
               <a href="#about" className="text-gray-800 hover:text-gray-600">About</a>

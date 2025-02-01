@@ -20,6 +20,7 @@
   ::-webkit-scrollbar {
     display: none; 
   }
+  
 
   body::before {
     content: '';
@@ -64,5 +65,21 @@
   100% {
     transform: scale(1);
     opacity: 0.8;
+  }
+}
+
+/* Animation de transition du bouton ENTER */
+@keyframes enterAnimation {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(0.8);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(1.2);
+    opacity: 0;
   }
 }
