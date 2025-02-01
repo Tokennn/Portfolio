@@ -37,23 +37,23 @@ useEffect(() => {
     return (
       <div className="fixed inset-0 bg-black flex flex-col items-center justify-center">
         <button
-  onClick={() => {
-    gsap.to(".enter-button", {
-      scale: 0.8,
-      opacity: 0,
-      duration: 1,
-      ease: "power2.out",
-      onComplete: () => {
-        setEntered(true); 
-        gsap.from(".main-content", {
-          opacity: 0,
-          y: 100,
-          duration: 1,
-          ease: "power2.out"
-        });
-      }
-    });
-  }}
+          onClick={() => {
+            gsap.to(".enter-button", {
+              scale: 0.8,
+              opacity: 0,
+              duration: 1,
+              ease: "power2.out",
+              onComplete: () => {
+                setEntered(true); 
+                gsap.from(".main-content", {
+                  opacity: 0,
+                  y: 100,
+                  duration: 1,
+                  ease: "power2.out"
+                });
+              }
+            });
+          }}
   className="enter-button group relative w-48 h-48"
         >
           <div className="absolute inset-0 border border-white/20 rounded-full transition-transform duration-700 group-hover:scale-110" />
