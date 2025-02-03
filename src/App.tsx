@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Menu, X, ArrowRight, Github, Linkedin, Mail } from 'lucide-react';
 import gsap from 'gsap';
+import backgroundVideo from './vid.mp4';
+
 
 
 function App() {
@@ -36,6 +38,25 @@ useEffect(() => {
   if (!entered) {
     return (
       <div className="fixed inset-0 bg-black flex flex-col items-center justify-center">
+        {/* Video Background */}
+        <video
+          autoPlay
+          loop
+          muted
+          className="absolute inset-0 w-full h-full object-cover"
+          style={{ filter: 'brightness(0.4)' }}
+        >
+          <source src={backgroundVideo} type="video/mp4" />
+        </video>
+
+        <div className="absolute top-6 left-8">
+          <span className="text-xs font-medium text-white block hover:shadow-glow transition-all duration-300">
+            Quentin
+          </span>
+          <span className="text-xs font-medium text-white block hover:shadow-glow transition-all duration-300">
+            Contreau
+          </span>
+        </div>
         <button
           onClick={() => {
             gsap.to(".enter-button", {
@@ -54,7 +75,7 @@ useEffect(() => {
               }
             });
           }}
-  className="enter-button group relative w-48 h-48"
+          className="enter-button group relative w-48 h-48"
         >
           <div className="absolute inset-0 border border-white/20 rounded-full transition-transform duration-700 group-hover:scale-110" />
           <div className="absolute inset-0 border border-white/20 rounded-full transition-transform duration-700 group-hover:scale-125" />
@@ -104,7 +125,7 @@ useEffect(() => {
       <nav className={`fixed w-full z-50 transition-all duration-300 ${scrolled ? 'bg-white/80 backdrop-blur-sm shadow-lg' : 'bg-transparent'}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
-            <span className="text-2xl font-bold">QuentinC.</span>
+            <span className="text-2xl font-bold">Quentin.C</span>
             <div className="hidden md:flex space-x-8">
               <a href="#work" className="text-gray-800 hover:text-gray-600">Work</a>
               <a href="#about" className="text-gray-800 hover:text-gray-600">About</a>
