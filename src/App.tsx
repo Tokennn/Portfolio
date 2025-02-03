@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Menu, X, ArrowRight, Github, Linkedin, Mail } from 'lucide-react';
 import gsap from 'gsap';
-import backgroundVideo from './vid.mp4';
+// import backgroundVideo from './vid.mp4';
 
 
 
@@ -46,7 +46,7 @@ useEffect(() => {
           className="absolute inset-0 w-full h-full object-cover"
           style={{ filter: 'brightness(0.4)' }}
         >
-          <source src={backgroundVideo} type="video/mp4" />
+          {/* <source src={backgroundVideo} type="video/mp4" /> */}
         </video>
 
         <div className="absolute top-6 left-8">
