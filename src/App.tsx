@@ -54,7 +54,7 @@ useEffect(() => {
             Quentin
           </span>
           <span className="text-xs font-medium text-white block hover:shadow-glow transition-all duration-300">
-            Contreau
+            Ctr
           </span>
         </div>
         <button
