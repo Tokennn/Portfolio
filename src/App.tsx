@@ -107,6 +107,12 @@ useEffect(() => {
       description: "Chess Game",
       image: "https://cdn.midjourney.com/9015e525-1601-4ddd-93c9-77ceb097abbd/0_1.png",
       link: "https://github.com/Tokennn/ChessGame"
+    },
+    {
+      title: "Project Foor",
+      description: "Langage-Sensei",
+      image: "https://cdn.midjourney.com/b0f4519b-ce21-4a26-96d8-b9cefe61e8a4/0_0_384_N.png",
+      link: "https://langage-sensei.netlify.app/"
     }
   ];
 
