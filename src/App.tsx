@@ -5,6 +5,7 @@ import backgroundVideo from './vid.mp4';
 
 
 
+
 function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -90,29 +91,35 @@ useEffect(() => {
   }
 
   const projects = [
+    // {
+    //   title: "Project One",
+    //   description: "Hangman Game",
+    //   image: "https://cdn.midjourney.com/ed41544b-cd96-4c62-a377-9f77d113b439/0_0.png",
+    //   link: "https://github.com/Tokennn/hangman-web"
+    // },
+    // {
+    //   title: "Project Two",
+    //   description: "WPF Application",
+    //   image: "https://cdn.midjourney.com/ee56211d-a3ae-49b4-b414-26dc2aa6a69a/0_0.png",
+    //   link: "https://github.com/Tokennn/Pokemon.WPF"
+    // },
+    // {
+    //   title: "Project Three",
+    //   description: "Chess Game",
+    //   image: "https://cdn.midjourney.com/9015e525-1601-4ddd-93c9-77ceb097abbd/0_1.png",
+    //   link: "https://github.com/Tokennn/ChessGame"
+    // },
     {
-      title: "Project One",
-      description: "Hangman Game",
-      image: "https://cdn.midjourney.com/ed41544b-cd96-4c62-a377-9f77d113b439/0_0.png",
-      link: "https://github.com/Tokennn/hangman-web"
-    },
-    {
-      title: "Project Two",
-      description: "WPF Application",
-      image: "https://cdn.midjourney.com/ee56211d-a3ae-49b4-b414-26dc2aa6a69a/0_0.png",
-      link: "https://github.com/Tokennn/Pokemon.WPF"
-    },
-    {
-      title: "Project Three",
-      description: "Chess Game",
-      image: "https://cdn.midjourney.com/9015e525-1601-4ddd-93c9-77ceb097abbd/0_1.png",
-      link: "https://github.com/Tokennn/ChessGame"
-    },
-    {
-      title: "Project Four",
-      description: "Langage-Sensei",
-      image: "https://cdn.midjourney.com/b0f4519b-ce21-4a26-96d8-b9cefe61e8a4/0_0_384_N.png",
+      title: "Langage-Sensei",
+      // description: "Langage-Sensei",
+      image: "https://cdn.midjourney.com/bf612167-d186-46f9-8141-ad6e799fa243/0_1.png",
       link: "https://langage-sensei.netlify.app/"
+    },
+    {
+        title: "MoveSmart",
+        // description: "WPF Application",
+        image: "https://cdn.midjourney.com/c5b6d334-83c3-4d27-ace8-00ca180a65ce/0_2.png",
+        link: "https://movesmart.netlify.app/"
     }
   ];
 
@@ -186,10 +193,10 @@ useEffect(() => {
               </div>
               <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/60 to-transparent text-white">
                 <h3 className="text-2xl font-bold mb-2">{project.title}</h3>
-                <p className="flex items-center">
+                {/* <p className="flex items-center">
                   {project.description}
                   <ArrowRight className="ml-2 opacity-0 group-hover:opacity-100 transform group-hover:translate-x-2 transition-all" />
-                </p>
+                </p> */}
               </div>
             </a>
           ))}
