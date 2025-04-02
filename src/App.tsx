@@ -109,7 +109,7 @@ useEffect(() => {
       link: "https://github.com/Tokennn/ChessGame"
     },
     {
-      title: "Project Foor",
+      title: "Project Four",
       description: "Langage-Sensei",
       image: "https://cdn.midjourney.com/b0f4519b-ce21-4a26-96d8-b9cefe61e8a4/0_0_384_N.png",
       link: "https://langage-sensei.netlify.app/"
