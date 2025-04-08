@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Menu, X, ArrowRight, Github, Linkedin, Mail } from 'lucide-react';
 import gsap from 'gsap';
 import backgroundVideo from './vid.mp4';
+import { useRef } from 'react';
 
 
 
@@ -10,6 +11,8 @@ function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [entered, setEntered] = useState(false);
+  const loadingRef = useRef(null);
+  const [loadingPercent, setLoadingPercent] = useState(0);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -20,6 +23,43 @@ function App() {
   }, []);
 
   const [scrollProgress, setScrollProgress] = useState(0);
+
+  useEffect(() => {
+    if (!entered) {
+      gsap.to(loadingRef.current, {
+        opacity: 0.2,
+        duration: 1,
+        repeat: -1,
+        yoyo: true,
+        ease: "power1.inOut"
+      });
+
+      
+  
+      // Incrémenter le pourcentage de 0 à 100
+      const obj = { val: 0 };
+      gsap.to(obj, {
+        val: 100,
+        duration: 5,
+        ease: "power1.inOut",
+        onUpdate: () => {
+          setLoadingPercent(Math.floor(obj.val));
+        }
+      });
+    }
+  }, [entered]);
+
+  useEffect(() => {
+    if (!entered && loadingRef.current) {
+      gsap.to(loadingRef.current, {
+        opacity: 0.2,
+        duration: 1,
+        repeat: -1,
+        yoyo: true,
+        ease: "power1.inOut"
+      });
+    }
+  }, [entered]);
 
 useEffect(() => {
   const handleScroll = () => {
@@ -86,6 +126,12 @@ useEffect(() => {
             </span>
           </div>
         </button>
+        <div
+          ref={loadingRef}
+          className="absolute bottom-6 right-6 text-white/70 text-sm font-light"
+        >
+          Loading... {loadingPercent}%
+        </div>
       </div>
     );
   }
