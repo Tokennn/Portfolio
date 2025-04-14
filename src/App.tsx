@@ -295,7 +295,7 @@ useEffect(() => {
                 <a href="https://www.linkedin.com/in/quentin-c-752996294/" className="text-gray-600 hover:text-gray-900">
                   <Linkedin size={24} />
                 </a>
-                <Link to="/contact" className="text-gray-800 hover:text-gray-600">Contact
+                <Link to="/contact" className="text-gray-800 hover:text-gray-600">
                  <Mail size={24}  />
                 </Link>
 
