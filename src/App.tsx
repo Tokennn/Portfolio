@@ -4,7 +4,6 @@ import gsap from 'gsap';
 import backgroundVideo from './vid.mp4';
 import { useRef } from 'react';
 import { Link } from 'react-router-dom';
-import 'boxicons/css/boxicons.min.css';
 
 
 
