@@ -3,6 +3,8 @@ import { Menu, X, ArrowRight, Github, Linkedin, Mail } from 'lucide-react';
 import gsap from 'gsap';
 import backgroundVideo from './vid.mp4';
 import { useRef } from 'react';
+import { Link } from 'react-router-dom';
+
 
 
 
@@ -293,9 +295,7 @@ useEffect(() => {
                 <a href="https://www.linkedin.com/in/quentin-c-752996294/" className="text-gray-600 hover:text-gray-900">
                   <Linkedin size={24} />
                 </a>
-                <a href="mailto:quentin.contreau@ynov.com" className="text-gray-600 hover:text-gray-900">
-                  <Mail size={24} />
-                </a>
+                <a href="/contact" className="text-gray-800 hover:text-gray-600">Contact</a>
               </div>
             </div>
           </div>
