@@ -191,7 +191,7 @@ useEffect(() => {
             <div className="hidden md:flex space-x-8">
               <a href="#work" className="text-gray-800 hover:text-gray-600">Work</a>
               <a href="#about" className="text-gray-800 hover:text-gray-600">About</a>
-              <a href="/contact" className="text-gray-800 hover:text-gray-600">Contact</a>
+              <a href="/contact" className="text-gray-800 hover:text-gray-600">Contactt</a>
             </div>
             <button 
               className="md:hidden"
