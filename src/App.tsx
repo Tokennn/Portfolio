@@ -4,6 +4,7 @@ import gsap from 'gsap';
 import backgroundVideo from './vid.mp4';
 import { useRef } from 'react';
 import { Link } from 'react-router-dom';
+import 'boxicons/css/boxicons.min.css';
 
 
 
@@ -190,7 +191,7 @@ useEffect(() => {
             <div className="hidden md:flex space-x-8">
               <a href="#work" className="text-gray-800 hover:text-gray-600">Work</a>
               <a href="#about" className="text-gray-800 hover:text-gray-600">About</a>
-              <a href="#contact" className="text-gray-800 hover:text-gray-600">Contact</a>
+              <a href="/contact" className="text-gray-800 hover:text-gray-600">Contact</a>
             </div>
             <button 
               className="md:hidden"
@@ -208,7 +209,7 @@ useEffect(() => {
           <div className="flex flex-col items-center space-y-8 pt-8">
             <a href="#work" className="text-2xl" onClick={() => setIsMenuOpen(false)}>Work</a>
             <a href="#about" className="text-2xl" onClick={() => setIsMenuOpen(false)}>About</a>
-            <a href="#contact" className="text-2xl" onClick={() => setIsMenuOpen(false)}>Contact</a>
+            <a href="/contact" className="text-2xl" onClick={() => setIsMenuOpen(false)}>Contact</a>
           </div>
         </div>
       )}
@@ -295,7 +296,9 @@ useEffect(() => {
                 <a href="https://www.linkedin.com/in/quentin-c-752996294/" className="text-gray-600 hover:text-gray-900">
                   <Linkedin size={24} />
                 </a>
-                <a href="/contact" className="text-gray-800 hover:text-gray-600">Contact</a>
+                <a href="/contact" className="text-gray-800 hover:text-gray-600 flex items-center gap-1">
+                  <Mail size={24} />
+                </a>
               </div>
             </div>
           </div>
