@@ -297,7 +297,7 @@ useEffect(() => {
                   <Linkedin size={24} />
                 </a>
                 <a href="/contact" className="text-gray-800 hover:text-gray-600 flex items-center gap-1">
-                  <Mail size={24} /
+                  <Mail size={24} />
                 </a>
               </div>
             </div>
