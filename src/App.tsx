@@ -128,6 +128,9 @@ useEffect(() => {
             </span>
           </div>
         </button>
+            <p className="text-white text-sm mt-6 opacity-80 text-center px-4">
+            Cliquez sur <span className="font-semibold">ENTER</span> pour découvrir mon portfolio 👀
+            </p>
         <div
           ref={loadingRef}
           className="absolute bottom-6 right-6 text-white/70 text-sm font-light"
