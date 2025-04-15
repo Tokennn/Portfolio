@@ -38,7 +38,7 @@ function App() {
 
       
   
-      // Incrémenter le pourcentage de 0 à 100
+    
       const obj = { val: 0 };
       gsap.to(obj, {
         val: 100,
@@ -159,13 +159,13 @@ useEffect(() => {
     // },
     {
       title: "Langage-Sensei",
-      // description: "Langage-Sensei",
+      description: "Site Permettant d'identifier les technologies idéales en fonction de vos besoins spécifiques, avec explications détaillées sur les raisons de ces choix.",
       image: "https://cdn.midjourney.com/bf612167-d186-46f9-8141-ad6e799fa243/0_1.png",
       link: "https://langage-sensei.netlify.app/"
     },
     {
         title: "MoveSmart",
-        // description: "WPF Application",
+        description: "Site visant à sensibiliser le mode de transport doux tous les jours !",
         image: "https://cdn.midjourney.com/c5b6d334-83c3-4d27-ace8-00ca180a65ce/0_2.png",
         link: "https://movesmart.netlify.app/"
     }
@@ -241,10 +241,10 @@ useEffect(() => {
               </div>
               <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/60 to-transparent text-white">
                 <h3 className="text-2xl font-bold mb-2">{project.title}</h3>
-                {/* <p className="flex items-center">
+                <p className="flex items-center">
                   {project.description}
                   <ArrowRight className="ml-2 opacity-0 group-hover:opacity-100 transform group-hover:translate-x-2 transition-all" />
-                </p> */}
+                </p>
               </div>
             </a>
           ))}
@@ -289,16 +289,38 @@ useEffect(() => {
                 Intéressé par une collaboration ? N'hésitez pas à me contacter pour discuter de votre projet.
               </p>
               <div className="flex space-x-6">
-                <a href="https://github.com/Tokennn" className="text-gray-600 hover:text-gray-900">
-                  <Github size={24} />
-                </a>
-                <a href="https://www.linkedin.com/in/quentin-c-752996294/" className="text-gray-600 hover:text-gray-900">
-                  <Linkedin size={24} />
-                </a>
-                <Link to="/contact" className="text-gray-800 hover:text-gray-600">
-                 <Mail size={24}  />
-                </Link>
+                <div className="flex flex-col items-center">
+                  <a 
+                    href="https://github.com/Tokennn" 
+                    className="text-gray-600 hover:text-gray-900" 
+                    title="Voir mon GitHub"
+                  >
+                    <Github size={24} />
+                  </a>
+                  <span className="text-sm text-gray-900 mt-1">GitHub</span>
+                </div>
 
+                <div className="flex flex-col items-center">
+                  <a 
+                    href="https://www.linkedin.com/in/quentin-c-752996294/" 
+                    className="text-gray-600 hover:text-gray-900" 
+                    title="Voir mon LinkedIn"
+                  >
+                    <Linkedin size={24} />
+                  </a>
+                  <span className="text-sm text-gray-900 mt-1">LinkedIn</span>
+                </div>
+
+                <div className="flex flex-col items-center">
+                  <Link 
+                    to="/contact" 
+                    className="text-gray-800 hover:text-gray-600" 
+                    title="M'envoyer un email"
+                  >
+                    <Mail size={24} />
+                  </Link>
+                  <span className="text-sm text-gray-900 mt-1">Email</span>
+                </div>
               </div>
             </div>
           </div>
