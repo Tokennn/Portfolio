@@ -208,7 +208,11 @@ useEffect(() => {
           <div className="flex flex-col items-center space-y-8 pt-8">
             <a href="#work" className="text-2xl" onClick={() => setIsMenuOpen(false)}>Work</a>
             <a href="#about" className="text-2xl" onClick={() => setIsMenuOpen(false)}>About</a>
-            <a href="/contact" className="text-2xl" onClick={() => setIsMenuOpen(false)}>Contact</a>
+            <Link 
+                    to="/contact" 
+                    className="text-gray-800 hover:text-gray-600" 
+                    title="M'envoyer un email">contact
+                  </Link>
           </div>
         </div>
       )}
