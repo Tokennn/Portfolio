@@ -296,7 +296,7 @@ useEffect(() => {
                   <a 
                     href="https://github.com/Tokennn" 
                     className="text-gray-600 hover:text-gray-900" 
-                    title="Voir mon GitHub"
+                    title="Ca c'est mon GitHub yep !"
                   >
                     <Github size={24} />
                   </a>
@@ -307,7 +307,7 @@ useEffect(() => {
                   <a 
                     href="https://www.linkedin.com/in/quentin-c-752996294/" 
                     className="text-gray-600 hover:text-gray-900" 
-                    title="Voir mon LinkedIn"
+                    title="Go LinkedIn !"
                   >
                     <Linkedin size={24} />
                   </a>
@@ -318,7 +318,7 @@ useEffect(() => {
                   <Link 
                     to="/contact" 
                     className="text-gray-800 hover:text-gray-600" 
-                    title="Aller au formulaire"
+                    title="Aller c'est partis pour le formulaire !"
                   >
                     <Mail size={24} />
                   </Link>
