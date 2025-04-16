@@ -5,10 +5,6 @@ import backgroundVideo from './vid.mp4';
 import { useRef } from 'react';
 import { Link } from 'react-router-dom';
 
-
-
-
-
 function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -214,7 +210,7 @@ useEffect(() => {
             <Link 
                     to="/contact" 
                     className="text-gray-800 hover:text-gray-600" 
-                    title="M'envoyer un email">contact
+                    title="Aller au formulaire">contact
                   </Link>
           </div>
         </div>
@@ -322,7 +318,7 @@ useEffect(() => {
                   <Link 
                     to="/contact" 
                     className="text-gray-800 hover:text-gray-600" 
-                    title="M'envoyer un email"
+                    title="Aller au formulaire"
                   >
                     <Mail size={24} />
                   </Link>

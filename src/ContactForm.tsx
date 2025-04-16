@@ -1,7 +1,9 @@
 import React, { useState, ChangeEvent, FormEvent } from 'react';
+import emailjs from '@emailjs/browser';
 
 const ContactForm = () => {
   const [form, setForm] = useState({ name: '', email: '', message: '' });
+  const [status, setStatus] = useState<'idle' | 'success' | 'error'>('idle');
 
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -9,9 +11,22 @@ const ContactForm = () => {
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(form); 
-    alert("Message envoyé !");
-    setForm({ name: '', email: '', message: '' });
+    emailjs.sendForm(
+      'service_gmail',
+      'portfolio_contact',
+      e.target as HTMLFormElement,
+      'th-1Gp5GH8NBmDT5O'
+    ).then(
+      () => {
+        console.log('Message envoyé !');
+        setStatus('success');
+        setForm({ name: '', email: '', message: '' });
+      },
+      () => {
+        console.error('Erreur lors de l\'envoi');
+        setStatus('error');
+      }
+    );
   };
 
   return (
@@ -57,6 +72,8 @@ const ContactForm = () => {
         >
           Envoyer
         </button>
+        {status === 'success' && <p className="text-green-600">Message envoyé avec succès ✅</p>}
+        {status === 'error' && <p className="text-red-600">Une erreur est survenue ❌</p>}
       </form>
     </div>
   );
