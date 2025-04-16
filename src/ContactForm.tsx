@@ -13,7 +13,7 @@ const ContactForm = () => {
     e.preventDefault();
     emailjs.sendForm(
       'Portfolio',
-      'template_c7oxu6n',
+      'template_8cpky3e',
       e.target as HTMLFormElement,
       'th-1Gp5GH8NBmDT5O'
     ).then(
