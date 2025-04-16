@@ -1,10 +1,35 @@
-import React, { useState, ChangeEvent, FormEvent } from 'react';
+import React, { useState, ChangeEvent, FormEvent, useEffect, useRef } from 'react';
 import emailjs from '@emailjs/browser';
 import { motion, AnimatePresence } from 'framer-motion';
+import gsap from 'gsap';
 
 const ContactForm = () => {
   const [form, setForm] = useState({ name: '', email: '', message: '' });
   const [status, setStatus] = useState<'idle' | 'success' | 'error'>('idle');
+
+  const formRef = useRef<HTMLFormElement>(null);
+  const inputsRef = useRef<Array<HTMLDivElement | null>>([]);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      gsap.from(formRef.current, {
+        opacity: 0,
+        y: 50,
+        duration: 0.8,
+        ease: 'power3.out'
+      });
+
+      gsap.from(inputsRef.current, {
+        opacity: 0,
+        y: 30,
+        stagger: 0.15,
+        delay: 0.3,
+        ease: 'power2.out'
+      });
+    });
+
+    return () => ctx.revert();
+  }, []);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -32,9 +57,14 @@ const ContactForm = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 relative">
-      <form onSubmit={handleSubmit} className="max-w-lg w-full bg-white p-8 rounded-xl shadow-lg space-y-6 z-10">
-        <h2 className="text-3xl font-bold">Contacte-moi 📬</h2>
-        <div>
+      <form
+        onSubmit={handleSubmit}
+        ref={formRef}
+        className="max-w-lg w-full bg-white p-8 rounded-xl shadow-lg space-y-6 z-10"
+      >
+        <h2 className="text-3xl font-bold text-center">Contacte-moi 📬</h2>
+
+        <div ref={el => (inputsRef.current[0] = el)}>
           <label className="block text-sm font-medium text-gray-700">Nom</label>
           <input
             type="text"
@@ -45,7 +75,7 @@ const ContactForm = () => {
             className="mt-1 p-2 w-full border border-gray-300 rounded-lg"
           />
         </div>
-        <div>
+        <div ref={el => (inputsRef.current[1] = el)}>
           <label className="block text-sm font-medium text-gray-700">Email</label>
           <input
             type="email"
@@ -56,7 +86,7 @@ const ContactForm = () => {
             className="mt-1 p-2 w-full border border-gray-300 rounded-lg"
           />
         </div>
-        <div>
+        <div ref={el => (inputsRef.current[2] = el)}>
           <label className="block text-sm font-medium text-gray-700">Message</label>
           <textarea
             name="message"
@@ -67,12 +97,14 @@ const ContactForm = () => {
             className="mt-1 p-2 w-full border border-gray-300 rounded-lg"
           />
         </div>
-        <button
-          type="submit"
-          className="bg-black text-white py-2 px-4 rounded-lg hover:bg-gray-800 transition"
-        >
-          Envoyer
-        </button>
+        <div ref={el => (inputsRef.current[3] = el)}>
+          <button
+            type="submit"
+            className="bg-black text-white py-2 px-4 rounded-lg hover:bg-gray-800 transition"
+          >
+            Envoyer
+          </button>
+        </div>
       </form>
 
       {/* POPUP animé */}
@@ -86,7 +118,7 @@ const ContactForm = () => {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
             />
-            
+
             {/* Boîte centrale */}
             <motion.div
               className="absolute top-1/2 left-1/2 z-30 bg-white rounded-2xl shadow-2xl p-6 w-[90%] max-w-sm text-center"
