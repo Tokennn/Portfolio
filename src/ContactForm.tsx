@@ -12,8 +12,8 @@ const ContactForm = () => {
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     emailjs.sendForm(
-      'service_gmail',
-      'portfolio_contact',
+      'Portfolio',
+      'template_c7oxu6n',
       e.target as HTMLFormElement,
       'th-1Gp5GH8NBmDT5O'
     ).then(
