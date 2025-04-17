@@ -60,7 +60,7 @@ const ContactForm = () => {
       {/* Lottie en dehors du formulaire */}
       <div className="mb-2">
         <a
-          href="/" // ← remplace ici par ton vrai lien
+          href="/"
           rel="noopener noreferrer"
         >
           <dotlottie-player
