@@ -56,7 +56,23 @@ const ContactForm = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 relative">
+    <div className="min-h-screen flex flex-col items-center justify-center p-4 relative space-y-6">
+      {/* Lottie en dehors du formulaire */}
+      <div className="mb-2">
+        <a
+          href="/" // ← remplace ici par ton vrai lien
+          rel="noopener noreferrer"
+        >
+          <dotlottie-player
+            src="https://lottie.host/4a30085a-3cbc-4adf-a818-ff35868f7d53/gvgUELm6hu.lottie"
+            background="transparent"
+            speed="1"
+            style={{ width: '100px', height: '100px', cursor: 'pointer' }}
+            loop
+            autoplay
+          ></dotlottie-player>
+        </a>
+      </div>
       <form
         onSubmit={handleSubmit}
         ref={formRef}
@@ -65,46 +81,47 @@ const ContactForm = () => {
         <h2 className="text-3xl font-bold text-center">Contacte-moi 📬</h2>
 
         <div ref={el => (inputsRef.current[0] = el)}>
-      <label htmlFor="name" className="block text-sm font-medium text-gray-700">Nom</label>
-        <input
-          id="name"
-          type="text"
-          name="name"
-          value={form.name}
-          onChange={handleChange}
-          required
-          className="mt-1 p-2 w-full border border-gray-300 rounded-lg"
-          aria-required="true"
-        />
-      </div>
+          <label htmlFor="name" className="block text-sm font-medium text-gray-700">Nom</label>
+          <input
+            id="name"
+            type="text"
+            name="name"
+            value={form.name}
+            onChange={handleChange}
+            required
+            className="mt-1 p-2 w-full border border-gray-300 rounded-lg"
+            aria-required="true"
+          />
+        </div>
 
-      <div ref={el => (inputsRef.current[1] = el)}>
-        <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
-        <input
-          id="email"
-          type="email"
-          name="email"
-          value={form.email}
-          onChange={handleChange}
-          required
-          className="mt-1 p-2 w-full border border-gray-300 rounded-lg"
-          aria-required="true"
-        />
-      </div>
+        <div ref={el => (inputsRef.current[1] = el)}>
+          <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
+          <input
+            id="email"
+            type="email"
+            name="email"
+            value={form.email}
+            onChange={handleChange}
+            required
+            className="mt-1 p-2 w-full border border-gray-300 rounded-lg"
+            aria-required="true"
+          />
+        </div>
 
-      <div ref={el => (inputsRef.current[2] = el)}>
-        <label htmlFor="message" className="block text-sm font-medium text-gray-700">Message</label>
-        <textarea
-          id="message"
-          name="message"
-          value={form.message}
-          onChange={handleChange}
-          rows={4}
-          required
-          className="mt-1 p-2 w-full border border-gray-300 rounded-lg"
-          aria-required="true"
-        />
-      </div>
+        <div ref={el => (inputsRef.current[2] = el)}>
+          <label htmlFor="message" className="block text-sm font-medium text-gray-700">Message</label>
+          <textarea
+            id="message"
+            name="message"
+            value={form.message}
+            onChange={handleChange}
+            rows={4}
+            required
+            className="mt-1 p-2 w-full border border-gray-300 rounded-lg"
+            aria-required="true"
+          />
+        </div>
+
         <div ref={el => (inputsRef.current[3] = el)}>
           <button
             type="submit"
@@ -119,7 +136,6 @@ const ContactForm = () => {
       <AnimatePresence>
         {status !== 'idle' && (
           <>
-            {/* Fond semi-transparent */}
             <motion.div
               className="absolute inset-0 bg-black bg-opacity-40 backdrop-blur-sm z-20"
               initial={{ opacity: 0 }}
@@ -127,7 +143,6 @@ const ContactForm = () => {
               exit={{ opacity: 0 }}
             />
 
-            {/* Boîte centrale */}
             <motion.div
               className="absolute top-1/2 left-1/2 z-30 bg-white rounded-2xl shadow-2xl p-6 w-[90%] max-w-sm text-center"
               initial={{ scale: 0.5, opacity: 0, y: '-50%', x: '-50%' }}
