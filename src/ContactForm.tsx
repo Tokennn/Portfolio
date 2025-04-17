@@ -65,38 +65,46 @@ const ContactForm = () => {
         <h2 className="text-3xl font-bold text-center">Contacte-moi 📬</h2>
 
         <div ref={el => (inputsRef.current[0] = el)}>
-          <label className="block text-sm font-medium text-gray-700">Nom</label>
-          <input
-            type="text"
-            name="name"
-            value={form.name}
-            onChange={handleChange}
-            required
-            className="mt-1 p-2 w-full border border-gray-300 rounded-lg"
-          />
-        </div>
-        <div ref={el => (inputsRef.current[1] = el)}>
-          <label className="block text-sm font-medium text-gray-700">Email</label>
-          <input
-            type="email"
-            name="email"
-            value={form.email}
-            onChange={handleChange}
-            required
-            className="mt-1 p-2 w-full border border-gray-300 rounded-lg"
-          />
-        </div>
-        <div ref={el => (inputsRef.current[2] = el)}>
-          <label className="block text-sm font-medium text-gray-700">Message</label>
-          <textarea
-            name="message"
-            value={form.message}
-            onChange={handleChange}
-            rows={4}
-            required
-            className="mt-1 p-2 w-full border border-gray-300 rounded-lg"
-          />
-        </div>
+      <label htmlFor="name" className="block text-sm font-medium text-gray-700">Nom</label>
+        <input
+          id="name"
+          type="text"
+          name="name"
+          value={form.name}
+          onChange={handleChange}
+          required
+          className="mt-1 p-2 w-full border border-gray-300 rounded-lg"
+          aria-required="true"
+        />
+      </div>
+
+      <div ref={el => (inputsRef.current[1] = el)}>
+        <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
+        <input
+          id="email"
+          type="email"
+          name="email"
+          value={form.email}
+          onChange={handleChange}
+          required
+          className="mt-1 p-2 w-full border border-gray-300 rounded-lg"
+          aria-required="true"
+        />
+      </div>
+
+      <div ref={el => (inputsRef.current[2] = el)}>
+        <label htmlFor="message" className="block text-sm font-medium text-gray-700">Message</label>
+        <textarea
+          id="message"
+          name="message"
+          value={form.message}
+          onChange={handleChange}
+          rows={4}
+          required
+          className="mt-1 p-2 w-full border border-gray-300 rounded-lg"
+          aria-required="true"
+        />
+      </div>
         <div ref={el => (inputsRef.current[3] = el)}>
           <button
             type="submit"
