@@ -189,7 +189,11 @@ useEffect(() => {
             <div className="hidden md:flex space-x-8">
               <a href="#work" className="text-gray-800 hover:text-gray-600">Work</a>
               <a href="#about" className="text-gray-800 hover:text-gray-600">About</a>
-              <a href="/contact" className="text-gray-800 hover:text-gray-600">Contact</a>
+              <Link 
+                    to="/contact" 
+                    className="text-gray-800 hover:text-gray-600" 
+                    title="Aller au formulaire">Contact
+            </Link>
             </div>
             <button 
               className="md:hidden"
@@ -211,7 +215,7 @@ useEffect(() => {
                     to="/contact" 
                     className="text-gray-800 hover:text-gray-600" 
                     title="Aller au formulaire">contact
-                  </Link>
+            </Link>
           </div>
         </div>
       )}
