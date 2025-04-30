@@ -124,9 +124,9 @@ useEffect(() => {
             </span>
           </div>
         </button>
-            <p className="text-white text-sm mt-6 opacity-80 text-center px-4">
+            {/* <p className="text-white text-sm mt-6 opacity-80 text-center px-4">
             Cliquez sur <span className="font-semibold">ENTER</span> pour découvrir mon portfolio 👀
-            </p>
+            </p> */}
         <div
           ref={loadingRef}
           className="absolute bottom-6 right-6 text-white/70 text-sm font-light"
@@ -213,8 +213,8 @@ useEffect(() => {
             <a href="#about" className="text-2xl" onClick={() => setIsMenuOpen(false)}>About</a>
             <Link 
                     to="/contact" 
-                    className="text-gray-800 hover:text-gray-600" 
-                    title="Aller au formulaire">contact
+                    className="text-xl hover:text-gray-600 font-bold" 
+                    title="Aller au formulaire">Contact
             </Link>
           </div>
         </div>
