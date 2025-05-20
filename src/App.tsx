@@ -279,7 +279,7 @@ useEffect(() => {
                 </p>
               </div>
               <div className="space-y-4">
-                <h3 className="text-xl font-bold text-white">Expertise</h3>
+                <h3 className="text-xl font-bold text-black">Expertise</h3>
                 <ul className="space-y-2 font-bold text-black">
                   <li>Web Design</li>
                   <li>Front-end Development</li>
