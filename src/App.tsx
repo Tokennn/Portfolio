@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense, lazy } from 'react';
 import { Menu, X, ArrowRight, Github, Linkedin, Mail } from 'lucide-react';
 import gsap from 'gsap';
 import backgroundVideo from './vid.mp4';
 import { useRef } from 'react';
 import { Link } from 'react-router-dom';
+import SplineScene from './SplineScene';
 
 function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -124,9 +125,6 @@ useEffect(() => {
             </span>
           </div>
         </button>
-            {/* <p className="text-white text-sm mt-6 opacity-80 text-center px-4">
-            Cliquez sur <span className="font-semibold">ENTER</span> pour découvrir mon portfolio 👀
-            </p> */}
         <div
           ref={loadingRef}
           className="absolute bottom-6 right-6 text-white/70 text-sm font-light"
@@ -172,167 +170,175 @@ useEffect(() => {
 
 
   return (
-    <div className="min-h-screen">
-      
-    {/* Scroll Progress Bar */}
-      <div className="fixed bottom-6 right-6 w-24 h-1 bg-gray-300 rounded-full overflow-hidden">
-        <div
-          className="h-full bg-black transition-all duration-150"
-          style={{ width: `${scrollProgress}%` }}
-        />
+    <div className="min-h-screen relative">
+      {/* Spline Scene en arrière-plan */}
+      <div className="fixed inset-0 z-0">
+        <SplineScene />
       </div>
-      {/* Navigation */}
-      <nav className={`fixed w-full z-50 transition-all duration-300 ${scrolled ? 'bg-white/80 backdrop-blur-sm shadow-lg' : 'bg-transparent'}`}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <span className="text-2xl font-bold">Quentin.C</span>
-            <div className="hidden md:flex space-x-8">
-              <a href="#work" className="text-gray-800 hover:text-gray-600">Work</a>
-              <a href="#about" className="text-gray-800 hover:text-gray-600">About</a>
-              <Link 
-                    to="/contact" 
-                    className="text-gray-800 hover:text-gray-600" 
-                    title="Aller au formulaire">Contact
-            </Link>
-            </div>
-            <button 
-              className="md:hidden"
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-            >
-              {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
-            </button>
-          </div>
+      
+      {/* Contenu principal */}
+      <div className="relative z-10">
+        {/* Scroll Progress Bar */}
+        <div className="fixed bottom-6 right-6 w-24 h-1 bg-gray-300 rounded-full overflow-hidden">
+          <div
+            className="h-full bg-white transition-all duration-150"
+            style={{ width: `${scrollProgress}%` }}
+          />
         </div>
-      </nav>
 
-      {/* Mobile Menu */}
-      {isMenuOpen && (
-        <div className="fixed inset-0 z-40 bg-white/90 backdrop-blur-sm pt-16">
-          <div className="flex flex-col items-center space-y-8 pt-8">
-            <a href="#work" className="text-2xl" onClick={() => setIsMenuOpen(false)}>Work</a>
-            <a href="#about" className="text-2xl" onClick={() => setIsMenuOpen(false)}>About</a>
-            <Link 
-                    to="/contact" 
-                    className="text-xl hover:text-gray-600 font-bold" 
-                    title="Aller au formulaire">Contact
-            </Link>
-          </div>
-        </div>
-      )}
-
-      {/* Hero Section */}
-      <section className="pt-32 pb-16 px-4">
-        <div className="max-w-7xl mx-auto">
-          <h1 className="text-6xl md:text-8xl font-bold mb-8">Creative Developer & Designer</h1>
-          <p className="text-xl md:text-2xl text-gray-600 max-w-2xl">
-            Crafting digital experiences that combine beautiful design with powerful functionality.
-          </p>
-        </div>
-      </section>
-
-      {/* Projects Grid */}
-      <section id="work" className="py-16 px-4">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
-          {projects.map((project, index) => (
-            <a 
-              href={project.link}
-              key={index}
-              className="group relative overflow-hidden rounded-lg shadow-xl"
-            >
-              <div className="aspect-w-16 aspect-h-9 overflow-hidden">
-                <img 
-                  src={project.image} 
-                  alt={project.title}
-                  className="object-cover w-full h-full transform group-hover:scale-105 transition-transform duration-500"
-                />
+        {/* Navigation */}
+        <nav className={`fixed w-full z-50 transition-all duration-300 ${scrolled ? 'bg-black/20 backdrop-blur-sm shadow-lg' : 'bg-transparent'}`}>
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex justify-between items-center h-16">
+              <span className="text-2xl font-bold text-white">Quentin.C</span>
+              <div className="hidden md:flex space-x-8">
+                <a href="#work" className="text-black hover:text-white">Work</a>
+                <a href="#about" className="text-black hover:text-white">About</a>
+                <Link 
+                  to="/contact" 
+                  className="text-black hover:text-white" 
+                  title="Aller au formulaire">Contact
+                </Link>
               </div>
-              <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/60 to-transparent text-white">
-                <h3 className="text-2xl font-bold mb-2">{project.title}</h3>
-                <p className="flex items-center">
-                  {project.description}
-                  <ArrowRight className="ml-2 opacity-0 group-hover:opacity-100 transform group-hover:translate-x-2 transition-all" />
+              <button 
+                className="md:hidden text-white"
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
+              >
+                {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+              </button>
+            </div>
+          </div>
+        </nav>
+
+        {/* Mobile Menu */}
+        {isMenuOpen && (
+          <div className="fixed inset-0 z-40 bg-black/80 backdrop-blur-sm pt-16">
+            <div className="flex flex-col items-center space-y-8 pt-8">
+              <a href="#work" className="text-2xl text-white" onClick={() => setIsMenuOpen(false)}>Work</a>
+              <a href="#about" className="text-2xl text-white" onClick={() => setIsMenuOpen(false)}>About</a>
+              <Link 
+                to="/contact" 
+                className="text-xl text-white hover:text-gray-300 font-bold" 
+                title="Aller au formulaire">Contact
+              </Link>
+            </div>
+          </div>
+        )}
+
+        {/* Hero Section */}
+        <section className="pt-32 pb-16 px-4">
+          <div className="max-w-7xl mx-auto">
+            <h1 className="text-6xl md:text-8xl font-bold mb-8 text-black">Creative Developer & Designer</h1>
+            <p className="text-xl font-bold md:text-2xl text-black max-w-2xl">
+              Crafting digital experiences that combine beautiful design with powerful functionality.
+            </p>
+          </div>
+        </section>
+
+        {/* Projects Grid */}
+        <section id="work" className="py-16 px-4">
+          <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
+            {projects.map((project, index) => (
+              <a 
+                href={project.link}
+                key={index}
+                className="group relative overflow-hidden rounded-lg shadow-xl"
+              >
+                <div className="aspect-w-16 aspect-h-9 overflow-hidden">
+                  <img 
+                    src={project.image} 
+                    alt={project.title}
+                    className="object-cover w-full h-full transform group-hover:scale-105 transition-transform duration-500"
+                  />
+                </div>
+                <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/60 to-transparent text-white">
+                  <h3 className="text-2xl font-bold mb-2">{project.title}</h3>
+                  <p className="flex items-center">
+                    {project.description}
+                    <ArrowRight className="ml-2 opacity-0 group-hover:opacity-100 transform group-hover:translate-x-2 transition-all" />
+                  </p>
+                </div>
+              </a>
+            ))}
+          </div>
+        </section>
+
+        {/* About Section */}
+        <section id="about" className="py-16 px-4">
+          <div className="max-w-7xl mx-auto">
+            <h2 className="text-4xl font-bold mb-8 text-black">About Me</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+              <div>
+                <p className="text-lg font-bold text-black mb-6">
+                  Je suis un développeur créatif passionné par la création d'expériences numériques uniques et mémorables. 
+                  Mon approche combine design innovant et développement technique pour donner vie à des projets ambitieux.
+                </p>
+                <p className="text-lg font-bold text-black">
+                  Avec une expertise en design et en développement web, je m'efforce de créer des solutions qui non seulement 
+                  répondent aux besoins fonctionnels mais apportent aussi une réelle valeur ajoutée esthétique.
                 </p>
               </div>
-            </a>
-          ))}
-        </div>
-      </section>
-
-      {/* About Section */}
-      <section id="about" className="py-16 px-4">
-        <div className="max-w-7xl mx-auto">
-          <h2 className="text-4xl font-bold mb-8">About Me</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-            <div>
-              <p className="text-lg text-gray-600 mb-6">
-                Je suis un développeur créatif passionné par la création d'expériences numériques uniques et mémorables. 
-                Mon approche combine design innovant et développement technique pour donner vie à des projets ambitieux.
-              </p>
-              <p className="text-lg text-gray-600">
-                Avec une expertise en design et en développement web, je m'efforce de créer des solutions qui non seulement 
-                répondent aux besoins fonctionnels mais apportent aussi une réelle valeur ajoutée esthétique.
-              </p>
-            </div>
-            <div className="space-y-4">
-              <h3 className="text-xl font-bold">Expertise</h3>
-              <ul className="space-y-2">
-                <li>Web Design</li>
-                <li>Front-end Development</li>
-                <li>UI/UX Design</li>
-                <li>Creative Development</li>
-              </ul>
+              <div className="space-y-4">
+                <h3 className="text-xl font-bold text-white">Expertise</h3>
+                <ul className="space-y-2 font-bold text-black">
+                  <li>Web Design</li>
+                  <li>Front-end Development</li>
+                  <li>UI/UX Design</li>
+                  <li>Creative Development</li>
+                </ul>
+              </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Contact Section */}
-      <section id="contact" className="py-16 px-4">
-        <div className="max-w-7xl mx-auto">
-          <h2 className="text-4xl font-bold mb-8">Let's Work Together</h2>
-          <div className="flex flex-col md:flex-row items-start space-y-8 md:space-y-0 md:space-x-12">
-            <div className="flex-1">
-              <p className="text-lg text-gray-600 mb-8">
-                Intéressé par une collaboration ? N'hésitez pas à me contacter pour discuter de votre projet.
-              </p>
-              <div className="flex space-x-6">
-                <div className="flex flex-col items-center">
-                  <a 
-                    href="https://github.com/Tokennn" 
-                    className="text-gray-600 hover:text-gray-900" 
-                    title="Ca c'est mon GitHub yep !"
-                  >
-                    <Github size={24} />
-                  </a>
-                  <span className="text-sm text-gray-900 mt-1">GitHub</span>
-                </div>
+        {/* Contact Section */}
+        <section id="contact" className="py-16 px-4">
+          <div className="max-w-7xl mx-auto">
+            <h2 className="text-4xl font-bold mb-8 text-black">Let's Work Together</h2>
+            <div className="flex flex-col md:flex-row items-start space-y-8 md:space-y-0 md:space-x-12">
+              <div className="flex-1">
+                <p className="text-lg font-bold text-black mb-8">
+                  Intéressé par une collaboration ? N'hésitez pas à me contacter pour discuter de votre projet.
+                </p>
+                <div className="flex space-x-6">
+                  <div className="flex flex-col items-center">
+                    <a 
+                      href="https://github.com/Tokennn" 
+                      className="text-black hover:text-gray-700" 
+                      title="Ca c'est mon GitHub yep !"
+                    >
+                      <Github size={24} />
+                    </a>
+                    <span className="text-sm text-black mt-1">GitHub</span>
+                  </div>
 
-                <div className="flex flex-col items-center">
-                  <a 
-                    href="https://www.linkedin.com/in/quentin-c-752996294/" 
-                    className="text-gray-600 hover:text-gray-900" 
-                    title="Go LinkedIn !"
-                  >
-                    <Linkedin size={24} />
-                  </a>
-                  <span className="text-sm text-gray-900 mt-1">LinkedIn</span>
-                </div>
+                  <div className="flex flex-col items-center">
+                    <a 
+                      href="https://www.linkedin.com/in/quentin-c-752996294/" 
+                      className="text-black hover:text-gray-700" 
+                      title="Go LinkedIn !"
+                    >
+                      <Linkedin size={24} />
+                    </a>
+                    <span className="text-sm text-black mt-1">LinkedIn</span>
+                  </div>
 
-                <div className="flex flex-col items-center">
-                  <Link 
-                    to="/contact" 
-                    className="text-gray-800 hover:text-gray-600" 
-                    title="Aller c'est partis pour le formulaire !"
-                  >
-                    <Mail size={24} />
-                  </Link>
-                  <span className="text-sm text-gray-900 mt-1">Email</span>
+                  <div className="flex flex-col items-center">
+                    <Link 
+                      to="/contact" 
+                      className="text-black hover:text-gray-700" 
+                      title="Aller c'est partis pour le formulaire !"
+                    >
+                      <Mail size={24} />
+                    </Link>
+                    <span className="text-sm text-black mt-1">Email</span>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      </div>
     </div>
   );
 }
