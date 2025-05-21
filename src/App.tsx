@@ -156,13 +156,11 @@ useEffect(() => {
     // },
     {
       title: "Langage-Sensei",
-      description: "Site Permettant d'identifier les technologies idéales en fonction de vos besoins spécifiques, avec explications détaillées sur les raisons de ces choix.",
       image: "https://cdn.midjourney.com/bf612167-d186-46f9-8141-ad6e799fa243/0_1.png",
       link: "https://langage-sensei.netlify.app/"
     },
     {
         title: "MoveSmart",
-        description: "Site visant à sensibiliser le mode de transport doux tous les jours !",
         image: "https://cdn.midjourney.com/c5b6d334-83c3-4d27-ace8-00ca180a65ce/0_2.png",
         link: "https://movesmart.netlify.app/"
     }
@@ -228,7 +226,7 @@ useEffect(() => {
         {/* Hero Section */}
         <section className="pt-32 pb-16 px-4">
           <div className="max-w-7xl mx-auto">
-            <h1 className="text-6xl md:text-8xl font-bold mb-8 text-black">Creative Developeur & Designeur</h1>
+            <h1 className="text-6xl md:text-8xl font-bold mb-8 text-black">Developeur & Designeur Creatif</h1>
             <p className="text-xl font-bold md:text-2xl text-black max-w-2xl">
             Concevoir des expériences numériques qui allient un design magnifique à des fonctionnalités puissantes.
             </p>
@@ -254,7 +252,7 @@ useEffect(() => {
                 <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/60 to-transparent text-white">
                   <h3 className="text-2xl font-bold mb-2">{project.title}</h3>
                   <p className="flex items-center">
-                    {project.description}
+                    {/* {project.description} */}
                     <ArrowRight className="ml-2 opacity-0 group-hover:opacity-100 transform group-hover:translate-x-2 transition-all" />
                   </p>
                 </div>
