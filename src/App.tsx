@@ -5,6 +5,7 @@ import backgroundVideo from './vid.mp4';
 import { useRef } from 'react';
 import { Link } from 'react-router-dom';
 import SplineScene from './SplineScene';
+import { HeroScrollDemo } from './components/ui/demo';
 
 function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -224,17 +225,11 @@ useEffect(() => {
         )}
 
         {/* Hero Section */}
-        <section className="pt-32 pb-16 px-4">
-          <div className="max-w-7xl mx-auto">
-            <h1 className="text-6xl md:text-8xl font-bold mb-8 text-black">Developeur & Designeur Creatif</h1>
-            <p className="text-xl font-bold md:text-2xl text-black max-w-2xl">
-            Concevoir des expériences numériques qui allient un design magnifique à des fonctionnalités puissantes.
-            </p>
-          </div>
+        <section className="pt-32 pb-8 px-4">
+          <HeroScrollDemo />
         </section>
 
-        {/* Projects Grid */}
-        <section id="work" className="py-16 px-4">
+        {/* <section id="work" className="py-8 px-4">
           <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
             {projects.map((project, index) => (
               <a 
@@ -252,14 +247,13 @@ useEffect(() => {
                 <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/60 to-transparent text-white">
                   <h3 className="text-2xl font-bold mb-2">{project.title}</h3>
                   <p className="flex items-center">
-                    {/* {project.description} */}
                     <ArrowRight className="ml-2 opacity-0 group-hover:opacity-100 transform group-hover:translate-x-2 transition-all" />
-                  </p>
+                  </p>  
                 </div>
               </a>
             ))}
           </div>
-        </section>
+        </section> */}
 
         {/* About Section */}
         <section id="about" className="py-16 px-4">
