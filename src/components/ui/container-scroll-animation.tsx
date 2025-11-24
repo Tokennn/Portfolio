@@ -1,6 +1,6 @@
 "use client";
 import React, { useRef } from "react";
-import { useScroll, useTransform, motion, MotionValue } from "framer-motion";
+import { useScroll, useTransform, motion } from "framer-motion";
 
 export const ContainerScroll = ({
   titleComponent,
@@ -26,12 +26,6 @@ export const ContainerScroll = ({
     };
   }, []);
 
-  const scaleDimensions = () => {
-    return isMobile ? [0.7, 0.9] : [1.05, 1];
-  };
-
-  const rotate = useTransform(scrollYProgress, [0, 1], [20, 0]);
-  const scale = useTransform(scrollYProgress, [0, 1], scaleDimensions());
   const translate = useTransform(scrollYProgress, [0, 1], [0, -100]);
 
   return (
@@ -46,9 +40,7 @@ export const ContainerScroll = ({
         }}
       >
         <Header translate={translate} titleComponent={titleComponent} />
-        <Card rotate={rotate} translate={translate} scale={scale}>
-          {children}
-        </Card>
+        <Card isMobile={isMobile}>{children}</Card>
       </div>
     </div>
   );
@@ -68,23 +60,27 @@ export const Header = ({ translate, titleComponent }: any) => {
 };
 
 export const Card = ({
-  rotate,
-  scale,
   children,
+  isMobile,
 }: {
-  rotate: MotionValue<number>;
-  scale: MotionValue<number>;
-  translate: MotionValue<number>;
   children: React.ReactNode;
+  isMobile: boolean;
 }) => {
   return (
     <motion.div
       style={{
-        rotateX: rotate,
-        scale,
         boxShadow:
           "0 0 #0000004d, 0 9px 20px #0000004a, 0 37px 37px #00000042, 0 84px 50px #00000026, 0 149px 60px #0000000a, 0 233px 65px #00000003",
       }}
+      whileHover={
+        isMobile
+          ? undefined
+          : {
+              scale: 1.02,
+              rotateX: -2,
+            }
+      }
+      transition={{ type: "spring", stiffness: 180, damping: 20 }}
       className="max-w-6xl -mt-12 mx-auto h-[25rem] md:h-[35rem] w-full border-4 border-[#6C6C6C] p-2 md:p-6 bg-[#222222] rounded-[30px] shadow-2xl"
     >
       <div className="h-full w-full overflow-hidden rounded-2xl bg-gray-100 dark:bg-zinc-900 md:rounded-2xl md:p-4">
