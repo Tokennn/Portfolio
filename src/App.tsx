@@ -1,10 +1,8 @@
-import React, { useState, useEffect, Suspense, lazy } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Menu, X, ArrowRight, Github, Linkedin, Mail } from 'lucide-react';
 import gsap from 'gsap';
 import backgroundVideo from './vid.mp4';
-import { useRef } from 'react';
 import { Link } from 'react-router-dom';
-import SplineScene from './SplineScene';
 import { HeroScrollDemo } from './components/ui/demo';
 
 function App() {
@@ -184,12 +182,7 @@ useEffect(() => {
 
 
   return (
-    <div className="min-h-screen relative">
-      {/* Spline Scene en arrière-plan */}
-      <div className="fixed inset-0 z-0">
-        <SplineScene />
-      </div>
-      
+    <div className="min-h-screen relative bg-gradient-to-b from-[#0d0d0f] via-[#111] to-[#18181b]">
       {/* Contenu principal */}
       <div className="relative z-10">
         {/* Scroll Progress Bar */}
