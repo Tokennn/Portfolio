@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Menu, X, ArrowRight, Github, Linkedin, Mail } from 'lucide-react';
 import gsap from 'gsap';
 import backgroundVideo from './vid.mp4';
+import blurBackground from './blur.mp4';
 import { Link } from 'react-router-dom';
 import { HeroScrollDemo } from './components/ui/demo';
 
@@ -182,7 +183,8 @@ useEffect(() => {
 
 
   return (
-    <div className="min-h-screen relative bg-gradient-to-b from-[#0d0d0f] via-[#111] to-[#18181b]">
+    <div className="min-h-screen relative text-white">
+      <BackgroundOrbs />
       {/* Contenu principal */}
       <div className="relative z-10">
         {/* Scroll Progress Bar */}
@@ -199,11 +201,11 @@ useEffect(() => {
             <div className="flex justify-between items-center h-16">
               <span className="text-2xl font-bold text-white">Quentin.C</span>
               <div className="hidden md:flex space-x-8">
-                <a href="#work" className="text-black hover:text-white">Work</a>
-                <a href="#about" className="text-black hover:text-white">About</a>
+                <a href="#work" className="text-white/80 hover:text-white">Work</a>
+                <a href="#about" className="text-white/80 hover:text-white">About</a>
                 <Link 
                   to="/contact" 
-                  className="text-black hover:text-white" 
+                  className="text-white/80 hover:text-white" 
                   title="Aller au formulaire">Contact
                 </Link>
               </div>
@@ -344,3 +346,25 @@ useEffect(() => {
 }
 
 export default App;
+
+function BackgroundOrbs() {
+  return (
+    <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
+      <video
+        autoPlay
+        loop
+        muted
+        playsInline
+        className="absolute inset-0 h-full w-full object-cover opacity-80"
+      >
+        <source src={blurBackground} type="video/mp4" />
+      </video>
+      <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/35 to-black/60" />
+      <div className="absolute -left-32 top-10 h-[420px] w-[420px] rounded-full bg-[radial-gradient(circle_at_30%_30%,rgba(56,189,248,0.35),rgba(56,189,248,0))] blur-3xl animate-[orbFloat_18s_ease-in-out_infinite_alternate]" />
+      <div className="absolute right-[-120px] top-1/4 h-[520px] w-[520px] rounded-full bg-[radial-gradient(circle_at_70%_40%,rgba(168,85,247,0.4),rgba(88,28,135,0))] blur-[110px] animate-[orbDrift_22s_ease-in-out_infinite_alternate]" />
+      <div className="absolute left-1/3 bottom-[-160px] h-[460px] w-[460px] rounded-full bg-[radial-gradient(circle_at_50%_50%,rgba(255,115,29,0.35),rgba(255,115,29,0))] blur-[120px] opacity-80 animate-[orbFloat_26s_ease-in-out_infinite_alternate-reverse]" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(255,255,255,0.08),transparent_35%),radial-gradient(circle_at_80%_10%,rgba(255,255,255,0.06),transparent_40%),radial-gradient(circle_at_50%_80%,rgba(255,255,255,0.05),transparent_45%)] opacity-70" />
+      <div className="absolute inset-0 mix-blend-soft-light opacity-30" style={{ backgroundImage: "url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 160 160%22%3E%3Cfilter id=%22n%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.85%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23n)%22 opacity=%220.35%22/%3E%3C/svg%3E')" }} />
+    </div>
+  );
+}
