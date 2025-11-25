@@ -81,9 +81,9 @@ export const Card = ({
             }
       }
       transition={{ type: "spring", stiffness: 180, damping: 20 }}
-      className="max-w-6xl -mt-12 mx-auto h-[25rem] md:h-[35rem] w-full border-4 border-[#6C6C6C] p-2 md:p-6 bg-[#222222] rounded-[30px] shadow-2xl"
+      className="max-w-6xl -mt-12 mx-auto h-[25rem] md:h-[35rem] w-full p-0 md:p-2 bg-transparent"
     >
-      <div className="h-full w-full overflow-hidden rounded-2xl bg-gray-100 dark:bg-zinc-900 md:rounded-2xl md:p-4">
+      <div className="h-full w-full overflow-hidden md:rounded-2xl md:p-4 bg-transparent">
         {children}
       </div>
     </motion.div>

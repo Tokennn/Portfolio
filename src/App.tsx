@@ -77,6 +77,8 @@ useEffect(() => {
 
 
   if (!entered) {
+    const canEnter = loadingPercent >= 100;
+
     return (
       <div className="fixed inset-0 bg-black flex flex-col items-center justify-center">
         {/* Video Background */}
@@ -99,7 +101,9 @@ useEffect(() => {
           </span>
         </div>
         <button
+          disabled={!canEnter}
           onClick={() => {
+            if (!canEnter) return;
             gsap.to(".enter-button", {
               scale: 0.8,
               opacity: 0,
@@ -116,7 +120,7 @@ useEffect(() => {
               }
             });
           }}
-          className="enter-button group relative w-48 h-48"
+          className={`enter-button group relative w-48 h-48 transition opacity-100 ${canEnter ? "cursor-pointer" : "cursor-not-allowed opacity-60"}`}
         >
           <div className="absolute inset-0 border border-white/20 rounded-full transition-transform duration-700 group-hover:scale-110" />
           <div className="absolute inset-0 border border-white/20 rounded-full transition-transform duration-700 group-hover:scale-125" />
@@ -126,11 +130,17 @@ useEffect(() => {
             </span>
           </div>
         </button>
-        <div
-          ref={loadingRef}
-          className="absolute bottom-6 right-6 text-white/70 text-sm font-light"
-        >
-          Loading... {loadingPercent}%
+        <div className="absolute bottom-6 right-6 text-white/80 text-sm font-medium flex flex-col items-end gap-2">
+          <div className="flex items-center gap-2">
+            <span className="text-xs uppercase tracking-[0.2em] text-white/60">Loading</span>
+            <span className="text-sm">{loadingPercent}%</span>
+          </div>
+          <div className="w-40 h-1.5 bg-white/10 rounded-full overflow-hidden">
+            <div
+              className="h-full bg-white/80"
+              style={{ width: `${loadingPercent}%`, transition: "width 0.3s ease-out" }}
+            />
+          </div>
         </div>
       </div>
     );
@@ -164,6 +174,11 @@ useEffect(() => {
         title: "MoveSmart",
         image: "https://cdn.midjourney.com/c5b6d334-83c3-4d27-ace8-00ca180a65ce/0_2.png",
         link: "https://movesmart.netlify.app/"
+    },
+    {
+      title: "PulseTracker",
+      image: "https://cdn.midjourney.com/9015e525-1601-4ddd-93c9-77ceb097abbd/0_1.png",
+      link: "https://pulsetracker.netlify.app/"
     }
   ];
 
