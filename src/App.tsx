@@ -272,22 +272,22 @@ useEffect(() => {
 
         {/* About Section */}
         <section id="about" className="py-16 px-4">
-          <div className="max-w-7xl mx-auto">
-            <h2 className="text-4xl font-bold mb-8 text-black">About Me</h2>
+          <div className="max-w-4xl ml-0 md:ml-12 bg-[#0a0a0a] text-white rounded-2xl p-8 shadow-2xl border border-white/5">
+            <h2 className="text-4xl font-bold mb-8">About Me</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
               <div>
-                <p className="text-lg font-bold text-black mb-6">
+                <p className="text-lg font-bold mb-6">
                   Je suis un développeur créatif passionné par la création d'expériences numériques uniques et mémorables. 
                   Mon approche combine design innovant et développement technique pour donner vie à des projets ambitieux.
                 </p>
-                <p className="text-lg font-bold text-black">
+                <p className="text-lg font-bold">
                   Avec une expertise en design et en développement web, je m'efforce de créer des solutions qui non seulement 
                   répondent aux besoins fonctionnels mais apportent aussi une réelle valeur ajoutée esthétique.
                 </p>
               </div>
               <div className="space-y-4">
-                <h3 className="text-xl font-bold text-black">Expertise</h3>
-                <ul className="space-y-2 font-bold text-black">
+                <h3 className="text-xl font-bold">Expertise</h3>
+                <ul className="space-y-2 font-bold">
                   <li>Web Design</li>
                   <li>Front-end Development</li>
                   <li>UI/UX Design</li>
@@ -300,45 +300,45 @@ useEffect(() => {
 
         {/* Contact Section */}
         <section id="contact" className="py-16 px-4">
-          <div className="max-w-7xl mx-auto">
-            <h2 className="text-4xl font-bold mb-8 text-black">Let's Work Together</h2>
+          <div className="max-w-4xl ml-0 md:ml-12 bg-[#0a0a0a] text-white rounded-2xl p-8 shadow-2xl border border-white/5">
+            <h2 className="text-4xl font-bold mb-8">Let's Work Together</h2>
             <div className="flex flex-col md:flex-row items-start space-y-8 md:space-y-0 md:space-x-12">
               <div className="flex-1">
-                <p className="text-lg font-bold text-black mb-8">
+                <p className="text-lg font-bold mb-8">
                   Intéressé par une collaboration ? N'hésitez pas à me contacter pour discuter de votre projet.
                 </p>
                 <div className="flex space-x-6">
                   <div className="flex flex-col items-center">
                     <a 
                       href="https://github.com/Tokennn" 
-                      className="text-black hover:text-gray-700" 
+                      className="text-white hover:text-gray-200" 
                       title="Ca c'est mon GitHub yep !"
                     >
                       <Github size={24} />
                     </a>
-                    <span className="text-sm text-black mt-1">GitHub</span>
+                    <span className="text-sm text-white mt-1">GitHub</span>
                   </div>
 
                   <div className="flex flex-col items-center">
                     <a 
                       href="https://www.linkedin.com/in/quentin-c-752996294/" 
-                      className="text-black hover:text-gray-700" 
+                      className="text-white hover:text-gray-200" 
                       title="Go LinkedIn !"
                     >
                       <Linkedin size={24} />
                     </a>
-                    <span className="text-sm text-black mt-1">LinkedIn</span>
+                    <span className="text-sm text-white mt-1">LinkedIn</span>
                   </div>
 
                   <div className="flex flex-col items-center">
                     <Link 
                       to="/contact" 
-                      className="text-black hover:text-gray-700" 
+                      className="text-white hover:text-gray-200" 
                       title="Aller c'est partis pour le formulaire !"
                     >
                       <Mail size={24} />
                     </Link>
-                    <span className="text-sm text-black mt-1">Email</span>
+                    <span className="text-sm text-white mt-1">Email</span>
                   </div>
                 </div>
               </div>
