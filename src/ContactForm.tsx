@@ -78,7 +78,7 @@ const ContactForm = () => {
         ref={formRef}
         className="max-w-lg w-full bg-white p-8 rounded-xl shadow-lg space-y-6 z-10"
       >
-        <h2 className="text-3xl font-bold text-center">Contacte-moi 📬</h2>
+        <h2 className="text-3xl font-bold text-black text-center">Contacte-moi 📬</h2>
 
         <div ref={el => (inputsRef.current[0] = el)}>
           <label htmlFor="name" className="block text-sm font-medium text-gray-700">Nom</label>

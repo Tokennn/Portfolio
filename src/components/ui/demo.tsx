@@ -1,10 +1,9 @@
 "use client";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { ArrowRight } from "lucide-react";
+import { AnimatePresence, motion } from "framer-motion";
 
 export function HeroScrollDemo() {
-  const noteCardImage =
-    "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='800' height='1000' viewBox='0 0 800 1000'><rect width='800' height='1000' fill='%23212121'/><rect x='170' y='180' width='460' height='640' fill='%23f3eedf' stroke='none' rx='4'/><text x='210' y='240' font-family='\"Courier New\", monospace' font-size='26' fill='%23212121'>ROEVI0W</text><text x='210' y='280' font-family='\"Courier New\", monospace' font-size='24' fill='%23212121'>Pr0Jc7re</text><text x='210' y='320' font-family='\"Courier New\", monospace' font-size='24' fill='%23212121'>Diotck.</text><text x='210' y='360' font-family='\"Courier New\", monospace' font-size='24' fill='%23212121'>A1. /ytttiosjt,</text><text x='210' y='400' font-family='\"Courier New\", monospace' font-size='24' fill='%23212121'>Rigjlot</text><text x='210' y='440' font-family='\"Courier New\", monospace' font-size='24' fill='%23212121'>Peonor, Mamy iovo</text><text x='210' y='480' font-family='\"Courier New\", monospace' font-size='24' fill='%23212121'>BLIRIS: Pix 1gtb</text><text x='210' y='520' font-family='\"Courier New\", monospace' font-size='24' fill='%23212121'>AB. Noy. Crause.</text><text x='210' y='560' font-family='\"Courier New\", monospace' font-size='24' fill='%23212121'>AG Nc. Tractg%aecke,</text></svg>";
   const projects = [
     {
       title: "Langage-Sensei",
@@ -35,6 +34,10 @@ export function HeroScrollDemo() {
     }
   ];
 
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  const current = projects[activeIndex];
+
   return (
     <div className="relative flex flex-col overflow-hidden px-4 pb-32 pt-20 md:pt-40">
       <CursorBlur />
@@ -48,50 +51,72 @@ export function HeroScrollDemo() {
           </p>
         </div>
 
-        <div className="relative z-10 space-y-8">
-          {projects.map((project, index) => (
-            <a
-              href={project.link}
-              key={index}
-              className="group block w-full relative isolate overflow-hidden rounded-[28px] border border-white/20 bg-white/8 shadow-[0_25px_70px_rgba(0,0,0,0.25)] backdrop-blur-xl transition-transform duration-500 hover:-translate-y-2"
-            >
-              <div
-                className={`absolute inset-0 opacity-90 bg-gradient-to-br ${project.accent}`}
-              />
-              <div
-                className="absolute inset-0 opacity-60 blur-[90px]"
-                style={{ background: project.glow }}
-              />
-              <div className="relative z-10 flex flex-col gap-4 p-8">
-                <div className="flex items-center justify-between text-sm uppercase tracking-[0.2em] text-white/70">
-                  <span className="rounded-full border border-white/25 bg-white/10 px-4 py-1 text-xs font-semibold">
-                    {project.tag}
-                  </span>
-                  <ArrowRight className="h-5 w-5 transition-all duration-300 group-hover:translate-x-2 group-hover:opacity-100 group-hover:text-white text-white/50" />
+        <div className="relative z-10">
+          <div className="relative h-[520px] overflow-hidden rounded-[28px]">
+            <AnimatePresence mode="wait">
+              <motion.a
+                key={current.title}
+                href={current.link}
+                className="group block w-full h-full relative isolate overflow-hidden rounded-[28px] border border-white/20 bg-white/8 shadow-[0_25px_70px_rgba(0,0,0,0.25)] backdrop-blur-xl"
+                initial={{ x: 120, opacity: 0.4 }}
+                animate={{ x: 0, opacity: 1 }}
+                exit={{ x: -120, opacity: 0 }}
+                transition={{ duration: 0.7, ease: "easeInOut" }}
+              >
+                <div
+                  className={`absolute inset-0 opacity-90 bg-gradient-to-br ${current.accent}`}
+                />
+                <div
+                  className="absolute inset-0 opacity-60 blur-[90px]"
+                  style={{ background: current.glow }}
+                />
+                <div className="relative z-10 flex flex-col gap-4 p-8 h-full">
+                  <div className="flex items-center justify-between text-sm uppercase tracking-[0.2em] text-white/70">
+                    <span className="rounded-full border border-white/25 bg-white/10 px-4 py-1 text-xs font-semibold">
+                      {current.tag}
+                    </span>
+                    <ArrowRight className="h-5 w-5 transition-all duration-300 group-hover:translate-x-2 group-hover:opacity-100 group-hover:text-white text-white/50" />
+                  </div>
+                  <div className="space-y-2">
+                    <h3 className="text-3xl md:text-4xl font-semibold text-white drop-shadow-sm">
+                      {current.title}
+                    </h3>
+                    <p className="text-base leading-relaxed text-white/80 max-w-3xl">
+                      {current.description}
+                    </p>
+                  </div>
+                  <div className="mt-auto overflow-hidden rounded-2xl border border-white/15 shadow-2xl transition-transform duration-500 group-hover:scale-[1.02] bg-white/5 flex items-center justify-center">
+                    <img
+                      src={current.image}
+                      alt={current.title}
+                      className="w-full h-80 md:h-96 object-cover object-center"
+                      draggable={false}
+                    />
+                  </div>
                 </div>
-                <div className="space-y-2">
-                  <h3 className="text-3xl font-semibold text-white drop-shadow-sm">
-                    {project.title}
-                  </h3>
-                  <p className="text-base leading-relaxed text-white/80">
-                    {project.description}
-                  </p>
+                <div className="pointer-events-none absolute inset-0 opacity-40 mix-blend-screen">
+                  <div className="absolute -left-10 top-12 h-32 w-32 rounded-full bg-white/30 blur-3xl" />
+                  <div className="absolute -right-16 bottom-12 h-32 w-32 rounded-full bg-white/20 blur-[90px]" />
                 </div>
-                <div className="mt-6 overflow-hidden rounded-2xl border border-white/15 shadow-2xl transition-transform duration-500 group-hover:scale-[1.02] bg-white/5 flex items-center justify-center">
-                  <img
-                    src={project.image}
-                    alt={project.title}
-                    className="w-full h-80 md:h-96 object-cover object-center"
-                    draggable={false}
-                  />
-                </div>
-              </div>
-              <div className="pointer-events-none absolute inset-0 opacity-40 mix-blend-screen">
-                <div className="absolute -left-10 top-12 h-32 w-32 rounded-full bg-white/30 blur-3xl" />
-                <div className="absolute -right-16 bottom-12 h-32 w-32 rounded-full bg-white/20 blur-[90px]" />
-              </div>
-            </a>
-          ))}
+              </motion.a>
+            </AnimatePresence>
+          </div>
+
+          <div className="mt-6 flex items-center justify-between text-white/70 text-sm">
+            <div className="flex items-center gap-3">
+              {projects.map((project, idx) => (
+                <button
+                  key={project.title}
+                  onClick={() => setActiveIndex(idx)}
+                  className={`h-2.5 rounded-full transition-all duration-300 ${idx === activeIndex ? "w-8 bg-white" : "w-3 bg-white/40"}`}
+                  aria-label={`Afficher ${project.title}`}
+                />
+              ))}
+            </div>
+            <span className="text-xs uppercase tracking-[0.25em]">
+              {String(activeIndex + 1).padStart(2, "0")} / {String(projects.length).padStart(2, "0")}
+            </span>
+          </div>
         </div>
       </div>
     </div>

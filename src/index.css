@@ -89,6 +89,34 @@
   text-shadow: 0 0 8px rgba(255, 255, 255, 0.8), 0 0 15px rgba(251, 251, 251, 0.8);
 }
 
+.nav-link {
+  position: relative;
+  padding-bottom: 12px;
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.nav-link:hover {
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+.nav-group:hover .nav-link {
+  filter: blur(2px);
+  opacity: 0.35;
+  transition: filter 0.25s ease, opacity 0.25s ease;
+}
+
+.nav-group .nav-link:hover {
+  filter: blur(0);
+  opacity: 1;
+}
+
+@keyframes navGlow {
+  0% { filter: drop-shadow(0 0 8px rgba(94, 234, 212, 0.45)); }
+  50% { filter: drop-shadow(0 0 16px rgba(59, 130, 246, 0.55)); }
+  100% { filter: drop-shadow(0 0 14px rgba(236, 72, 153, 0.55)); }
+}
+
 @keyframes orbFloat {
   from { transform: translate3d(0, 0, 0); }
   to { transform: translate3d(40px, -30px, 0); }

@@ -1,24 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Menu, X, ArrowRight, Github, Linkedin, Mail } from 'lucide-react';
+import { Github, Linkedin, Mail } from 'lucide-react';
 import gsap from 'gsap';
 import blurBackground from './blur.mp4';
 import { Link } from 'react-router-dom';
 import { HeroScrollDemo } from './components/ui/demo';
 
 function App() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
   const [entered, setEntered] = useState(false);
   const loadingRef = useRef(null);
   const [loadingPercent, setLoadingPercent] = useState(0);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
 
   const [scrollProgress, setScrollProgress] = useState(0);
 
@@ -144,99 +134,32 @@ useEffect(() => {
     );
   }
 
-  const projects = [
-    // {
-    //   title: "Project One",
-    //   description: "Hangman Game",
-    //   image: "https://cdn.midjourney.com/ed41544b-cd96-4c62-a377-9f77d113b439/0_0.png",
-    //   link: "https://github.com/Tokennn/hangman-web"
-    // },
-    // {
-    //   title: "Project Two",
-    //   description: "WPF Application",
-    //   image: "https://cdn.midjourney.com/ee56211d-a3ae-49b4-b414-26dc2aa6a69a/0_0.png",
-    //   link: "https://github.com/Tokennn/Pokemon.WPF"
-    // },
-    // {
-    //   title: "Project Three",
-    //   description: "Chess Game",
-    //   image: "https://cdn.midjourney.com/9015e525-1601-4ddd-93c9-77ceb097abbd/0_1.png",
-    //   link: "https://github.com/Tokennn/ChessGame"
-    // },
-    {
-      title: "Langage-Sensei",
-      image: "https://cdn.midjourney.com/bf612167-d186-46f9-8141-ad6e799fa243/0_1.png",
-      link: "https://langage-sensei.netlify.app/"
-    },
-    {
-        title: "MoveSmart",
-        image: "https://cdn.midjourney.com/c5b6d334-83c3-4d27-ace8-00ca180a65ce/0_2.png",
-        link: "https://movesmart.netlify.app/"
-    },
-    {
-      title: "PulseTracker",
-      image: "https://cdn.midjourney.com/9015e525-1601-4ddd-93c9-77ceb097abbd/0_1.png",
-      link: "https://pulsetracker.netlify.app/"
-    }
-  ];
-
-
   return (
     <div className="min-h-screen relative text-white">
       <BackgroundOrbs />
       {/* Contenu principal */}
       <div className="relative z-10">
+        {/* Nav centrée minimaliste */}
+        <nav className="fixed inset-0 z-40 flex items-center justify-center pointer-events-none">
+          <div className="nav-group flex items-center space-x-12 text-2xl font-black uppercase tracking-[0.28em] pointer-events-auto">
+            <Link to="/work" className="nav-link text-white/90">Work</Link>
+            <a href="#about" className="nav-link text-white/90">About</a>
+            <Link to="/contact" className="nav-link text-white/90">Contact</Link>
+          </div>
+        </nav>
+
         {/* Scroll Progress Bar */}
-        <div className="fixed bottom-6 right-6 w-24 h-1 bg-gray-300 rounded-full overflow-hidden">
+        {/* <div className="fixed bottom-6 right-6 w-24 h-1 bg-gray-300 rounded-full overflow-hidden">
           <div
             className="h-full bg-white transition-all duration-150"
             style={{ width: `${scrollProgress}%` }}
           />
-        </div>
-
-        {/* Navigation */}
-        <nav className={`fixed w-full z-50 transition-all duration-300 ${scrolled ? 'bg-black/20 backdrop-blur-sm shadow-lg' : 'bg-transparent'}`}>
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-between items-center h-16">
-              <span className="text-2xl font-bold text-white">Quentin.C</span>
-              <div className="hidden md:flex space-x-8">
-                <a href="#work" className="text-white/80 hover:text-white">Work</a>
-                <a href="#about" className="text-white/80 hover:text-white">About</a>
-                <Link 
-                  to="/contact" 
-                  className="text-white/80 hover:text-white" 
-                  title="Aller au formulaire">Contact
-                </Link>
-              </div>
-              <button 
-                className="md:hidden text-white"
-                onClick={() => setIsMenuOpen(!isMenuOpen)}
-              >
-                {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
-              </button>
-            </div>
-          </div>
-        </nav>
-
-        {/* Mobile Menu */}
-        {isMenuOpen && (
-          <div className="fixed inset-0 z-40 bg-black/80 backdrop-blur-sm pt-16">
-            <div className="flex flex-col items-center space-y-8 pt-8">
-              <a href="#work" className="text-2xl text-white" onClick={() => setIsMenuOpen(false)}>Work</a>
-              <a href="#about" className="text-2xl text-white" onClick={() => setIsMenuOpen(false)}>About</a>
-              <Link 
-                to="/contact" 
-                className="text-xl text-white hover:text-gray-300 font-bold" 
-                title="Aller au formulaire">Contact
-              </Link>
-            </div>
-          </div>
-        )}
+        </div> */}
 
         {/* Hero Section */}
-        <section className="pt-32 pb-8 px-4">
+        {/* <section className="pt-32 pb-8 px-4">
           <HeroScrollDemo />
-        </section>
+        </section> */}
 
         {/* <section id="work" className="py-8 px-4">
           <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -265,7 +188,7 @@ useEffect(() => {
         </section> */}
 
         {/* About Section */}
-        <section id="about" className="py-16 px-4">
+        {/* <section id="about" className="py-16 px-4">
           <div className="max-w-4xl ml-0 md:ml-12 bg-[#0a0a0a] text-white rounded-2xl p-8 shadow-2xl border border-white/5">
             <h2 className="text-4xl font-bold mb-8">About Me</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
@@ -290,10 +213,10 @@ useEffect(() => {
               </div>
             </div>
           </div>
-        </section>
+        </section> */}
 
         {/* Contact Section */}
-        <section id="contact" className="py-16 px-4">
+        {/* <section id="contact" className="py-16 px-4">
           <div className="max-w-4xl ml-0 md:ml-12 bg-[#0a0a0a] text-white rounded-2xl p-8 shadow-2xl border border-white/5">
             <h2 className="text-4xl font-bold mb-8">Let's Work Together</h2>
             <div className="flex flex-col md:flex-row items-start space-y-8 md:space-y-0 md:space-x-12">
@@ -338,7 +261,7 @@ useEffect(() => {
               </div>
             </div>
           </div>
-        </section>
+        </section> */}
       </div>
     </div>
   );
