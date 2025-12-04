@@ -3,7 +3,7 @@ import { Github, Linkedin, Mail } from 'lucide-react';
 import gsap from 'gsap';
 import blurBackground from './blur.mp4';
 import { Link } from 'react-router-dom';
-import { HeroScrollDemo } from './components/ui/demo';
+// import { HeroScrollDemo } from './components/ui/demo';
 
 function App() {
   const [entered, setEntered] = useState(false);
