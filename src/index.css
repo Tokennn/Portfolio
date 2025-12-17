@@ -2,12 +2,21 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: "Amazing Maret";
+  src: url("/fonts/AmazingMaret-V4mAl.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
 @layer base {
   html {
     scroll-behavior: smooth;
   }
   
   body {
+    font-family: "Amazing Maret", "Inter", system-ui, -apple-system, sans-serif;
     @apply text-white;
     background-color: #050507;
     background-image: radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.04), transparent 40%), radial-gradient(circle at 80% 0%, rgba(255, 255, 255, 0.03), transparent 45%);
@@ -33,6 +42,86 @@
     pointer-events: none;
     z-index: -1;
     animation: glowShift 18s ease-in-out infinite alternate;
+  }
+}
+
+@layer components {
+  .font-amazing {
+    font-family: "Amazing Maret", "Inter", system-ui, -apple-system, sans-serif;
+    letter-spacing: 0.08em;
+  }
+
+  .nav-underline {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    font-size: 13px;
+    padding-bottom: 6px;
+    transition: color 0.2s ease;
+  }
+
+  .nav-underline::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 2px;
+    width: 100%;
+    background: #0f0f0f;
+    transform-origin: left;
+    transform: scaleX(0);
+    transition: transform 0.24s ease;
+  }
+
+  .nav-underline:hover::after,
+  .nav-underline:focus-visible::after {
+    transform: scaleX(1);
+  }
+
+  .nav-dot {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 12px;
+    height: 12px;
+    border-radius: 9999px;
+    background: #0f0f0f;
+    border: 1px solid #0f0f0f;
+    color: transparent;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .nav-dot::after {
+    content: attr(data-label);
+    position: absolute;
+    left: 50%;
+    top: -12px;
+    transform: translate(-50%, -120%) scale(0.96);
+    background: transparent;
+    color: #0f0f0f;
+    padding: 0;
+    border-radius: 0;
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.18s ease, transform 0.18s ease;
+  }
+
+  .nav-dot:hover,
+  .nav-dot:focus-visible {
+    transform: scale(1.15);
+    box-shadow: 0 0 0 6px rgba(15, 15, 15, 0.08);
+  }
+
+  .nav-dot:hover::after,
+  .nav-dot:focus-visible::after {
+    opacity: 1;
+    transform: translate(-50%, -140%) scale(1);
   }
 }
 
@@ -109,6 +198,48 @@
 .nav-group .nav-link:hover {
   filter: blur(0);
   opacity: 1;
+}
+
+.hero-menu {
+  background: radial-gradient(circle at 15% 20%, rgba(73, 149, 255, 0.16), transparent 25%),
+              radial-gradient(circle at 80% 30%, rgba(128, 17, 255, 0.22), transparent 30%),
+              linear-gradient(120deg, #0c1d2d 0%, #0f1b2c 40%, #1e1533 70%, #2d0f3e 100%);
+  animation: heroGradient 16s ease-in-out infinite alternate;
+  mix-blend-mode: normal;
+}
+
+.hero-menu .nav-group {
+  gap: clamp(32px, 6vw, 72px);
+}
+
+.hero-menu .nav-link {
+  font-size: clamp(18px, 2vw, 26px);
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.55);
+  opacity: 0.45;
+  filter: blur(1px);
+  transform: none;
+}
+
+.hero-menu .nav-link:hover,
+.hero-menu .nav-link:focus-visible {
+  color: #ffffff;
+  opacity: 1;
+  filter: blur(0);
+}
+
+.hero-menu .nav-link.hero-highlight {
+  color: #ffffff;
+  opacity: 1;
+  filter: blur(0);
+}
+
+@keyframes heroGradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 50% 50%; }
+  100% { background-position: 100% 50%; }
 }
 
 @keyframes navGlow {

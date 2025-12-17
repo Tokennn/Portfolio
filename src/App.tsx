@@ -140,7 +140,7 @@ useEffect(() => {
       {/* Contenu principal */}
       <div className="relative z-10">
         {/* Nav centrée minimaliste */}
-        <nav className="fixed inset-0 z-40 flex items-center justify-center pointer-events-none">
+        <nav id="home-nav" className="fixed inset-0 z-40 flex items-center justify-center pointer-events-none">
           <div className="nav-group flex items-center space-x-12 text-2xl font-black uppercase tracking-[0.28em] pointer-events-auto">
             <Link to="/work" className="nav-link text-white/90">Work</Link>
             <a href="#about" className="nav-link text-white/90">About</a>
