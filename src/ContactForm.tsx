@@ -38,7 +38,7 @@ const ContactForm = () => {
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     emailjs.sendForm(
-      'Portfolio',
+      'service_5kj1l8m',
       'template_8cpky3e',
       e.target as HTMLFormElement,
       'th-1Gp5GH8NBmDT5O'
@@ -57,80 +57,87 @@ const ContactForm = () => {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-4 relative space-y-6">
-      {/* Lottie en dehors du formulaire */}
-      <div className="mb-2">
-        <a
-          href="/"
-          rel="noopener noreferrer"
+      <div className="flex flex-col items-center justify-center w-full space-y-6">
+        {/* Lottie en dehors du formulaire */}
+        <div className="relative mb-2 flex flex-col items-center gap-3">
+          <div className="relative flex items-center justify-center">
+            <a
+              href="/"
+              rel="noopener noreferrer"
+            >
+              <dotlottie-player
+                src="https://lottie.host/4a30085a-3cbc-4adf-a818-ff35868f7d53/gvgUELm6hu.lottie"
+                background="transparent"
+                speed="1"
+                style={{ width: '100px', height: '100px', cursor: 'pointer' }}
+                loop
+                autoplay
+              ></dotlottie-player>
+            </a>
+            <p className="absolute -top-3 -right-5 max-w-[160px] text-[8px] md:text-[8px] text-gray-100/90 leading-snug inline-block bg-white/10 border border-white/20 px-2 py-1 rounded-full shadow-[0_8px_24px_rgba(0,0,0,0.35)] backdrop-blur-sm text-center">
+            DM me for any questions or collaborations.  
+            </p>
+          </div>
+        </div>
+        <form
+          onSubmit={handleSubmit}
+          ref={formRef}
+          className="max-w-lg w-full bg-[#f8f3ea] border border-[#dccfb9] shadow-[0_18px_60px_rgba(52,34,18,0.16)] backdrop-blur-sm p-8 rounded-xl space-y-6"
         >
-          <dotlottie-player
-            src="https://lottie.host/4a30085a-3cbc-4adf-a818-ff35868f7d53/gvgUELm6hu.lottie"
-            background="transparent"
-            speed="1"
-            style={{ width: '100px', height: '100px', cursor: 'pointer' }}
-            loop
-            autoplay
-          ></dotlottie-player>
-        </a>
+          <h2 className="text-3xl font-bold text-black text-center">Contacte-moi 📬</h2>
+
+          <div ref={el => (inputsRef.current[0] = el)}>
+            <label htmlFor="name" className="block text-sm font-medium text-gray-700">Nom</label>
+            <input
+              id="name"
+              type="text"
+              name="name"
+              value={form.name}
+              onChange={handleChange}
+              required
+              className="mt-1 p-2 w-full rounded-lg border border-[#dccfb9] bg-[#f8f3ea] text-[#0f0f0f] placeholder:text-[#8c8170]"
+              aria-required="true"
+            />
+          </div>
+
+          <div ref={el => (inputsRef.current[1] = el)}>
+            <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
+            <input
+              id="email"
+              type="email"
+              name="email"
+              value={form.email}
+              onChange={handleChange}
+              required
+              className="mt-1 p-2 w-full rounded-lg border border-[#dccfb9] bg-[#f8f3ea] text-[#0f0f0f] placeholder:text-[#8c8170]"
+              aria-required="true"
+            />
+          </div>
+
+          <div ref={el => (inputsRef.current[2] = el)}>
+            <label htmlFor="message" className="block text-sm font-medium text-gray-700">Message</label>
+            <textarea
+              id="message"
+              name="message"
+              value={form.message}
+              onChange={handleChange}
+              rows={4}
+              required
+              className="mt-1 p-2 w-full rounded-lg border border-[#dccfb9] bg-[#f8f3ea] text-[#0f0f0f] placeholder:text-[#8c8170]"
+              aria-required="true"
+            />
+          </div>
+
+          <div ref={el => (inputsRef.current[3] = el)}>
+            <button
+              type="submit"
+              className="bg-black text-white py-2 px-4 rounded-lg hover:bg-gray-800 transition"
+            >
+              Envoyer
+            </button>
+          </div>
+        </form>
       </div>
-      <form
-        onSubmit={handleSubmit}
-        ref={formRef}
-        className="max-w-lg w-full bg-white p-8 rounded-xl shadow-lg space-y-6 z-10"
-      >
-        <h2 className="text-3xl font-bold text-black text-center">Contacte-moi 📬</h2>
-
-        <div ref={el => (inputsRef.current[0] = el)}>
-          <label htmlFor="name" className="block text-sm font-medium text-gray-700">Nom</label>
-          <input
-            id="name"
-            type="text"
-            name="name"
-            value={form.name}
-            onChange={handleChange}
-            required
-            className="mt-1 p-2 w-full border border-gray-300 rounded-lg"
-            aria-required="true"
-          />
-        </div>
-
-        <div ref={el => (inputsRef.current[1] = el)}>
-          <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
-          <input
-            id="email"
-            type="email"
-            name="email"
-            value={form.email}
-            onChange={handleChange}
-            required
-            className="mt-1 p-2 w-full border border-gray-300 rounded-lg"
-            aria-required="true"
-          />
-        </div>
-
-        <div ref={el => (inputsRef.current[2] = el)}>
-          <label htmlFor="message" className="block text-sm font-medium text-gray-700">Message</label>
-          <textarea
-            id="message"
-            name="message"
-            value={form.message}
-            onChange={handleChange}
-            rows={4}
-            required
-            className="mt-1 p-2 w-full border border-gray-300 rounded-lg"
-            aria-required="true"
-          />
-        </div>
-
-        <div ref={el => (inputsRef.current[3] = el)}>
-          <button
-            type="submit"
-            className="bg-black text-white py-2 px-4 rounded-lg hover:bg-gray-800 transition"
-          >
-            Envoyer
-          </button>
-        </div>
-      </form>
 
       {/* POPUP animé */}
       <AnimatePresence>
