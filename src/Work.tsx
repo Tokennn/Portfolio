@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 
 const projects = [
@@ -65,6 +65,8 @@ function Work() {
         <a href="/contact" className="text-[#3a3a3a] hover:text-[#0f0f0f] transition-colors">Contact</a>
       </header>
 
+      <WaterCursor />
+
       <main className="relative max-w-6xl mx-auto space-y-10 md:space-y-14">
         <section className="relative isolate overflow-hidden rounded-[32px] border border-[#dccfb9] bg-white/90 shadow-[0_24px_70px_rgba(52,34,18,0.14)] px-4 py-8 md:px-10 md:py-12 reveal-up">
           <div className="relative z-10 grid md:grid-cols-[0.8fr_1.6fr_0.8fr] items-center gap-6 md:gap-10">
@@ -80,8 +82,11 @@ function Work() {
               ))}
             </div>
 
-            <div key={activeProject.title} className="relative isolate rounded-[30px] overflow-hidden border border-[#e6d9c6] bg-white shadow-[0_18px_60px_rgba(52,34,18,0.14)] reveal-up delay-2 fade-in">
-              <div className="relative z-10 flex flex-col gap-6 md:gap-8 p-8 md:p-10 items-center text-center">
+            <div
+              key={activeProject.title}
+              className="group relative isolate rounded-[30px] overflow-hidden border border-[#e6d9c6] bg-white shadow-[0_18px_60px_rgba(52,34,18,0.14)] reveal-up delay-2 fade-in transition-all duration-500 ease-[cubic-bezier(.16,1,.3,1)] hover:-translate-y-2 hover:shadow-[0_24px_70px_rgba(52,34,18,0.16)]"
+            >
+              <div className="relative z-10 flex flex-col gap-6 md:gap-8 p-8 md:p-10 items-center text-center transition-colors duration-500">
                 <div className="flex flex-col items-center gap-3">
                   <span className="rounded-full border border-[#d5c5ad] bg-white/90 px-4 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-[#0f0f0f]">
                     {activeProject.tag}
@@ -96,7 +101,7 @@ function Work() {
 
                 <div className="relative w-full">
                   <div className="absolute inset-4 rounded-[26px] border border-[#e2d6c3]/80 shadow-[0_14px_40px_rgba(52,34,18,0.12)] pointer-events-none" />
-                  <div className="relative overflow-hidden rounded-[24px] border border-[#f1e4d2]/70 bg-white shadow-[0_20px_60px_rgba(52,34,18,0.12)] transition-transform duration-700 ease-[cubic-bezier(.16,1,.3,1)] hover:-translate-y-1">
+                  <div className="relative overflow-hidden rounded-[24px] border border-[#f1e4d2]/70 bg-white shadow-[0_20px_60px_rgba(52,34,18,0.12)] transition duration-700 ease-[cubic-bezier(.16,1,.3,1)] group-hover:-translate-y-1 group-hover:shadow-[0_20px_60px_rgba(52,34,18,0.18)]">
                     <img
                       src={activeProject.image}
                       alt={activeProject.title}
@@ -153,6 +158,84 @@ function Work() {
           </button>
         </div>
       </main>
+    </div>
+  );
+}
+
+function WaterCursor() {
+  const blobRef = useRef<HTMLDivElement>(null);
+  const rippleRef = useRef<HTMLDivElement>(null);
+  const shimmerRef = useRef<HTMLDivElement>(null);
+  const raf = useRef<number>();
+
+  useEffect(() => {
+    let x = window.innerWidth / 2;
+    let y = window.innerHeight / 2;
+    let tx = x;
+    let ty = y;
+
+    const triggerRipple = () => {
+      if (!rippleRef.current) return;
+      rippleRef.current.animate(
+        [
+          { transform: `translate3d(${x}px, ${y}px, 0) scale(0.6)`, opacity: 0.35 },
+          { transform: `translate3d(${x}px, ${y}px, 0) scale(1.35)`, opacity: 0 },
+        ],
+        { duration: 1200, easing: "ease-out" }
+      );
+    };
+
+    const handleMove = (event: PointerEvent) => {
+      tx = event.clientX;
+      ty = event.clientY;
+      triggerRipple();
+    };
+
+    const animate = () => {
+      x += (tx - x) * 0.12;
+      y += (ty - y) * 0.12;
+
+      if (blobRef.current) {
+        blobRef.current.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+      }
+      if (shimmerRef.current) {
+        shimmerRef.current.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+      }
+
+      raf.current = requestAnimationFrame(animate);
+    };
+
+    window.addEventListener("pointermove", handleMove);
+    animate();
+
+    return () => {
+      window.removeEventListener("pointermove", handleMove);
+      if (raf.current) cancelAnimationFrame(raf.current);
+    };
+  }, []);
+
+  return (
+    <div className="pointer-events-none fixed inset-0 z-20 mix-blend-soft-light">
+      <div
+        ref={blobRef}
+        className="absolute -translate-x-1/2 -translate-y-1/2 h-[260px] w-[260px] rounded-full blur-[90px] opacity-70 will-change-transform"
+        style={{
+          background:
+            "radial-gradient(circle at 30% 35%, rgba(143, 210, 255, 0.3), transparent 55%), radial-gradient(circle at 70% 70%, rgba(212, 238, 255, 0.4), transparent 60%)",
+        }}
+      />
+      <div
+        ref={shimmerRef}
+        className="absolute -translate-x-1/2 -translate-y-1/2 h-[120px] w-[120px] rounded-full blur-[36px] opacity-60 will-change-transform"
+        style={{
+          background:
+            "radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.65), transparent 65%), radial-gradient(circle at 30% 30%, rgba(200, 229, 255, 0.45), transparent 70%)",
+        }}
+      />
+      <div
+        ref={rippleRef}
+        className="absolute -translate-x-1/2 -translate-y-1/2 h-[180px] w-[180px] rounded-full border border-[#a8dbff]/50 opacity-0"
+      />
     </div>
   );
 }
