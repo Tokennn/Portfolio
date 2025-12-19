@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Github, Linkedin, Mail } from 'lucide-react';
 import gsap from 'gsap';
 import blurBackground from './blur.mp4';
@@ -9,8 +9,6 @@ function App() {
   const [entered, setEntered] = useState(false);
   const loadingRef = useRef(null);
   const [loadingPercent, setLoadingPercent] = useState(0);
-
-  const [scrollProgress, setScrollProgress] = useState(0);
 
   useEffect(() => {
     if (!entered) {
@@ -48,20 +46,6 @@ function App() {
       });
     }
   }, [entered]);
-
-useEffect(() => {
-  const handleScroll = () => {
-    const scrollTop = window.scrollY;
-    const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
-    const progress = (scrollTop / scrollHeight) * 100;
-    setScrollProgress(progress);
-  };
-
-  window.addEventListener("scroll", handleScroll);
-  return () => window.removeEventListener("scroll", handleScroll);
-
-}, []);
-
 
 
   if (!entered) {
@@ -143,7 +127,7 @@ useEffect(() => {
         <nav id="home-nav" className="fixed inset-0 z-40 flex items-center justify-center pointer-events-none">
           <div className="nav-group flex items-center space-x-12 text-2xl font-black uppercase tracking-[0.28em] pointer-events-auto">
             <Link to="/work" className="nav-link text-white/90">Work</Link>
-            <a href="#about" className="nav-link text-white/90">About</a>
+            <Link to="/about" className="nav-link text-white/90">About</Link>
             <Link to="/contact" className="nav-link text-white/90">Contact</Link>
           </div>
         </nav>

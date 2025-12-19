@@ -1,5 +1,6 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { ArrowLeft, ArrowRight } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import WaterCursor from './components/WaterCursor';
 
 const projects = [
   {
@@ -60,12 +61,12 @@ function Work() {
 
       <header className="relative max-w-6xl mx-auto flex items-center justify-between mb-10 md:mb-14 px-1 md:px-2 md:hidden">
         <div className="flex items-center gap-6 md:gap-8">
-          <a href="/" className="nav-underline font-amazing text-[#3a3a3a] hover:text-[#0f0f0f]">Home</a>
-          <a href="/work" className="nav-underline font-amazing text-[#0f0f0f] hover:text-[#0f0f0f]">Work</a>
+          <Link to="/" className="nav-underline font-amazing text-[#3a3a3a] hover:text-[#0f0f0f]">Home</Link>
+          <Link to="/work" className="nav-underline font-amazing text-[#0f0f0f] hover:text-[#0f0f0f]">Work</Link>
         </div>
         <div className="flex items-center gap-6 md:gap-8">
-          <a href="/#about" className="nav-underline font-amazing text-[#3a3a3a] hover:text-[#0f0f0f]">About</a>
-          <a href="/contact" className="nav-underline font-amazing text-[#3a3a3a] hover:text-[#0f0f0f]">Contact</a>
+          <Link to="/about" className="nav-underline font-amazing text-[#3a3a3a] hover:text-[#0f0f0f]">About</Link>
+          <Link to="/contact" className="nav-underline font-amazing text-[#3a3a3a] hover:text-[#0f0f0f]">Contact</Link>
         </div>
       </header>
 
@@ -74,20 +75,20 @@ function Work() {
       <main className="relative max-w-6xl mx-auto space-y-10 md:space-y-14">
         <div className="relative">
           <div className="pointer-events-auto hidden md:flex flex-col gap-10 text-[#0f0f0f] absolute left-[-80px] lg:left-[-90px] top-[42%] -translate-y-1/2 z-20">
-            <a href="/" className="nav-dot font-amazing" data-label="Home" aria-label="Home">
+            <Link to="/" className="nav-dot font-amazing" data-label="Home" aria-label="Home">
               <span className="sr-only">Home</span>
-            </a>
+            </Link>
             {/* <a href="/work" className="nav-dot font-amazing" data-label="Work" aria-label="Work">
               <span className="sr-only">Work</span>
             </a> */}
           </div>
           <div className="pointer-events-auto hidden md:flex flex-col gap-10 text-[#0f0f0f] absolute right-[-80px] lg:right-[-90px] top-[42%] -translate-y-1/2 z-20 text-right">
-            <a href="/#about" className="nav-dot font-amazing" data-label="About" aria-label="About">
+            <Link to="/about" className="nav-dot font-amazing" data-label="About" aria-label="About">
               <span className="sr-only">About</span>
-            </a>
-            <a href="/contact" className="nav-dot font-amazing" data-label="Contact" aria-label="Contact">
+            </Link>
+            <Link to="/contact" className="nav-dot font-amazing" data-label="Contact" aria-label="Contact">
               <span className="sr-only">Contact</span>
-            </a>
+            </Link>
           </div>
 
           <section className="relative isolate overflow-hidden rounded-[32px] border border-[#dccfb9] bg-white/90 shadow-[0_24px_70px_rgba(52,34,18,0.14)] px-4 py-8 md:px-10 md:py-12 reveal-up">
@@ -160,91 +161,13 @@ function Work() {
             </div>
           </section>
         </div>
-        
+
         <div className="flex justify-center py-0">
           <p className="text-[10px] md:text-xs font-amazing tracking-[0.16em] text-[#6b6b6b]">
             Next project soon
           </p>
         </div>
       </main>
-    </div>
-  );
-}
-
-function WaterCursor() {
-  const blobRef = useRef<HTMLDivElement>(null);
-  const rippleRef = useRef<HTMLDivElement>(null);
-  const shimmerRef = useRef<HTMLDivElement>(null);
-  const raf = useRef<number>();
-
-  useEffect(() => {
-    let x = window.innerWidth / 2;
-    let y = window.innerHeight / 2;
-    let tx = x;
-    let ty = y;
-
-    const triggerRipple = () => {
-      if (!rippleRef.current) return;
-      rippleRef.current.animate(
-        [
-          { transform: `translate3d(${x}px, ${y}px, 0) scale(0.6)`, opacity: 0.35 },
-          { transform: `translate3d(${x}px, ${y}px, 0) scale(1.35)`, opacity: 0 },
-        ],
-        { duration: 1200, easing: "ease-out" }
-      );
-    };
-
-    const handleMove = (event: PointerEvent) => {
-      tx = event.clientX;
-      ty = event.clientY;
-      triggerRipple();
-    };
-
-    const animate = () => {
-      x += (tx - x) * 0.12;
-      y += (ty - y) * 0.12;
-
-      if (blobRef.current) {
-        blobRef.current.style.transform = `translate3d(${x}px, ${y}px, 0)`;
-      }
-      if (shimmerRef.current) {
-        shimmerRef.current.style.transform = `translate3d(${x}px, ${y}px, 0)`;
-      }
-
-      raf.current = requestAnimationFrame(animate);
-    };
-
-    window.addEventListener("pointermove", handleMove);
-    animate();
-
-    return () => {
-      window.removeEventListener("pointermove", handleMove);
-      if (raf.current) cancelAnimationFrame(raf.current);
-    };
-  }, []);
-
-  return (
-    <div className="pointer-events-none fixed inset-0 z-20 mix-blend-soft-light">
-      <div
-        ref={blobRef}
-        className="absolute -translate-x-1/2 -translate-y-1/2 h-[260px] w-[260px] rounded-full blur-[90px] opacity-70 will-change-transform"
-        style={{
-          background:
-            "radial-gradient(circle at 30% 35%, rgba(143, 210, 255, 0.3), transparent 55%), radial-gradient(circle at 70% 70%, rgba(212, 238, 255, 0.4), transparent 60%)",
-        }}
-      />
-      <div
-        ref={shimmerRef}
-        className="absolute -translate-x-1/2 -translate-y-1/2 h-[120px] w-[120px] rounded-full blur-[36px] opacity-60 will-change-transform"
-        style={{
-          background:
-            "radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.65), transparent 65%), radial-gradient(circle at 30% 30%, rgba(200, 229, 255, 0.45), transparent 70%)",
-        }}
-      />
-      <div
-        ref={rippleRef}
-        className="absolute -translate-x-1/2 -translate-y-1/2 h-[180px] w-[180px] rounded-full border border-[#a8dbff]/50 opacity-0"
-      />
     </div>
   );
 }

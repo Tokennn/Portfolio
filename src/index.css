@@ -123,6 +123,31 @@
     opacity: 1;
     transform: translate(-50%, -140%) scale(1);
   }
+
+  .stack-marquee {
+    position: relative;
+    overflow: hidden;
+    border-radius: 9999px;
+    mask-image: linear-gradient(90deg, transparent 0%, black 14%, black 86%, transparent 100%);
+    -webkit-mask-image: linear-gradient(90deg, transparent 0%, black 14%, black 86%, transparent 100%);
+  }
+
+  .stack-marquee-track {
+    display: inline-flex;
+    align-items: center;
+    gap: 28px;
+    animation: stack-scroll 16s linear infinite;
+    white-space: nowrap;
+  }
+
+  @keyframes stack-scroll {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-50%);
+    }
+  }
 }
 
 @layer components {

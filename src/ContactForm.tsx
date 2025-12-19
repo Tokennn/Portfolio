@@ -45,7 +45,7 @@ const ContactForm = () => {
     ).then(
       () => {
         setStatus('success');
-        setForm({ name: '', email: '', message: '' });
+        setForm({ name: '', email: '', message: '' });;
         setTimeout(() => setStatus('idle'), 3000);
       },
       () => {
@@ -75,7 +75,7 @@ const ContactForm = () => {
               ></dotlottie-player>
             </a>
             <p className="absolute -top-3 -right-5 max-w-[160px] text-[8px] md:text-[8px] text-gray-100/90 leading-snug inline-block bg-white/10 border border-white/20 px-2 py-1 rounded-full shadow-[0_8px_24px_rgba(0,0,0,0.35)] backdrop-blur-sm text-center">
-            DM me for any questions or collaborations.  
+            DM me for any questions or collaborations !!
             </p>
           </div>
         </div>
