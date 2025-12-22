@@ -185,6 +185,21 @@
     pointer-events: none;
   }
 
+  .serpent-path {
+    fill: none;
+    stroke: rgba(214, 198, 175, 0.9);
+    stroke-width: 2;
+    stroke-dasharray: 6 10;
+  }
+
+  .serpent-text {
+    fill: #a48f77;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+  }
+
   .leaflet-tooltip.map-tooltip {
     background: rgba(255, 255, 255, 0.95);
     border: 1px solid rgba(214, 198, 175, 0.9);

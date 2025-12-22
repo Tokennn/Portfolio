@@ -6,6 +6,8 @@ import WaterCursor from "./components/WaterCursor";
 
 const stackItems = ["React", "TypeScript", "GSAP", "Framer", "Tailwind", "UI / UX", "lenis"];
 const lyonPosition: [number, number] = [45.749977593867, 4.8232436066254225];
+const serpentText =
+  "Developpement Front End • Design UI UX • Optimisation Web • Developpement Back End • ";
 const mapMarker = divIcon({
   className: "map-marker",
   iconSize: [34, 34],
@@ -97,11 +99,14 @@ function About() {
                   </div> */}
                   <div className="rounded-[26px] border border-[#e6d9c6] bg-white/80 p-6 shadow-[0_14px_40px_rgba(52,34,18,0.10)]">
                     <h2 className="text-sm font-semibold uppercase tracking-[0.24em] text-[#0f0f0f] mb-3">
-                      Values
+                      Valeurs
                     </h2>
-                    <p className="text-sm md:text-base text-[#3a3a3a] leading-relaxed">
-                      Esprit d'équipe - créativité - curiosité - innovation - adaptabilité.
-                    </p>
+                  <ul className="space-y-3 text-sm md:text-base text-[#3a3a3a] leading-relaxed">
+                    <li>• Esprit d'équipe .</li>
+                    <li>• Créativité .</li>
+                    <li>• Innovation .</li>
+                    <li>• Adaptabilité .</li>
+                  </ul>
                   </div>
                   <div className="rounded-[26px] border border-[#e6d9c6] bg-white/80 p-4 shadow-[0_14px_40px_rgba(52,34,18,0.10)]">
                     <div className="relative h-[170px] overflow-hidden rounded-[20px] border border-[#e6d9c6] bg-white">
@@ -124,7 +129,7 @@ function About() {
                             opacity={1}
                             className="map-tooltip"
                           >
-                            Oui c'est moi 
+                            je suis là !!
                           </Tooltip>
                         </Marker>
                       </MapContainer>
@@ -222,6 +227,33 @@ function About() {
                 </div>
               </aside>
             </div>
+
+            <div className="pointer-events-none hidden md:block absolute left-[79%] top-[80%] -translate-x-1/2 -translate-y-1/2">
+              <svg className="h-[150px] w-[360px] lg:w-[440px]" viewBox="0 0 600 140" aria-hidden="true">
+                <defs>
+                  <path
+                    id="serpentPath"
+                    d="M10 90 C 120 10, 220 150, 330 90 C 430 30, 520 130, 590 60"
+                  />
+                </defs>
+                <path
+                  d="M10 90 C 120 10, 220 150, 330 90 C 430 30, 520 130, 590 60"
+                  className="serpent-path"
+                />
+                <text className="serpent-text">
+                  <textPath href="#serpentPath" startOffset="0%">
+                    {serpentText.repeat(4)}
+                    <animate
+                      attributeName="startOffset"
+                      from="0%"
+                      to="-100%"
+                      dur="18s"
+                      repeatCount="indefinite"
+                    />
+                  </textPath>
+                </text>
+              </svg>
+            </div>
           </section>
         </div>
 
@@ -256,7 +288,7 @@ function About() {
 
         <div className="flex justify-center py-0">
           <p className="text-[10px] md:text-xs font-amazing tracking-[0.16em] text-[#6b6b6b]">
-           - Contactez-moi pour toute collaboration ou simplement pour dire bonjour -
+           - Contactez-moi pour toute collaboration ou simplement dire bonjour -
           </p>
         </div>
       </main>
