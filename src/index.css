@@ -155,6 +155,8 @@
   .map-marker {
     background: transparent;
     border: none;
+    pointer-events: auto;
+    cursor: pointer;
   }
 
   .map-pulse {
@@ -170,6 +172,7 @@
     border-radius: 9999px;
     background: rgba(106, 150, 255, 0.25);
     animation: map-pulse 1.8s ease-out infinite;
+    pointer-events: none;
   }
 
   .map-pulse-core {
@@ -179,6 +182,23 @@
     background: #6a96ff;
     border: 2px solid #ffffff;
     box-shadow: 0 0 0 5px rgba(106, 150, 255, 0.2);
+    pointer-events: none;
+  }
+
+  .leaflet-tooltip.map-tooltip {
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(214, 198, 175, 0.9);
+    border-radius: 9999px;
+    padding: 6px 10px;
+    color: #2f2f2f;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    box-shadow: 0 8px 18px rgba(52, 34, 18, 0.18);
+  }
+
+  .leaflet-tooltip.map-tooltip::before {
+    border-top-color: rgba(214, 198, 175, 0.9);
   }
 
   .stack-marquee {

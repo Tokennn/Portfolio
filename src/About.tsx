@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { MapContainer, Marker, TileLayer } from "react-leaflet";
+import { MapContainer, Marker, TileLayer, Tooltip } from "react-leaflet";
 import { divIcon } from "leaflet";
 import portrait from "./iip.jpeg";
 import WaterCursor from "./components/WaterCursor";
@@ -68,7 +68,7 @@ function About() {
                   A propos
                   </span>
                   <h1 className="text-4xl md:text-5xl font-black text-[#0a0a0a] leading-tight">
-                    Développeur créatif indépendant 
+                    Développeur et VibeDev créatif indépendant 
                   </h1>
                 </div>
 
@@ -117,7 +117,16 @@ function About() {
                           url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
                           attribution="&copy; OpenStreetMap contributors &copy; CARTO"
                         />
-                        <Marker position={lyonPosition} icon={mapMarker} interactive={false} />
+                        <Marker position={lyonPosition} icon={mapMarker} interactive>
+                          <Tooltip
+                            direction="top"
+                            offset={[0, -8]}
+                            opacity={1}
+                            className="map-tooltip"
+                          >
+                            Oui c'est moi 
+                          </Tooltip>
+                        </Marker>
                       </MapContainer>
                       <span className="pointer-events-none absolute left-3 bottom-3 rounded-full bg-white/90 px-3 py-1 text-xs font-semibold text-[#2f2f2f] shadow-[0_6px_16px_rgba(52,34,18,0.12)]">
                         Lyon, France
