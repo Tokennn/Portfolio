@@ -1,10 +1,22 @@
 import { Link } from "react-router-dom";
-import { CircleMarker, MapContainer, TileLayer } from "react-leaflet";
+import { MapContainer, Marker, TileLayer } from "react-leaflet";
+import { divIcon } from "leaflet";
 import portrait from "./iip.jpeg";
 import WaterCursor from "./components/WaterCursor";
 
 const stackItems = ["React", "TypeScript", "GSAP", "Framer", "Tailwind", "UI / UX", "lenis"];
 const lyonPosition: [number, number] = [45.749977593867, 4.8232436066254225];
+const mapMarker = divIcon({
+  className: "map-marker",
+  iconSize: [34, 34],
+  iconAnchor: [17, 17],
+  html: `
+    <span class="map-pulse">
+      <span class="map-pulse-ring"></span>
+      <span class="map-pulse-core"></span>
+    </span>
+  `,
+});
 
 function About() {
   return (
@@ -95,43 +107,23 @@ function About() {
                     <div className="relative h-[170px] overflow-hidden rounded-[20px] border border-[#e6d9c6] bg-white">
                       <MapContainer
                         center={lyonPosition}
-                        zoom={12}
+                        zoom={15}
                         scrollWheelZoom={false}
                         zoomControl={false}
                         attributionControl={false}
                         className="about-map h-full w-full"
                       >
                         <TileLayer
-                          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                          attribution="&copy; OpenStreetMap contributors"
+                          url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
+                          attribution="&copy; OpenStreetMap contributors &copy; CARTO"
                         />
-                        <CircleMarker
-                          center={lyonPosition}
-                          radius={10}
-                          pathOptions={{
-                            color: "#ffffff",
-                            weight: 2,
-                            fillColor: "#6a96ff",
-                            fillOpacity: 1,
-                            className: "map-marker-outer",
-                          }}
-                        />
-                        <CircleMarker
-                          center={lyonPosition}
-                          radius={4}
-                          pathOptions={{
-                            color: "#ffffff",
-                            weight: 2,
-                            fillColor: "#ffffff",
-                            fillOpacity: 1,
-                          }}
-                        />
+                        <Marker position={lyonPosition} icon={mapMarker} interactive={false} />
                       </MapContainer>
                       <span className="pointer-events-none absolute left-3 bottom-3 rounded-full bg-white/90 px-3 py-1 text-xs font-semibold text-[#2f2f2f] shadow-[0_6px_16px_rgba(52,34,18,0.12)]">
                         Lyon, France
                       </span>
                       <span className="pointer-events-none absolute right-3 bottom-3 text-[9px] font-semibold uppercase tracking-[0.2em] text-[#6b6b6b]">
-                        © OpenStreetMap contributors
+                        © OpenStreetMap contributors © CARTO
                       </span>
                     </div>
                   </div>
