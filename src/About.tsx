@@ -7,7 +7,7 @@ import WaterCursor from "./components/WaterCursor";
 const stackItems = ["React", "TypeScript", "GSAP", "Framer", "Tailwind", "UI / UX", "lenis"];
 const lyonPosition: [number, number] = [45.749977593867, 4.8232436066254225];
 const serpentText =
-  "Developpement Front End • Design UI UX • Optimisation Web • Developpement Back End • ";
+  "Figma • FlutterFlow • Always Data • Airtable • Postman • FireBase • SupaBase • Git • Wix • Wordpress • Bubble";
 const mapMarker = divIcon({
   className: "map-marker",
   iconSize: [34, 34],
@@ -80,11 +80,11 @@ function About() {
                     Toujours à la recherche d'opportunités intéressantes en freelance ou en équipe pour développer de belles expériences numériques.
                   </p>
                   <h2 className="text-4xl md:text-5xl font-black text-[#0a0a0a] leading-tight">
-                    Ecole dans laquelle j'apprends : 
+                    Mon école : 
                   </h2>
                   <p>
-                   Actuellement en formation à Ynov Campus sur Lyon, je suis en 3ème année de Bachelor en développement où je me suis spécialisé dans le développement web. 
-                   Par la suite de cette formation, à la fin de mon Master, je voudrais vraiment me spécialiser dans le design web.
+                   Actuellement en formation à Ynov Campus sur Lyon, je suis en 3ème année de Bachelor en développement où je me spécialise dans le développement web. 
+                   Par la suite de cette formation, à la fin de mon Master, je voudrais plus me spécialiser dans le design web.
                   </p> 
                 </div>
 
@@ -194,7 +194,7 @@ function About() {
                             <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#2bbf6a]/50" />
                             <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-[#2bbf6a] shadow-[0_0_0_4px_rgba(43,191,106,0.18)]" />
                           </span>
-                          <span>Available</span>
+                          <span>Disponible</span>
                         </dd>
                       </div>
                     </dl>
@@ -259,27 +259,54 @@ function About() {
 
         <section className="grid gap-6 md:grid-cols-3 reveal-up delay-1">
           <div className="rounded-[28px] border border-[#dccfb9] bg-white/80 p-7 shadow-[0_18px_60px_rgba(52,34,18,0.10)]">
-            <h2 className="text-sm font-semibold uppercase tracking-[0.24em] text-[#0f0f0f] mb-3">
-              Process
-            </h2>
+            <div className="mb-3 flex items-center justify-between gap-3">
+              <h2 className="text-sm font-semibold uppercase tracking-[0.24em] text-[#0f0f0f]">
+                Process
+              </h2>
+              <button
+                type="button"
+                aria-label="Process emoji"
+                className="flex h-8 w-8 items-center justify-center rounded-full border border-[#e6d9c5] bg-[#fff7e9] text-lg leading-none shadow-[0_8px_18px_rgba(52,34,18,0.12)] transition-transform duration-300 hover:-translate-y-0.5 hover:scale-105 hover:rotate-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#a88f6b]"
+              >
+                😀
+              </button>
+            </div>
             <p className="text-sm md:text-base text-[#3a3a3a] leading-relaxed">
               Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
               dolore magna aliqua.
             </p>
           </div>
           <div className="rounded-[28px] border border-[#dccfb9] bg-white/80 p-7 shadow-[0_18px_60px_rgba(52,34,18,0.10)]">
-            <h2 className="text-sm font-semibold uppercase tracking-[0.24em] text-[#0f0f0f] mb-3">
-              Tools
-            </h2>
+            <div className="mb-3 flex items-center justify-between gap-3">
+              <h2 className="text-sm font-semibold uppercase tracking-[0.24em] text-[#0f0f0f]">
+                Tools
+              </h2>
+              <button
+                type="button"
+                aria-label="Tools emoji"
+                className="flex h-8 w-8 items-center justify-center rounded-full border border-[#e6d9c5] bg-[#fff7e9] text-lg leading-none shadow-[0_8px_18px_rgba(52,34,18,0.12)] transition-transform duration-300 hover:-translate-y-0.5 hover:scale-105 hover:-rotate-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#a88f6b]"
+              >
+                🤓
+              </button>
+            </div>
             <p className="text-sm md:text-base text-[#3a3a3a] leading-relaxed">
               Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
               consequat.
             </p>
           </div>
           <div className="rounded-[28px] border border-[#dccfb9] bg-white/80 p-7 shadow-[0_18px_60px_rgba(52,34,18,0.10)]">
-            <h2 className="text-sm font-semibold uppercase tracking-[0.24em] text-[#0f0f0f] mb-3">
-              Outside work
-            </h2>
+            <div className="mb-3 flex items-center justify-between gap-3">
+              <h2 className="text-sm font-semibold uppercase tracking-[0.24em] text-[#0f0f0f]">
+                Outside work
+              </h2>
+              <button
+                type="button"
+                aria-label="Outside work emoji"
+                className="flex h-8 w-8 items-center justify-center rounded-full border border-[#e6d9c5] bg-[#fff7e9] text-lg leading-none shadow-[0_8px_18px_rgba(52,34,18,0.12)] transition-transform duration-300 hover:-translate-y-0.5 hover:scale-105 hover:rotate-3 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#a88f6b]"
+              >
+                😎
+              </button>
+            </div>
             <p className="text-sm md:text-base text-[#3a3a3a] leading-relaxed">
               Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
             </p>
