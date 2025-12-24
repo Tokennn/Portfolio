@@ -336,6 +336,51 @@ function About() {
            - Contactez-moi pour toute collaboration ou simplement dire bonjour -
           </p>
         </div>
+
+        <div className="mt-4 border-t border-[#e6d9c6] pt-4 text-[11px] md:text-xs text-[#6b6b6b]">
+          <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+            <p className="font-amazing tracking-[0.08em]">© 2025 Quentin Contreau. Tous droits réservés.</p>
+            <div className="flex flex-wrap items-center gap-3 md:gap-5">
+              <span className="inline-flex items-center gap-2 font-amazing tracking-[0.08em]">
+                Créé avec
+                <svg className="h-5 w-5" viewBox="0 0 32 32" aria-hidden="true">
+                  <circle cx="16" cy="16" r="2.4" fill="#61dafb" />
+                  <ellipse cx="16" cy="16" rx="12" ry="5" fill="none" stroke="#61dafb" strokeWidth="2" />
+                  <ellipse
+                    cx="16"
+                    cy="16"
+                    rx="12"
+                    ry="5"
+                    fill="none"
+                    stroke="#61dafb"
+                    strokeWidth="2"
+                    transform="rotate(60 16 16)"
+                  />
+                  <ellipse
+                    cx="16"
+                    cy="16"
+                    rx="12"
+                    ry="5"
+                    fill="none"
+                    stroke="#61dafb"
+                    strokeWidth="2"
+                    transform="rotate(120 16 16)"
+                  />
+                </svg>
+              </span>
+              <span className="hidden md:inline text-[#b7b0a3]">•</span>
+              <span className="inline-flex items-center gap-2 font-amazing tracking-[0.08em]">
+                Hébergé sur
+                <svg className="h-5 w-5" viewBox="0 0 32 32" aria-hidden="true">
+                  <path
+                    d="M6 6h4l12 14V6h4v20h-4L10 12v14H6V6z"
+                    fill="#00c7b7"
+                  />
+                </svg>
+              </span>
+            </div>
+          </div>
+        </div>
       </main>
     </div>
   );
