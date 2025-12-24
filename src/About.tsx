@@ -260,6 +260,70 @@ function About() {
           </section>
         </div>
 
+        <div className="-mt-6 -mb-2 flex justify-center">
+          <div className="flex items-center gap-4 rounded-full border border-[#e6d9c6] bg-white/85 px-5 py-2 shadow-[0_10px_30px_rgba(52,34,18,0.12)]">
+            <span className="hidden sm:inline-block h-px w-10 bg-[#e6d9c6]" aria-hidden="true" />
+            <div className="flex items-center gap-3">
+              <a
+                href="https://github.com/Tokennn"
+                target="_blank"
+                rel="noreferrer"
+                className="flex h-11 w-11 items-center justify-center rounded-full bg-white shadow-[0_8px_18px_rgba(52,34,18,0.12)] transition-transform duration-300 hover:-translate-y-1 hover:scale-105"
+                aria-label="GitHub"
+              >
+                <svg className="h-5 w-5 text-[#111111]" viewBox="0 0 24 24" aria-hidden="true">
+                  <path
+                    fill="currentColor"
+                    d="M12 .5C5.73.5.5 5.74.5 12.01c0 5.1 3.29 9.43 7.86 10.95.58.11.79-.25.79-.56 0-.28-.01-1.02-.02-2-3.2.7-3.87-1.54-3.87-1.54-.52-1.32-1.27-1.67-1.27-1.67-1.04-.71.08-.7.08-.7 1.15.08 1.75 1.18 1.75 1.18 1.02 1.75 2.67 1.24 3.32.95.1-.74.4-1.24.73-1.52-2.55-.29-5.23-1.28-5.23-5.69 0-1.26.45-2.29 1.18-3.1-.12-.29-.51-1.46.11-3.05 0 0 .97-.31 3.18 1.18.92-.26 1.91-.38 2.9-.39.98.01 1.98.13 2.9.39 2.2-1.5 3.17-1.18 3.17-1.18.62 1.59.23 2.76.11 3.05.73.81 1.18 1.84 1.18 3.1 0 4.42-2.69 5.4-5.25 5.68.41.36.78 1.07.78 2.16 0 1.56-.01 2.82-.01 3.2 0 .31.2.67.8.56 4.57-1.52 7.85-5.85 7.85-10.95C23.5 5.74 18.27.5 12 .5z"
+                  />
+                </svg>
+              </a>
+              <a
+                href="mailto:quentin@ynov.com"
+                className="flex h-11 w-11 items-center justify-center rounded-full bg-white shadow-[0_8px_18px_rgba(52,34,18,0.12)] transition-transform duration-300 hover:-translate-y-1 hover:scale-105"
+                aria-label="Gmail"
+              >
+                <svg className="h-5 w-5" viewBox="0 0 24 24" aria-hidden="true">
+                  <path
+                    d="M4 6.5c0-.55.45-1 1-1h14c.55 0 1 .45 1 1v11c0 .55-.45 1-1 1H5c-.55 0-1-.45-1-1v-11z"
+                    fill="#ffffff"
+                  />
+                  <path
+                    d="M5 7l7 5 7-5v2.2l-7 5-7-5V7z"
+                    fill="#ea4335"
+                  />
+                  <path
+                    d="M5 17.5V9.7l7 5 7-5v7.8c0 .55-.45 1-1 1H6c-.55 0-1-.45-1-1z"
+                    fill="#34a853"
+                  />
+                  <path d="M5 7h14l-7 5-7-5z" fill="#fbbc04" />
+                  <path
+                    d="M5 7l7 5 7-5v2.2l-7 5-7-5V7z"
+                    fill="none"
+                    stroke="#ea4335"
+                    strokeWidth="0.6"
+                  />
+                </svg>
+              </a>
+              <a
+                href="mailto:quentin@ynov.com"
+                className="flex h-11 w-11 items-center justify-center rounded-full bg-white shadow-[0_8px_18px_rgba(52,34,18,0.12)] transition-transform duration-300 hover:-translate-y-1 hover:scale-105"
+                aria-label="Outlook"
+              >
+                <svg className="h-5 w-5" viewBox="0 0 24 24" aria-hidden="true">
+                  <rect x="2.5" y="5.2" width="8.4" height="13.6" rx="1.4" fill="#0078d4" />
+                  <rect x="10.2" y="7" width="11.3" height="10" rx="1.6" fill="#2b88d8" />
+                  <path d="M10.2 7l5.65 4 5.65-4" fill="#7ac9ff" />
+                  <path d="M10.2 7l5.65 4 5.65-4" fill="none" stroke="#106ebe" strokeWidth="1" />
+                  <circle cx="6.7" cy="12" r="2.5" fill="#ffffff" />
+                  <circle cx="6.7" cy="12" r="1.4" fill="#0078d4" />
+                </svg>
+              </a>
+            </div>
+            <span className="hidden sm:inline-block h-px w-10 bg-[#e6d9c6]" aria-hidden="true" />
+          </div>
+        </div>
+
         <section className="grid gap-6 md:grid-cols-3 reveal-up delay-1">
           <div className="rounded-[28px] border border-[#dccfb9] bg-white/80 p-7 shadow-[0_18px_60px_rgba(52,34,18,0.10)]">
             <div className="mb-3 flex items-center justify-between gap-3">
@@ -365,6 +429,16 @@ function About() {
                     stroke="#61dafb"
                     strokeWidth="2"
                     transform="rotate(120 16 16)"
+                  />
+                </svg>
+                <svg className="h-5 w-6" viewBox="0 0 54 33" aria-hidden="true">
+                  <path
+                    d="M27 0C19.8 0 15.3 3.6 13.5 10.8C15.3 7.2 18.9 5.4 24.3 5.4C31.5 5.4 36 9 37.8 16.2C36 12.6 32.4 10.8 27 10.8C19.8 10.8 15.3 7.2 13.5 0Z"
+                    fill="#38bdf8"
+                  />
+                  <path
+                    d="M27 16.2C19.8 16.2 15.3 19.8 13.5 27C15.3 23.4 18.9 21.6 24.3 21.6C31.5 21.6 36 25.2 37.8 32.4C36 28.8 32.4 27 27 27C19.8 27 15.3 23.4 13.5 16.2Z"
+                    fill="#38bdf8"
                   />
                 </svg>
               </span>
