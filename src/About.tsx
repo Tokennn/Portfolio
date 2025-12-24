@@ -2,6 +2,9 @@ import { Link } from "react-router-dom";
 import { MapContainer, Marker, TileLayer, Tooltip } from "react-leaflet";
 import { divIcon } from "leaflet";
 import portrait from "./iip.jpeg";
+import avatarProcess from "./oo-removebg-preview.png";
+import avatarTools from "./ii-removebg-preview.png";
+import avatarOutside from "./pp-removebg-preview.png";
 import WaterCursor from "./components/WaterCursor";
 
 const stackItems = ["React", "TypeScript", "GSAP", "Framer", "Tailwind", "UI / UX", "lenis"];
@@ -217,7 +220,7 @@ function About() {
 
                 <div className="rounded-[30px] border border-[#e6d9c6] bg-white/80 p-7 shadow-[0_18px_60px_rgba(52,34,18,0.10)] reveal-up delay-2">
                   <h2 className="text-sm font-semibold uppercase tracking-[0.24em] text-[#0f0f0f] mb-4">
-                    Je ce que j'apporte
+                    Ce que j'apporte
                   </h2>
                   <ul className="space-y-3 text-sm md:text-base text-[#3a3a3a] leading-relaxed">
                     <li>• Developpement Front End .</li>
@@ -265,10 +268,15 @@ function About() {
               </h2>
               <button
                 type="button"
-                aria-label="Process emoji"
-                className="flex h-8 w-8 items-center justify-center rounded-full border border-[#e6d9c5] bg-[#fff7e9] text-lg leading-none shadow-[0_8px_18px_rgba(52,34,18,0.12)] transition-transform duration-300 hover:-translate-y-0.5 hover:scale-105 hover:rotate-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#a88f6b]"
+                aria-label="Process avatar emoji"
+                className="-mt-5 flex h-32 w-32 items-center justify-center bg-transparent transition-transform duration-500 ease-out hover:-translate-y-4 hover:scale-125 hover:rotate-12 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3a7bb3]"
               >
-                😀
+                <img
+                  src={avatarProcess}
+                  alt=""
+                  className="h-32 w-32 object-contain drop-shadow-[0_18px_40px_rgba(0,0,0,0.3)]"
+                  draggable="false"
+                />
               </button>
             </div>
             <p className="text-sm md:text-base text-[#3a3a3a] leading-relaxed">
@@ -283,10 +291,15 @@ function About() {
               </h2>
               <button
                 type="button"
-                aria-label="Tools emoji"
-                className="flex h-8 w-8 items-center justify-center rounded-full border border-[#e6d9c5] bg-[#fff7e9] text-lg leading-none shadow-[0_8px_18px_rgba(52,34,18,0.12)] transition-transform duration-300 hover:-translate-y-0.5 hover:scale-105 hover:-rotate-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#a88f6b]"
+                aria-label="Tools avatar emoji"
+                className="-mt-5 flex h-32 w-32 items-center justify-center bg-transparent transition-transform duration-500 ease-out hover:-translate-y-4 hover:scale-125 hover:-rotate-12 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#b37b3a]"
               >
-                🤓
+                <img
+                  src={avatarTools}
+                  alt=""
+                  className="h-32 w-32 object-contain drop-shadow-[0_18px_40px_rgba(0,0,0,0.3)]"
+                  draggable="false"
+                />
               </button>
             </div>
             <p className="text-sm md:text-base text-[#3a3a3a] leading-relaxed">
@@ -301,10 +314,15 @@ function About() {
               </h2>
               <button
                 type="button"
-                aria-label="Outside work emoji"
-                className="flex h-8 w-8 items-center justify-center rounded-full border border-[#e6d9c5] bg-[#fff7e9] text-lg leading-none shadow-[0_8px_18px_rgba(52,34,18,0.12)] transition-transform duration-300 hover:-translate-y-0.5 hover:scale-105 hover:rotate-3 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#a88f6b]"
+                aria-label="Outside work avatar emoji"
+                className="-mt-5 flex h-32 w-32 items-center justify-center bg-transparent transition-transform duration-500 ease-out hover:-translate-y-4 hover:scale-125 hover:rotate-10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3ab37b]"
               >
-                😎
+                <img
+                  src={avatarOutside}
+                  alt=""
+                  className="h-32 w-32 object-contain drop-shadow-[0_18px_40px_rgba(0,0,0,0.3)]"
+                  draggable="false"
+                />
               </button>
             </div>
             <p className="text-sm md:text-base text-[#3a3a3a] leading-relaxed">
