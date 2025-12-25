@@ -5,10 +5,12 @@ import 'leaflet/dist/leaflet.css';
 import './index.css';
 import { BrowserRouter } from 'react-router-dom';
 import AnimatedRoutes from './components/AnimatedRoutes';
+import WebGLTransition from './components/WebGLTransition';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <BrowserRouter>
+      <WebGLTransition />
       <AnimatedRoutes />
     </BrowserRouter>
   </StrictMode>
