@@ -1,6 +1,7 @@
+import { useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { MapContainer, Marker, TileLayer, Tooltip } from "react-leaflet";
-import { divIcon } from "leaflet";
+import { divIcon, type Map as LeafletMap } from "leaflet";
 import portrait from "./iip.jpeg";
 import avatarProcess from "./oo-removebg-preview.png";
 import avatarTools from "./ii-removebg-preview.png";
@@ -24,6 +25,9 @@ const mapMarker = divIcon({
 });
 
 function About() {
+  const mapRef = useRef<LeafletMap | null>(null);
+  const [isMapReady, setIsMapReady] = useState(false);
+
   return (
     <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-[#f8f3ea] via-[#f2e6d7] to-[#fdf8ef] text-[#0f0f0f] px-4 md:px-8 py-12 md:py-16">
       <div className="pointer-events-none absolute inset-0 opacity-70 bg-[radial-gradient(circle_at_18%_16%,rgba(255,255,255,0.85),transparent_38%),radial-gradient(circle_at_82%_6%,rgba(253,230,205,0.45),transparent_46%),radial-gradient(circle_at_24%_80%,rgba(210,175,140,0.28),transparent_50%)]" />
@@ -112,6 +116,26 @@ function About() {
                   </ul>
                   </div>
                   <div className="rounded-[26px] border border-[#e6d9c6] bg-white/80 p-4 shadow-[0_14px_40px_rgba(52,34,18,0.10)]">
+                    <div className="mb-2 flex items-center justify-between">
+                      <button
+                        type="button"
+                        onClick={() => mapRef.current?.zoomOut()}
+                        disabled={!isMapReady}
+                        className="flex h-9 w-9 items-center justify-center rounded-full border border-[#e6d9c6] bg-white text-sm font-semibold text-[#6b6b6b] shadow-[0_6px_16px_rgba(52,34,18,0.12)] transition-transform duration-200 hover:-translate-y-0.5 hover:scale-105 disabled:cursor-not-allowed disabled:opacity-60"
+                        aria-label="Dezoomer la carte"
+                      >
+                        -
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => mapRef.current?.zoomIn()}
+                        disabled={!isMapReady}
+                        className="flex h-9 w-9 items-center justify-center rounded-full border border-[#e6d9c6] bg-white text-sm font-semibold text-[#6b6b6b] shadow-[0_6px_16px_rgba(52,34,18,0.12)] transition-transform duration-200 hover:-translate-y-0.5 hover:scale-105 disabled:cursor-not-allowed disabled:opacity-60"
+                        aria-label="Zoomer la carte"
+                      >
+                        +
+                      </button>
+                    </div>
                     <div className="relative h-[170px] overflow-hidden rounded-[20px] border border-[#e6d9c6] bg-white">
                       <MapContainer
                         center={lyonPosition}
@@ -119,6 +143,8 @@ function About() {
                         scrollWheelZoom={false}
                         zoomControl={false}
                         attributionControl={false}
+                        ref={mapRef}
+                        whenReady={() => setIsMapReady(true)}
                         className="about-map h-full w-full"
                       >
                         <TileLayer
