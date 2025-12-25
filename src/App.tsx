@@ -53,16 +53,14 @@ function App() {
 
     return (
       <div className="fixed inset-0 bg-black flex flex-col items-center justify-center">
-        {/* Video Background */}
-        <video
-          autoPlay
-          loop
-          muted
-          className="absolute inset-0 w-full h-full object-cover"
-          style={{ filter: 'brightness(0.4)' }}
-        >
-          <source src={blurBackground} type="video/mp4" />
-        </video>
+        {/* Spline Background */}
+        <spline-viewer
+          url="https://prod.spline.design/phRSX0hJurf0mICV/scene.splinecode"
+          logo="false"
+          className="absolute inset-0 h-full w-full pointer-events-none"
+          style={{ filter: 'brightness(0.45)' }}
+        />
+        <div className="absolute inset-0 bg-black/30 pointer-events-none" />
 
         <div className="absolute top-6 left-8">
           <span className="text-xs font-medium text-white block hover:shadow-glow transition-all duration-300">
@@ -92,7 +90,7 @@ function App() {
               }
             });
           }}
-          className={`enter-button group relative w-48 h-48 transition opacity-100 ${canEnter ? "cursor-pointer" : "cursor-not-allowed opacity-60"}`}
+          className={`enter-button group absolute left-1/2 top-1/2 h-48 w-48 -translate-x-1/2 -translate-y-1/2 transition opacity-100 ${canEnter ? "cursor-pointer" : "cursor-not-allowed opacity-60"}`}
         >
           <div className="absolute inset-0 border border-white/20 rounded-full transition-transform duration-700 group-hover:scale-110" />
           <div className="absolute inset-0 border border-white/20 rounded-full transition-transform duration-700 group-hover:scale-125" />

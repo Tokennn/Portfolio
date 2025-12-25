@@ -7,5 +7,8 @@ declare namespace JSX {
       loop?: boolean;
       autoplay?: boolean;
     };
+    'spline-viewer': React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement> & {
+      url: string;
+    };
   }
 } 
