@@ -43,6 +43,7 @@
     z-index: -1;
     animation: glowShift 18s ease-in-out infinite alternate;
   }
+
 }
 
 @layer components {

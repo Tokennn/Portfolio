@@ -56,7 +56,6 @@ function App() {
         {/* Spline Background */}
         <spline-viewer
           url="https://prod.spline.design/phRSX0hJurf0mICV/scene.splinecode"
-          logo="false"
           className="absolute inset-0 h-full w-full pointer-events-none"
           style={{ filter: 'brightness(0.45)' }}
         />
