@@ -253,18 +253,12 @@ export default App;
 function BackgroundOrbs() {
   return (
     <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
-      <video
-        autoPlay
-        loop
-        muted
-        playsInline
-        className="absolute inset-0 h-full w-full object-cover opacity-90"
-      >
-        <source src={blurBackground} type="video/mp4" />
-      </video>
-      <div className="absolute -left-32 top-10 h-[420px] w-[420px] rounded-full bg-[radial-gradient(circle_at_30%_30%,rgba(56,189,248,0.25),rgba(56,189,248,0))] blur-3xl animate-[orbFloat_18s_ease-in-out_infinite_alternate]" />
-      <div className="absolute right-[-120px] top-1/4 h-[520px] w-[520px] rounded-full bg-[radial-gradient(circle_at_70%_40%,rgba(168,85,247,0.4),rgba(88,28,135,0))] blur-[110px] animate-[orbDrift_22s_ease-in-out_infinite_alternate]" />
-      <div className="absolute left-1/3 bottom-[-160px] h-[460px] w-[460px] rounded-full bg-[radial-gradient(circle_at_50%_50%,rgba(255,115,29,0.35),rgba(255,115,29,0))] blur-[120px] opacity-80 animate-[orbFloat_26s_ease-in-out_infinite_alternate-reverse]" />
+      <spline-viewer
+        url="https://prod.spline.design/phRSX0hJurf0mICV/scene.splinecode"
+        className="absolute inset-0 h-full w-full"
+        style={{ filter: 'brightness(0.45)' }}
+      />
+      <div className="absolute inset-0 bg-black/30" />
     </div>
   );
 }

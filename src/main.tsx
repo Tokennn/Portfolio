@@ -3,20 +3,13 @@ import { createRoot } from 'react-dom/client';
 import App from './App.tsx';
 import 'leaflet/dist/leaflet.css';
 import './index.css';
-import ContactForm from './ContactForm';
-import Work from './Work';
-import About from './About';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter } from 'react-router-dom';
+import AnimatedRoutes from './components/AnimatedRoutes';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<App />} />
-        <Route path="/contact" element={<ContactForm />} />
-        <Route path="/work" element={<Work />} />
-        <Route path="/about" element={<About />} />
-      </Routes>
+      <AnimatedRoutes />
     </BrowserRouter>
   </StrictMode>
 );

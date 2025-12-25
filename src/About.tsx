@@ -130,7 +130,7 @@ function About() {
                         type="button"
                         onClick={() => mapRef.current?.zoomIn()}
                         disabled={!isMapReady}
-                        className="flex h-9 w-9 items-center justify-center rounded-full border border-[#e6d9c6] bg-white text-sm font-semibold text-[#6b6b6b] shadow-[0_6px_16px_rgba(52,34,18,0.12)] transition-transform duration-200 hover:-translate-y-0.5 hover:scale-105 disabled:cursor-not-allowed disabled:opacity-60"
+                        className="flex h-7 w-7 items-center justify-center rounded-full border border-[#e6d9c6] bg-white text-sm font-semibold text-[#6b6b6b] shadow-[0_6px_16px_rgba(52,34,18,0.12)] transition-transform duration-200 hover:-translate-y-0.5 hover:scale-105 disabled:cursor-not-allowed disabled:opacity-60"
                         aria-label="Zoomer la carte"
                       >
                         +
