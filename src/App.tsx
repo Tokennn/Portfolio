@@ -121,8 +121,8 @@ function App() {
       {/* Contenu principal */}
       <div className="relative z-10">
         {/* Nav centrée minimaliste */}
-        <nav id="home-nav" className="fixed inset-0 z-40 flex items-center justify-center pointer-events-none">
-          <div className="nav-group flex items-center space-x-12 text-2xl font-black uppercase tracking-[0.28em] pointer-events-auto">
+        <nav id="home-nav" className="fixed inset-0 z-40 flex items-center justify-center pointer-events-none px-6">
+          <div className="nav-group flex flex-col items-center text-center space-y-6 text-lg font-black uppercase tracking-[0.18em] pointer-events-auto md:flex-row md:space-y-0 md:space-x-12 md:text-2xl md:tracking-[0.28em]">
             <Link to="/work" className="nav-link text-white/90">Work</Link>
             <Link to="/about" className="nav-link text-white/90">About</Link>
             <Link to="/contact" className="nav-link text-white/90">Contact</Link>
