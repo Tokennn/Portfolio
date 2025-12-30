@@ -1,19 +1,50 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 function WaterCursor() {
   const blobRef = useRef<HTMLDivElement>(null);
   const rippleRef = useRef<HTMLDivElement>(null);
   const shimmerRef = useRef<HTMLDivElement>(null);
   const raf = useRef<number>();
+  const [isEnabled, setIsEnabled] = useState(() => {
+    if (typeof window === "undefined") return true;
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const coarsePointer = window.matchMedia("(pointer: coarse)").matches;
+    return !(reduceMotion || coarsePointer);
+  });
 
   useEffect(() => {
+    const reduceMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const coarsePointerQuery = window.matchMedia("(pointer: coarse)");
+    const update = () => {
+      setIsEnabled(!(reduceMotionQuery.matches || coarsePointerQuery.matches));
+    };
+
+    update();
+    reduceMotionQuery.addEventListener("change", update);
+    coarsePointerQuery.addEventListener("change", update);
+
+    return () => {
+      reduceMotionQuery.removeEventListener("change", update);
+      coarsePointerQuery.removeEventListener("change", update);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!isEnabled) return;
+
     let x = window.innerWidth / 2;
     let y = window.innerHeight / 2;
     let tx = x;
     let ty = y;
+    let isAnimating = false;
+    let lastMoveTime = 0;
+    let lastRippleTime = 0;
 
     const triggerRipple = () => {
       if (!rippleRef.current) return;
+      const now = performance.now();
+      if (now - lastRippleTime < 140) return;
+      lastRippleTime = now;
       rippleRef.current.animate(
         [
           { transform: `translate3d(${x}px, ${y}px, 0) scale(0.6)`, opacity: 0.35 },
@@ -26,10 +57,15 @@ function WaterCursor() {
     const handleMove = (event: PointerEvent) => {
       tx = event.clientX;
       ty = event.clientY;
+      lastMoveTime = performance.now();
       triggerRipple();
+      if (!isAnimating) {
+        isAnimating = true;
+        raf.current = requestAnimationFrame(animate);
+      }
     };
 
-    const animate = () => {
+    const animate = (now: number) => {
       x += (tx - x) * 0.12;
       y += (ty - y) * 0.12;
 
@@ -40,17 +76,32 @@ function WaterCursor() {
         shimmerRef.current.style.transform = `translate3d(${x}px, ${y}px, 0)`;
       }
 
+      const isIdle = now - lastMoveTime > 160;
+      const isSettled = Math.abs(tx - x) < 0.1 && Math.abs(ty - y) < 0.1;
+
+      if (isIdle && isSettled) {
+        isAnimating = false;
+        raf.current = undefined;
+        return;
+      }
+
       raf.current = requestAnimationFrame(animate);
     };
 
-    window.addEventListener("pointermove", handleMove);
-    animate();
+    window.addEventListener("pointermove", handleMove, { passive: true });
+    lastMoveTime = performance.now();
+    isAnimating = true;
+    raf.current = requestAnimationFrame(animate);
 
     return () => {
       window.removeEventListener("pointermove", handleMove);
-      if (raf.current) cancelAnimationFrame(raf.current);
+      if (raf.current) {
+        cancelAnimationFrame(raf.current);
+      }
     };
-  }, []);
+  }, [isEnabled]);
+
+  if (!isEnabled) return null;
 
   return (
     <div className="pointer-events-none fixed inset-0 z-20 mix-blend-soft-light">
@@ -79,4 +130,3 @@ function WaterCursor() {
 }
 
 export default WaterCursor;
-

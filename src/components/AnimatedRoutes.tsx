@@ -17,16 +17,14 @@ function PageShell({ children }: { children: ReactNode }) {
           ? false
           : {
               opacity: 0,
-              y: 28,
-              filter: 'blur(8px)'
+              y: 22
             }
       }
       animate={{
         opacity: 1,
         y: 0,
-        filter: 'blur(0px)',
         transition: {
-          duration: 1.15,
+          duration: 0.85,
           ease: [0.16, 1, 0.3, 1]
         }
       }}
@@ -35,10 +33,9 @@ function PageShell({ children }: { children: ReactNode }) {
           ? { opacity: 1 }
           : {
               opacity: 0,
-              y: -16,
-              filter: 'blur(6px)',
+              y: -14,
               transition: {
-                duration: 0.45,
+                duration: 0.35,
                 ease: [0.4, 0, 0.2, 1]
               }
             }
