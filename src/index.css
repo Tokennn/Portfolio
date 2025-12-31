@@ -433,6 +433,12 @@
   animation: revealUp 0.75s ease forwards;
 }
 
+.page-shell[data-reveal="off"] .reveal-up {
+  animation: none;
+  opacity: 1;
+  transform: none;
+}
+
 .reveal-up.delay-1 { animation-delay: 0.08s; }
 .reveal-up.delay-2 { animation-delay: 0.16s; }
 

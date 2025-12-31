@@ -6,7 +6,10 @@ import { Link } from 'react-router-dom';
 // import { HeroScrollDemo } from './components/ui/demo';
 
 function App() {
-  const [entered, setEntered] = useState(false);
+  const [entered, setEntered] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    return sessionStorage.getItem('introEntered') === 'true';
+  });
   const loadingRef = useRef(null);
   const [loadingPercent, setLoadingPercent] = useState(0);
 
@@ -32,6 +35,12 @@ function App() {
           setLoadingPercent(Math.floor(obj.val));
         }
       });
+    }
+  }, [entered]);
+
+  useEffect(() => {
+    if (entered) {
+      sessionStorage.setItem('introEntered', 'true');
     }
   }, [entered]);
 

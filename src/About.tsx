@@ -121,19 +121,24 @@ function About() {
                         type="button"
                         onClick={() => mapRef.current?.zoomOut()}
                         disabled={!isMapReady}
-                        className="flex h-9 w-9 items-center justify-center rounded-full border border-[#e6d9c6] bg-white text-sm font-semibold text-[#6b6b6b] shadow-[0_6px_16px_rgba(52,34,18,0.12)] transition-transform duration-200 hover:-translate-y-0.5 hover:scale-105 disabled:cursor-not-allowed disabled:opacity-60"
+                        className="flex h-11 w-11 items-center justify-center rounded-full border border-[#e6d9c6] bg-white text-[#6b6b6b] shadow-[0_6px_16px_rgba(52,34,18,0.12)] transition-transform duration-200 hover:-translate-y-0.5 hover:scale-105 disabled:cursor-not-allowed disabled:opacity-60"
                         aria-label="Dezoomer la carte"
                       >
-                        -
+                        <svg className="h-5 w-5" viewBox="0 0 24 24" aria-hidden="true">
+                          <rect x="5" y="11" width="14" height="2" rx="1" fill="currentColor" />
+                        </svg>
                       </button>
                       <button
                         type="button"
                         onClick={() => mapRef.current?.zoomIn()}
                         disabled={!isMapReady}
-                        className="flex h-7 w-7 items-center justify-center rounded-full border border-[#e6d9c6] bg-white text-sm font-semibold text-[#6b6b6b] shadow-[0_6px_16px_rgba(52,34,18,0.12)] transition-transform duration-200 hover:-translate-y-0.5 hover:scale-105 disabled:cursor-not-allowed disabled:opacity-60"
+                        className="flex h-11 w-11 items-center justify-center rounded-full border border-[#e6d9c6] bg-white text-[#6b6b6b] shadow-[0_6px_16px_rgba(52,34,18,0.12)] transition-transform duration-200 hover:-translate-y-0.5 hover:scale-105 disabled:cursor-not-allowed disabled:opacity-60"
                         aria-label="Zoomer la carte"
                       >
-                        +
+                        <svg className="h-5 w-5" viewBox="0 0 24 24" aria-hidden="true">
+                          <rect x="5" y="11" width="14" height="2" rx="1" fill="currentColor" />
+                          <rect x="11" y="5" width="2" height="14" rx="1" fill="currentColor" />
+                        </svg>
                       </button>
                     </div>
                     <div className="relative h-[170px] overflow-hidden rounded-[20px] border border-[#e6d9c6] bg-white">
@@ -362,7 +367,7 @@ function About() {
                 className="-mt-5 flex h-32 w-32 items-center justify-center bg-transparent transition-transform duration-500 ease-out hover:-translate-y-4 hover:scale-125 hover:rotate-12 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3a7bb3]"
               >
                 <img
-                  src={avatarProcess}
+                  src={avatarOutside}
                   alt=""
                   className="h-32 w-32 object-contain drop-shadow-[0_18px_40px_rgba(0,0,0,0.3)]"
                   draggable="false"
@@ -408,7 +413,7 @@ function About() {
                 className="-mt-5 flex h-32 w-32 items-center justify-center bg-transparent transition-transform duration-500 ease-out hover:-translate-y-4 hover:scale-125 hover:rotate-10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3ab37b]"
               >
                 <img
-                  src={avatarOutside}
+                  src={avatarProcess}
                   alt=""
                   className="h-32 w-32 object-contain drop-shadow-[0_18px_40px_rgba(0,0,0,0.3)]"
                   draggable="false"

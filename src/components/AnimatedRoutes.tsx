@@ -1,4 +1,4 @@
-import { type ReactNode } from 'react';
+import { type ReactNode, useEffect, useRef } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import App from '../App';
@@ -6,12 +6,20 @@ import ContactForm from '../ContactForm';
 import Work from '../Work';
 import About from '../About';
 
-function PageShell({ children }: { children: ReactNode }) {
+function PageShell({
+  children,
+  shouldReveal
+}: {
+  children: ReactNode;
+  shouldReveal: boolean;
+}) {
   const reduceMotion = useReducedMotion();
+  const revealEnabled = shouldReveal && !reduceMotion;
 
   return (
     <motion.div
       className="page-shell"
+      data-reveal={revealEnabled ? 'on' : 'off'}
       initial={
         reduceMotion
           ? false
@@ -48,6 +56,12 @@ function PageShell({ children }: { children: ReactNode }) {
 
 function AnimatedRoutes() {
   const location = useLocation();
+  const visitedRoutes = useRef(new Set<string>());
+  const isFirstVisit = !visitedRoutes.current.has(location.pathname);
+
+  useEffect(() => {
+    visitedRoutes.current.add(location.pathname);
+  }, [location.pathname]);
 
   return (
     <AnimatePresence mode="wait" initial={false}>
@@ -55,7 +69,7 @@ function AnimatedRoutes() {
         <Route
           path="/"
           element={
-            <PageShell>
+            <PageShell shouldReveal={isFirstVisit}>
               <App />
             </PageShell>
           }
@@ -63,7 +77,7 @@ function AnimatedRoutes() {
         <Route
           path="/contact"
           element={
-            <PageShell>
+            <PageShell shouldReveal={isFirstVisit}>
               <ContactForm />
             </PageShell>
           }
@@ -71,7 +85,7 @@ function AnimatedRoutes() {
         <Route
           path="/work"
           element={
-            <PageShell>
+            <PageShell shouldReveal={isFirstVisit}>
               <Work />
             </PageShell>
           }
@@ -79,7 +93,7 @@ function AnimatedRoutes() {
         <Route
           path="/about"
           element={
-            <PageShell>
+            <PageShell shouldReveal={isFirstVisit}>
               <About />
             </PageShell>
           }
