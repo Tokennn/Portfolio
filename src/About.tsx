@@ -6,6 +6,18 @@ import portrait from "./iip.jpeg";
 import avatarProcess from "./oo-removebg-preview.png";
 import avatarTools from "./ii-removebg-preview.png";
 import avatarOutside from "./pp-removebg-preview.png";
+import logoCursor from "./assets/logos/cursor.png";
+import logoHostinger from "./assets/logos/hostinger.png";
+import logoGolang from "./assets/logos/golang.png";
+import logoFirebase from "./assets/logos/firebase.png";
+import logoSupabase from "./assets/logos/supabase.png";
+import logoMysql from "./assets/logos/mysql.png";
+import logoGit from "./assets/logos/git.png";
+import logoDocker from "./assets/logos/dockeur.png";
+import logoThreejs from "./assets/logos/threejs.png";
+import logoVue from "./assets/logos/vue.png";
+import logoNuxt from "./assets/logos/nuxt.png";
+import logoWordpress from "./assets/logos/wordpress.png";
 import WaterCursor from "./components/WaterCursor";
 
 const stackItems = ["React", "TypeScript", "GSAP", "Framer", "Tailwind", "UI / UX", "lenis"];
@@ -27,6 +39,7 @@ const mapMarker = divIcon({
 function About() {
   const mapRef = useRef<LeafletMap | null>(null);
   const [isMapReady, setIsMapReady] = useState(false);
+  const [isToolsExpanded, setIsToolsExpanded] = useState(false);
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-[#f8f3ea] via-[#f2e6d7] to-[#fdf8ef] text-[#0f0f0f] px-4 md:px-8 py-12 md:py-16">
@@ -356,10 +369,10 @@ function About() {
         </div>
 
         <section className="grid gap-6 md:grid-cols-3 reveal-up delay-1">
-          <div className="rounded-[28px] border border-[#dccfb9] bg-white/80 p-7 shadow-[0_18px_60px_rgba(52,34,18,0.10)]">
+          <div className="self-start rounded-[28px] border border-[#dccfb9] bg-white/80 p-7 shadow-[0_18px_60px_rgba(52,34,18,0.10)]">
             <div className="mb-3 flex items-center justify-between gap-3">
               <h2 className="text-sm font-semibold uppercase tracking-[0.24em] text-[#0f0f0f]">
-                Process
+                Process'
               </h2>
               <button
                 type="button"
@@ -375,14 +388,14 @@ function About() {
               </button>
             </div>
             <p className="text-sm md:text-base text-[#3a3a3a] leading-relaxed">
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-              dolore magna aliqua.
+              Je démarre par un brief clair, puis je propose une direction visuelle rapide. Ensuite, je développe en
+              itérations courtes avec des points réguliers, avant tests, optimisation et mise en ligne.
             </p>
           </div>
-          <div className="rounded-[28px] border border-[#dccfb9] bg-white/80 p-7 shadow-[0_18px_60px_rgba(52,34,18,0.10)]">
+          <div className="relative self-start rounded-[28px] border border-[#dccfb9] bg-white/80 p-7 shadow-[0_18px_60px_rgba(52,34,18,0.10)]">
             <div className="mb-3 flex items-center justify-between gap-3">
               <h2 className="text-sm font-semibold uppercase tracking-[0.24em] text-[#0f0f0f]">
-                Tools
+                Outils
               </h2>
               <button
                 type="button"
@@ -397,15 +410,226 @@ function About() {
                 />
               </button>
             </div>
-            <p className="text-sm md:text-base text-[#3a3a3a] leading-relaxed">
-              Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-              consequat.
-            </p>
+            <div
+              id="tools-grid"
+              className={`grid grid-cols-3 gap-3 overflow-hidden pb-2 transition-all duration-700 ease-in-out ${isToolsExpanded ? "max-h-[520px]" : "max-h-[160px]"}`}
+              style={{ willChange: "max-height" }}
+            >
+              <div className="group flex flex-col items-center gap-2 rounded-2xl border border-[#e6d9c6] bg-white/90 px-2 py-3 text-center shadow-[0_10px_24px_rgba(52,34,18,0.08)] transition-transform duration-300 hover:-translate-y-1">
+                <img
+                  src={logoCursor}
+                  alt="Cursor logo"
+                  className="h-8 w-8 rounded-lg object-contain transition-transform duration-300 group-hover:scale-110"
+                  draggable="false"
+                />
+                <span className="text-[9px] font-semibold uppercase tracking-[0.18em] text-[#3a3a3a]">Cursor</span>
+              </div>
+              <div className="group flex flex-col items-center gap-2 rounded-2xl border border-[#e6d9c6] bg-white/90 px-2 py-3 text-center shadow-[0_10px_24px_rgba(52,34,18,0.08)] transition-transform duration-300 hover:-translate-y-1">
+                <img
+                  src={logoHostinger}
+                  alt="Hostinger logo"
+                  className="h-8 w-8 object-contain transition-transform duration-300 group-hover:scale-110"
+                  draggable="false"
+                />
+                <span className="text-[9px] font-semibold uppercase tracking-[0.18em] text-[#3a3a3a]">Hostinger</span>
+              </div>
+              <div className="group flex flex-col items-center gap-2 rounded-2xl border border-[#e6d9c6] bg-white/90 px-2 py-3 text-center shadow-[0_10px_24px_rgba(52,34,18,0.08)] transition-transform duration-300 hover:-translate-y-1">
+                <svg
+                  className="h-8 w-8 transition-transform duration-300 group-hover:scale-110"
+                  viewBox="0 0 40 40"
+                  aria-hidden="true"
+                >
+                  <circle cx="20" cy="20" r="3" fill="#61dafb" />
+                  <ellipse cx="20" cy="20" rx="14" ry="5.5" fill="none" stroke="#61dafb" strokeWidth="2" />
+                  <ellipse
+                    cx="20"
+                    cy="20"
+                    rx="14"
+                    ry="5.5"
+                    fill="none"
+                    stroke="#61dafb"
+                    strokeWidth="2"
+                    transform="rotate(60 20 20)"
+                  />
+                  <ellipse
+                    cx="20"
+                    cy="20"
+                    rx="14"
+                    ry="5.5"
+                    fill="none"
+                    stroke="#61dafb"
+                    strokeWidth="2"
+                    transform="rotate(120 20 20)"
+                  />
+                </svg>
+                <span className="text-[9px] font-semibold uppercase tracking-[0.18em] text-[#3a3a3a]">React</span>
+              </div>
+              <div className="group flex flex-col items-center gap-2 rounded-2xl border border-[#e6d9c6] bg-white/90 px-2 py-3 text-center shadow-[0_10px_24px_rgba(52,34,18,0.08)] transition-transform duration-300 hover:-translate-y-1">
+                <svg
+                  className="h-8 w-8 transition-transform duration-300 group-hover:scale-110"
+                  viewBox="0 0 64 40"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M8 16c4-8 12-8 16 0s12 8 16 0 12-8 16 0"
+                    fill="none"
+                    stroke="#38bdf8"
+                    strokeWidth="6"
+                    strokeLinecap="round"
+                  />
+                  <path
+                    d="M8 30c4-8 12-8 16 0s12 8 16 0 12-8 16 0"
+                    fill="none"
+                    stroke="#38bdf8"
+                    strokeWidth="6"
+                    strokeLinecap="round"
+                    opacity="0.7"
+                  />
+                </svg>
+                <span className="text-[9px] font-semibold uppercase tracking-[0.18em] text-[#3a3a3a]">Tailwind</span>
+              </div>
+              <div className="group flex flex-col items-center gap-2 rounded-2xl border border-[#e6d9c6] bg-white/90 px-2 py-3 text-center shadow-[0_10px_24px_rgba(52,34,18,0.08)] transition-transform duration-300 hover:-translate-y-1">
+                <svg
+                  className="h-8 w-8 transition-transform duration-300 group-hover:scale-110"
+                  viewBox="0 0 40 40"
+                  aria-hidden="true"
+                >
+                  <rect x="2" y="2" width="36" height="36" rx="6" fill="#3178c6" />
+                  <text
+                    x="20"
+                    y="25"
+                    textAnchor="middle"
+                    fontSize="16"
+                    fontFamily="ui-sans-serif, system-ui, -apple-system, sans-serif"
+                    fontWeight="700"
+                    fill="#ffffff"
+                  >
+                    TS
+                  </text>
+                </svg>
+                <span className="text-[9px] font-semibold uppercase tracking-[0.18em] text-[#3a3a3a]">TypeScript</span>
+              </div>
+              <div className="group flex flex-col items-center gap-2 rounded-2xl border border-[#e6d9c6] bg-white/90 px-2 py-3 text-center shadow-[0_10px_24px_rgba(52,34,18,0.08)] transition-transform duration-300 hover:-translate-y-1">
+                <img
+                  src={logoGolang}
+                  alt="Golang logo"
+                  className="h-8 w-8 object-contain transition-transform duration-300 group-hover:scale-110"
+                  draggable="false"
+                />
+                <span className="text-[9px] font-semibold uppercase tracking-[0.18em] text-[#3a3a3a]">Golang</span>
+              </div>
+              <div className="group flex flex-col items-center gap-2 rounded-2xl border border-[#e6d9c6] bg-white/90 px-2 py-3 text-center shadow-[0_10px_24px_rgba(52,34,18,0.08)] transition-transform duration-300 hover:-translate-y-1">
+                <img
+                  src={logoFirebase}
+                  alt="Firebase logo"
+                  className="h-8 w-8 rounded-lg object-contain transition-transform duration-300 group-hover:scale-110"
+                  draggable="false"
+                />
+                <span className="text-[9px] font-semibold uppercase tracking-[0.18em] text-[#3a3a3a]">Firebase</span>
+              </div>
+              <div className="group flex flex-col items-center gap-2 rounded-2xl border border-[#e6d9c6] bg-white/90 px-2 py-3 text-center shadow-[0_10px_24px_rgba(52,34,18,0.08)] transition-transform duration-300 hover:-translate-y-1">
+                <img
+                  src={logoSupabase}
+                  alt="Supabase logo"
+                  className="h-8 w-8 rounded-lg object-contain transition-transform duration-300 group-hover:scale-110"
+                  draggable="false"
+                />
+                <span className="text-[9px] font-semibold uppercase tracking-[0.18em] text-[#3a3a3a]">Supabase</span>
+              </div>
+              <div className="group flex flex-col items-center gap-2 rounded-2xl border border-[#e6d9c6] bg-white/90 px-2 py-3 text-center shadow-[0_10px_24px_rgba(52,34,18,0.08)] transition-transform duration-300 hover:-translate-y-1">
+                <img
+                  src={logoMysql}
+                  alt="MySQL logo"
+                  className="h-8 w-8 object-contain transition-transform duration-300 group-hover:scale-110"
+                  draggable="false"
+                />
+                <span className="text-[9px] font-semibold uppercase tracking-[0.18em] text-[#3a3a3a]">MySQL</span>
+              </div>
+              <div className="group flex flex-col items-center gap-2 rounded-2xl border border-[#e6d9c6] bg-white/90 px-2 py-3 text-center shadow-[0_10px_24px_rgba(52,34,18,0.08)] transition-transform duration-300 hover:-translate-y-1">
+                <img
+                  src={logoGit}
+                  alt="Git logo"
+                  className="h-8 w-8 object-contain transition-transform duration-300 group-hover:scale-110"
+                  draggable="false"
+                />
+                <span className="text-[9px] font-semibold uppercase tracking-[0.18em] text-[#3a3a3a]">Git</span>
+              </div>
+              <div className="group flex flex-col items-center gap-2 rounded-2xl border border-[#e6d9c6] bg-white/90 px-2 py-3 text-center shadow-[0_10px_24px_rgba(52,34,18,0.08)] transition-transform duration-300 hover:-translate-y-1">
+                <img
+                  src={logoDocker}
+                  alt="Docker logo"
+                  className="h-8 w-8 rounded-lg object-contain transition-transform duration-300 group-hover:scale-110"
+                  draggable="false"
+                />
+                <span className="text-[9px] font-semibold uppercase tracking-[0.18em] text-[#3a3a3a]">Docker</span>
+              </div>
+              <div className="group flex flex-col items-center gap-2 rounded-2xl border border-[#e6d9c6] bg-white/90 px-2 py-3 text-center shadow-[0_10px_24px_rgba(52,34,18,0.08)] transition-transform duration-300 hover:-translate-y-1">
+                <img
+                  src={logoThreejs}
+                  alt="Three.js logo"
+                  className="h-8 w-8 rounded-lg object-contain transition-transform duration-300 group-hover:scale-110"
+                  draggable="false"
+                />
+                <span className="text-[9px] font-semibold uppercase tracking-[0.18em] text-[#3a3a3a]">Three.js</span>
+              </div>
+              <div className="group flex flex-col items-center gap-2 rounded-2xl border border-[#e6d9c6] bg-white/90 px-2 py-3 text-center shadow-[0_10px_24px_rgba(52,34,18,0.08)] transition-transform duration-300 hover:-translate-y-1">
+                <img
+                  src={logoVue}
+                  alt="Vue logo"
+                  className="h-8 w-8 object-contain transition-transform duration-300 group-hover:scale-110"
+                  draggable="false"
+                />
+                <span className="text-[9px] font-semibold uppercase tracking-[0.18em] text-[#3a3a3a]">Vue</span>
+              </div>
+              <div className="group flex flex-col items-center gap-2 rounded-2xl border border-[#e6d9c6] bg-white/90 px-2 py-3 text-center shadow-[0_10px_24px_rgba(52,34,18,0.08)] transition-transform duration-300 hover:-translate-y-1">
+                <img
+                  src={logoNuxt}
+                  alt="Nuxt logo"
+                  className="h-8 w-8 object-contain transition-transform duration-300 group-hover:scale-110"
+                  draggable="false"
+                />
+                <span className="text-[9px] font-semibold uppercase tracking-[0.18em] text-[#3a3a3a]">Nuxt</span>
+              </div>
+              <div className="group flex flex-col items-center gap-2 rounded-2xl border border-[#e6d9c6] bg-white/90 px-2 py-3 text-center shadow-[0_10px_24px_rgba(52,34,18,0.08)] transition-transform duration-300 hover:-translate-y-1">
+                <img
+                  src={logoWordpress}
+                  alt="WordPress logo"
+                  className="h-8 w-8 object-contain transition-transform duration-300 group-hover:scale-110"
+                  draggable="false"
+                />
+                <span className="text-[9px] font-semibold uppercase tracking-[0.18em] text-[#3a3a3a]">WordPress</span>
+              </div>
+            </div>
+            <div className="mt-3 flex justify-center">
+              <button
+                type="button"
+                onClick={() => setIsToolsExpanded((prev) => !prev)}
+                className="flex h-8 w-8 items-center justify-center rounded-full border border-[#dccfb9] bg-white/90 text-[#0f0f0f] shadow-[0_8px_18px_rgba(52,34,18,0.12)] transition-transform duration-300 hover:-translate-y-0.5 hover:scale-105"
+                aria-label={isToolsExpanded ? "Réduire la liste des outils" : "Afficher plus d'outils"}
+                aria-expanded={isToolsExpanded}
+                aria-controls="tools-grid"
+              >
+                <svg
+                  className={`h-4 w-4 transition-transform duration-300 ${isToolsExpanded ? "rotate-180" : ""}`}
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M12 5v12m0 0l-5-5m5 5l5-5"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </button>
+            </div>
           </div>
-          <div className="rounded-[28px] border border-[#dccfb9] bg-white/80 p-7 shadow-[0_18px_60px_rgba(52,34,18,0.10)]">
+          <div className="self-start rounded-[28px] border border-[#dccfb9] bg-white/80 p-7 shadow-[0_18px_60px_rgba(52,34,18,0.10)]">
             <div className="mb-3 flex items-center justify-between gap-3">
               <h2 className="text-sm font-semibold uppercase tracking-[0.24em] text-[#0f0f0f]">
-                Outside work
+                En dehors du travail
               </h2>
               <button
                 type="button"
