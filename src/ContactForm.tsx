@@ -76,7 +76,7 @@ const ContactForm = () => {
               ></dotlottie-player>
             </a>
             <p className="absolute -top-3 -right-5 max-w-[160px] text-[8px] md:text-[8px] text-[#2f2f2f] leading-snug inline-block bg-white/70 border border-[#dccfb9] px-2 py-1 rounded-full shadow-[0_8px_24px_rgba(52,34,18,0.12)] backdrop-blur-sm text-center">
-            DM me for any questions or collaborations !!
+            Ecrivez moi pour toute question ou collaboration !!
             </p>
           </div>
         </div>
