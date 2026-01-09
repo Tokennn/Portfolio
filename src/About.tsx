@@ -23,6 +23,7 @@ import logoOutlook from "./assets/logos/outlook.png";
 import logoNode from "./assets/logos/node.png";
 import logoAirtable from "./assets/logos/airtable.png";
 import logoFramer from "./assets/logos/framer.png";
+import logoNetlify from "./assets/logos/netlify.png";
 import WaterCursor from "./components/WaterCursor";
 
 const stackItems = ["React", "TypeScript", "GSAP", "Framer", "Tailwind", "UI / UX", "lenis"];
@@ -122,7 +123,7 @@ function About() {
                       Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero.
                     </p>
                   </div> */}
-                  <div className="rounded-[26px] border border-[#e6d9c6] bg-white/80 p-6 shadow-[0_14px_40px_rgba(52,34,18,0.10)]">
+                  <div className="rounded-[26px] border border-[#e6d9c6] bg-white/80 p-6 shadow-[0_14px_40px_rgba(52,34,18,0.10)] transition-transform duration-300 hover:-translate-y-1">
                     <h2 className="text-sm font-semibold uppercase tracking-[0.24em] text-[#0f0f0f] mb-3">
                       Valeurs
                     </h2>
@@ -133,7 +134,7 @@ function About() {
                     <li>• Adaptabilité</li>
                   </ul>
                   </div>
-                  <div className="rounded-[26px] border border-[#e6d9c6] bg-white/80 p-4 shadow-[0_14px_40px_rgba(52,34,18,0.10)]">
+                  <div className="rounded-[26px] border border-[#e6d9c6] bg-white/80 p-4 shadow-[0_14px_40px_rgba(52,34,18,0.10)] transition-transform duration-300 hover:-translate-y-1">
                     <div className="mb-2 flex items-center justify-between">
                       <button
                         type="button"
@@ -197,7 +198,7 @@ function About() {
               </div>
 
               <aside className="space-y-4">
-                <div className="relative overflow-hidden rounded-[30px] border border-[#e6d9c6] bg-white p-7 shadow-[0_18px_60px_rgba(52,34,18,0.12)] reveal-up delay-1">
+                <div className="relative overflow-hidden rounded-[30px] border border-[#e6d9c6] bg-white p-7 shadow-[0_18px_60px_rgba(52,34,18,0.12)] reveal-up delay-1 transition-transform duration-300 hover:-translate-y-1">
                   <div className="pointer-events-none absolute inset-0 opacity-70 bg-[radial-gradient(circle_at_20%_20%,rgba(253,230,205,0.6),transparent_45%),radial-gradient(circle_at_80%_10%,rgba(210,175,140,0.26),transparent_55%)]" />
                   <div className="relative z-10 space-y-6">
                     <div className="flex items-center gap-4">
@@ -267,7 +268,7 @@ function About() {
                   </div>
                 </div>
 
-                <div className="rounded-[30px] border border-[#e6d9c6] bg-white/80 p-7 shadow-[0_18px_60px_rgba(52,34,18,0.10)] reveal-up delay-2">
+                <div className="rounded-[30px] border border-[#e6d9c6] bg-white/80 p-7 shadow-[0_18px_60px_rgba(52,34,18,0.10)] reveal-up delay-2 transition-transform duration-300 hover:-translate-y-1">
                   <h2 className="text-sm font-semibold uppercase tracking-[0.24em] text-[#0f0f0f] mb-4">
                     Ce que j'apporte
                   </h2>
@@ -650,7 +651,7 @@ function About() {
               </button>
             </div>
             <p className="text-sm md:text-base text-[#3a3a3a] leading-relaxed">
-              Passion pour le sport, le dessin, la photo/vidéo, les sports motorisés, les voyages...
+              Passion pour le sport, le dessin, la photo/vidéo, les sports motorisés, la mode, la musique et pouvoir voyager !!
             </p>
           </div>
         </section>
@@ -705,12 +706,7 @@ function About() {
               <span className="hidden md:inline text-[#b7b0a3]">•</span>
               <span className="inline-flex items-center gap-2 font-amazing tracking-[0.08em]">
                 Hébergé sur
-                <svg className="h-5 w-5" viewBox="0 0 32 32" aria-hidden="true">
-                  <path
-                    d="M6 6h4l12 14V6h4v20h-4L10 12v14H6V6z"
-                    fill="#00c7b7"
-                  />
-                </svg>
+                <img src={logoNetlify} alt="Netlify" className="h-5 w-5 rounded object-contain" loading="lazy" />
               </span>
             </div>
           </div>

@@ -56,8 +56,9 @@ const ContactForm = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-4 relative space-y-6">
-      <div className="flex flex-col items-center justify-center w-full space-y-6">
+    <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-[#f8f3ea] via-[#f2e6d7] to-[#fdf8ef] text-[#0f0f0f] px-4 md:px-8 py-12 md:py-16">
+      <div className="pointer-events-none absolute inset-0 opacity-70 bg-[radial-gradient(circle_at_18%_16%,rgba(255,255,255,0.85),transparent_38%),radial-gradient(circle_at_82%_6%,rgba(253,230,205,0.45),transparent_46%),radial-gradient(circle_at_24%_80%,rgba(210,175,140,0.28),transparent_50%)]" />
+      <div className="relative z-10 flex flex-col items-center justify-center w-full min-h-[70vh] space-y-6">
         {/* Lottie en dehors du formulaire */}
         <div className="relative mb-2 flex flex-col items-center gap-3">
           <div className="relative flex items-center justify-center">
