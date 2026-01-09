@@ -2,10 +2,37 @@ import React, { useState, ChangeEvent, FormEvent, useEffect, useRef } from 'reac
 import emailjs from '@emailjs/browser';
 import { motion, AnimatePresence } from 'framer-motion';
 import gsap from 'gsap';
+import LanguageToggle from './components/LanguageToggle';
+import { useLanguage } from './context/LanguageContext';
+
+const contactCopy = {
+  fr: {
+    title: "Contacte-moi 📬",
+    nameLabel: "Nom",
+    emailLabel: "Email",
+    messageLabel: "Message",
+    sendLabel: "Envoyer",
+    successMessage: "Message envoyé avec succès ✅",
+    errorMessage: "Une erreur est survenue ❌",
+    bubble: "Ecris-moi pour toute question ou collaboration !!"
+  },
+  en: {
+    title: "Contact me 📬",
+    nameLabel: "Name",
+    emailLabel: "Email",
+    messageLabel: "Message",
+    sendLabel: "Send",
+    successMessage: "Message sent successfully ✅",
+    errorMessage: "Something went wrong ❌",
+    bubble: "DM me for any questions or collaborations !!"
+  }
+};
 
 const ContactForm = () => {
   const [form, setForm] = useState({ name: '', email: '', message: '' });
   const [status, setStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  const { language } = useLanguage();
+  const copy = contactCopy[language];
 
   const formRef = useRef<HTMLFormElement>(null);
   const inputsRef = useRef<Array<HTMLDivElement | null>>([]);
@@ -58,6 +85,9 @@ const ContactForm = () => {
   return (
     <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-[#f8f3ea] via-[#f2e6d7] to-[#fdf8ef] text-[#0f0f0f] px-4 md:px-8 py-12 md:py-16">
       <div className="pointer-events-none absolute inset-0 opacity-70 bg-[radial-gradient(circle_at_18%_16%,rgba(255,255,255,0.85),transparent_38%),radial-gradient(circle_at_82%_6%,rgba(253,230,205,0.45),transparent_46%),radial-gradient(circle_at_24%_80%,rgba(210,175,140,0.28),transparent_50%)]" />
+      <div className="absolute right-5 top-5 z-30 md:right-8 md:top-8">
+        <LanguageToggle />
+      </div>
       <div className="relative z-10 flex flex-col items-center justify-center w-full min-h-[70vh] space-y-6">
         {/* Lottie en dehors du formulaire */}
         <div className="relative mb-2 flex flex-col items-center gap-3">
@@ -76,7 +106,7 @@ const ContactForm = () => {
               ></dotlottie-player>
             </a>
             <p className="absolute -top-3 -right-5 max-w-[160px] text-[8px] md:text-[8px] text-[#2f2f2f] leading-snug inline-block bg-white/70 border border-[#dccfb9] px-2 py-1 rounded-full shadow-[0_8px_24px_rgba(52,34,18,0.12)] backdrop-blur-sm text-center">
-            Ecrivez moi pour toute question ou collaboration !!
+            {copy.bubble}
             </p>
           </div>
         </div>
@@ -85,10 +115,10 @@ const ContactForm = () => {
           ref={formRef}
           className="max-w-lg w-full bg-[#f8f3ea] border border-[#dccfb9] shadow-[0_18px_60px_rgba(52,34,18,0.16)] backdrop-blur-sm p-8 rounded-xl space-y-6"
         >
-          <h2 className="text-3xl font-bold text-black text-center">Contacte-moi 📬</h2>
+          <h2 className="text-3xl font-bold text-black text-center">{copy.title}</h2>
 
           <div ref={el => (inputsRef.current[0] = el)}>
-            <label htmlFor="name" className="block text-sm font-medium text-gray-700">Nom</label>
+            <label htmlFor="name" className="block text-sm font-medium text-gray-700">{copy.nameLabel}</label>
             <input
               id="name"
               type="text"
@@ -102,7 +132,7 @@ const ContactForm = () => {
           </div>
 
           <div ref={el => (inputsRef.current[1] = el)}>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
+            <label htmlFor="email" className="block text-sm font-medium text-gray-700">{copy.emailLabel}</label>
             <input
               id="email"
               type="email"
@@ -116,7 +146,7 @@ const ContactForm = () => {
           </div>
 
           <div ref={el => (inputsRef.current[2] = el)}>
-            <label htmlFor="message" className="block text-sm font-medium text-gray-700">Message</label>
+            <label htmlFor="message" className="block text-sm font-medium text-gray-700">{copy.messageLabel}</label>
             <textarea
               id="message"
               name="message"
@@ -134,7 +164,7 @@ const ContactForm = () => {
               type="submit"
               className="bg-black text-white py-2 px-4 rounded-lg hover:bg-gray-800 transition"
             >
-              Envoyer
+              {copy.sendLabel}
             </button>
           </div>
         </form>
@@ -159,7 +189,7 @@ const ContactForm = () => {
               transition={{ type: 'spring', stiffness: 300, damping: 20 }}
             >
               <p className={`text-lg font-semibold ${status === 'success' ? 'text-green-600' : 'text-red-600'}`}>
-                {status === 'success' ? 'Message envoyé avec succès ✅' : 'Une erreur est survenue ❌'}
+                {status === 'success' ? copy.successMessage : copy.errorMessage}
               </p>
             </motion.div>
           </>

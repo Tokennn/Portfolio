@@ -6,12 +6,15 @@ import './index.css';
 import { BrowserRouter } from 'react-router-dom';
 import AnimatedRoutes from './components/AnimatedRoutes';
 import WebGLTransition from './components/WebGLTransition';
+import { LanguageProvider } from './context/LanguageContext';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <BrowserRouter>
-      <WebGLTransition />
-      <AnimatedRoutes />
-    </BrowserRouter>
+    <LanguageProvider>
+      <BrowserRouter>
+        <WebGLTransition />
+        <AnimatedRoutes />
+      </BrowserRouter>
+    </LanguageProvider>
   </StrictMode>
 );

@@ -25,11 +25,113 @@ import logoAirtable from "./assets/logos/airtable.png";
 import logoFramer from "./assets/logos/framer.png";
 import logoNetlify from "./assets/logos/netlify.png";
 import WaterCursor from "./components/WaterCursor";
+import LanguageToggle from "./components/LanguageToggle";
+import { useLanguage } from "./context/LanguageContext";
 
 const stackItems = ["React", "TypeScript", "GSAP", "Framer", "Tailwind", "UI / UX", "lenis"];
 const lyonPosition: [number, number] = [45.749977593867, 4.8232436066254225];
 const serpentText =
   "Figma • FlutterFlow • Always Data • Airtable • Postman • FireBase • SupaBase • Git • Wix • Wordpress • Bubble";
+const aboutCopy = {
+  fr: {
+    nav: {
+      home: "Accueil",
+      work: "Projets",
+      about: "A propos",
+      contact: "Contact"
+    },
+    badge: "A propos",
+    title: "Développeur et VibeDev créatif indépendant",
+    intro:
+      "Développeur créatif basé en France, passionné par l'art numérique, le codage créatif et l'animation 3D. Toujours à la recherche d'opportunités intéressantes en freelance ou en équipe pour développer de belles expériences numériques.",
+    schoolTitle: "Mon école :",
+    schoolBody:
+      "Actuellement en formation à Ynov Campus sur Lyon, je suis en 3ème année de Bachelor en développement où je me spécialise dans le développement web. Par la suite de cette formation, à la fin de mon Master, je voudrais plus me spécialiser dans le design web.",
+    valuesTitle: "Valeurs",
+    values: ["Esprit d'équipe", "Créativité", "Innovation", "Adaptabilité"],
+    zoomOut: "Dezoomer la carte",
+    zoomIn: "Zoomer la carte",
+    mapTooltip: "je suis là !!",
+    snapshotLabel: "Snapshot",
+    locationLabel: "Localisation",
+    locationValue: "Lyon, France",
+    roleLabel: "Rôle",
+    roleValue: "Dev créatif",
+    techLabel: "Technologies",
+    statusLabel: "Statut",
+    statusValue: "Disponible",
+    keywordsLabel: "Mots-clés",
+    keywords: ["Design", "UI", "UX", "Ergonomie", "Simplicité"],
+    processTitle: "Process'",
+    processBody:
+      "Je démarre par un brief clair, puis je propose une direction visuelle rapide. Ensuite, je développe en itérations courtes avec des points réguliers, avant tests, optimisation et mise en ligne.",
+    toolsTitle: "Outils",
+    outsideTitle: "En dehors du travail",
+    outsideBody:
+      "Passion pour le sport, le dessin, la photo/vidéo, les sports motorisés, la mode, la musique et pouvoir voyager !!",
+    contributeTitle: "Ce que j'apporte",
+    contributeItems: [
+      "Developpement Front End .",
+      "Developpement Back End .",
+      "Optimisation de pages web ."
+    ],
+    contactTagline: "- Contactez-moi pour toute collaboration ou simplement dire bonjour -",
+    footerRights: "© 2025 Quentin Contreau. Tous droits réservés.",
+    footerBuiltWith: "Créé avec",
+    footerHostedOn: "Hébergé sur",
+    toolsExpandLabel: "Afficher plus d'outils",
+    toolsCollapseLabel: "Réduire la liste des outils"
+  },
+  en: {
+    nav: {
+      home: "Home",
+      work: "Work",
+      about: "About",
+      contact: "Contact"
+    },
+    badge: "About",
+    title: "Creative freelance developer & VibeDev",
+    intro:
+      "Creative developer based in France, passionate about digital art, creative coding, and 3D animation. Always looking for exciting freelance or team opportunities to build beautiful digital experiences.",
+    schoolTitle: "My school:",
+    schoolBody:
+      "Currently studying at Ynov Campus in Lyon, I am in my 3rd year of a Bachelor in development with a focus on web development. After this program, at the end of my Master's degree, I want to specialize more in web design.",
+    valuesTitle: "Values",
+    values: ["Team spirit", "Creativity", "Innovation", "Adaptability"],
+    zoomOut: "Zoom out map",
+    zoomIn: "Zoom in map",
+    mapTooltip: "I'm here!!",
+    snapshotLabel: "Snapshot",
+    locationLabel: "Location",
+    locationValue: "Lyon, France",
+    roleLabel: "Role",
+    roleValue: "Creative dev",
+    techLabel: "Technologies",
+    statusLabel: "Status",
+    statusValue: "Available",
+    keywordsLabel: "Keywords",
+    keywords: ["Design", "UI", "UX", "Ergonomics", "Simplicity"],
+    processTitle: "Process",
+    processBody:
+      "I start with a clear brief, then propose a quick visual direction. Next, I build in short iterations with regular check-ins, followed by testing, optimization, and launch.",
+    toolsTitle: "Tools",
+    outsideTitle: "Outside work",
+    outsideBody:
+      "Passion for sports, drawing, photo/video, motorsports, fashion, music, and traveling.",
+    contributeTitle: "What I bring",
+    contributeItems: [
+      "Front-end development.",
+      "Back-end development.",
+      "Web page optimization."
+    ],
+    contactTagline: "- Contact me for any collaboration or just to say hello -",
+    footerRights: "© 2025 Quentin Contreau. All rights reserved.",
+    footerBuiltWith: "Built with",
+    footerHostedOn: "Hosted on",
+    toolsExpandLabel: "Show more tools",
+    toolsCollapseLabel: "Show fewer tools"
+  }
+};
 const mapMarker = divIcon({
   className: "map-marker",
   iconSize: [34, 34],
@@ -43,6 +145,8 @@ const mapMarker = divIcon({
 });
 
 function About() {
+  const { language } = useLanguage();
+  const copy = aboutCopy[language];
   const mapRef = useRef<LeafletMap | null>(null);
   const [isMapReady, setIsMapReady] = useState(false);
   const [isToolsExpanded, setIsToolsExpanded] = useState(false);
@@ -50,22 +154,25 @@ function About() {
   return (
     <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-[#f8f3ea] via-[#f2e6d7] to-[#fdf8ef] text-[#0f0f0f] px-4 md:px-8 py-12 md:py-16">
       <div className="pointer-events-none absolute inset-0 opacity-70 bg-[radial-gradient(circle_at_18%_16%,rgba(255,255,255,0.85),transparent_38%),radial-gradient(circle_at_82%_6%,rgba(253,230,205,0.45),transparent_46%),radial-gradient(circle_at_24%_80%,rgba(210,175,140,0.28),transparent_50%)]" />
+      <div className="fixed right-5 top-5 z-50 md:right-8 md:top-8">
+        <LanguageToggle />
+      </div>
 
       <header className="relative max-w-6xl mx-auto flex items-center justify-between mb-10 md:mb-14 px-1 md:px-2 md:hidden">
         <div className="flex items-center gap-6 md:gap-8">
           <Link to="/" className="nav-underline font-amazing text-[#3a3a3a] hover:text-[#0f0f0f]">
-            Home
+            {copy.nav.home}
           </Link>
           <Link to="/work" className="nav-underline font-amazing text-[#3a3a3a] hover:text-[#0f0f0f]">
-            Work
+            {copy.nav.work}
           </Link>
         </div>
         <div className="flex items-center gap-6 md:gap-8">
           <Link to="/about" className="nav-underline font-amazing text-[#0f0f0f] hover:text-[#0f0f0f]">
-            About
+            {copy.nav.about}
           </Link>
           <Link to="/contact" className="nav-underline font-amazing text-[#3a3a3a] hover:text-[#0f0f0f]">
-            Contact
+            {copy.nav.contact}
           </Link>
         </div>
       </header>
@@ -75,16 +182,16 @@ function About() {
       <main className="relative max-w-6xl mx-auto space-y-10 md:space-y-14">
         <div className="relative">
           <div className="pointer-events-auto hidden md:flex flex-col gap-10 text-[#0f0f0f] absolute left-[-80px] lg:left-[-90px] top-[42%] -translate-y-1/2 z-20">
-            <Link to="/" className="nav-dot font-amazing" data-label="Home" aria-label="Home">
-              <span className="sr-only">Home</span>
+            <Link to="/" className="nav-dot font-amazing" data-label={copy.nav.home} aria-label={copy.nav.home}>
+              <span className="sr-only">{copy.nav.home}</span>
             </Link>
-            <Link to="/work" className="nav-dot font-amazing" data-label="Work" aria-label="Work">
-              <span className="sr-only">Work</span>
+            <Link to="/work" className="nav-dot font-amazing" data-label={copy.nav.work} aria-label={copy.nav.work}>
+              <span className="sr-only">{copy.nav.work}</span>
             </Link>
           </div>
           <div className="pointer-events-auto hidden md:flex flex-col gap-10 text-[#0f0f0f] absolute right-[-80px] lg:right-[-90px] top-[42%] -translate-y-1/2 z-20 text-right">
-            <Link to="/contact" className="nav-dot font-amazing" data-label="Contact" aria-label="Contact">
-              <span className="sr-only">Contact</span>
+            <Link to="/contact" className="nav-dot font-amazing" data-label={copy.nav.contact} aria-label={copy.nav.contact}>
+              <span className="sr-only">{copy.nav.contact}</span>
             </Link>
           </div>
 
@@ -93,25 +200,19 @@ function About() {
               <div className="space-y-7">
                 <div className="flex flex-col gap-4">
                   <span className="w-fit rounded-full border border-[#d5c5ad] bg-white/90 px-4 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-[#0f0f0f]">
-                  A propos
+                  {copy.badge}
                   </span>
                   <h1 className="text-4xl md:text-5xl font-black text-[#0a0a0a] leading-tight">
-                    Développeur et VibeDev créatif indépendant 
+                    {copy.title}
                   </h1>
                 </div>
 
                 <div className="space-y-5 text-base md:text-lg text-[#1f1f1f] leading-relaxed max-w-2xl">
-                  <p>
-                    Développeur créatif basé en France, passionné par l'art numérique, le codage créatif et l'animation 3D.
-                    Toujours à la recherche d'opportunités intéressantes en freelance ou en équipe pour développer de belles expériences numériques.
-                  </p>
+                  <p>{copy.intro}</p>
                   <h2 className="text-4xl md:text-5xl font-black text-[#0a0a0a] leading-tight">
-                    Mon école : 
+                    {copy.schoolTitle}
                   </h2>
-                  <p>
-                   Actuellement en formation à Ynov Campus sur Lyon, je suis en 3ème année de Bachelor en développement où je me spécialise dans le développement web. 
-                   Par la suite de cette formation, à la fin de mon Master, je voudrais plus me spécialiser dans le design web.
-                  </p> 
+                  <p>{copy.schoolBody}</p> 
                 </div>
 
                 <div className="grid gap-4 sm:grid-cols-2">
@@ -125,13 +226,12 @@ function About() {
                   </div> */}
                   <div className="rounded-[26px] border border-[#e6d9c6] bg-white/80 p-6 shadow-[0_14px_40px_rgba(52,34,18,0.10)] transition-transform duration-300 hover:-translate-y-1">
                     <h2 className="text-sm font-semibold uppercase tracking-[0.24em] text-[#0f0f0f] mb-3">
-                      Valeurs
+                      {copy.valuesTitle}
                     </h2>
                   <ul className="space-y-3 text-sm md:text-base text-[#3a3a3a] leading-relaxed">
-                    <li>• Esprit d'équipe</li>
-                    <li>• Créativité</li>
-                    <li>• Innovation</li>
-                    <li>• Adaptabilité</li>
+                    {copy.values.map((value) => (
+                      <li key={value}>• {value}</li>
+                    ))}
                   </ul>
                   </div>
                   <div className="rounded-[26px] border border-[#e6d9c6] bg-white/80 p-4 shadow-[0_14px_40px_rgba(52,34,18,0.10)] transition-transform duration-300 hover:-translate-y-1">
@@ -141,7 +241,7 @@ function About() {
                         onClick={() => mapRef.current?.zoomOut()}
                         disabled={!isMapReady}
                         className="flex h-11 w-11 items-center justify-center rounded-full border border-[#e6d9c6] bg-white text-[#6b6b6b] shadow-[0_6px_16px_rgba(52,34,18,0.12)] transition-transform duration-200 hover:-translate-y-0.5 hover:scale-105 disabled:cursor-not-allowed disabled:opacity-60"
-                        aria-label="Dezoomer la carte"
+                        aria-label={copy.zoomOut}
                       >
                         <svg className="h-5 w-5" viewBox="0 0 24 24" aria-hidden="true">
                           <rect x="5" y="11" width="14" height="2" rx="1" fill="currentColor" />
@@ -152,7 +252,7 @@ function About() {
                         onClick={() => mapRef.current?.zoomIn()}
                         disabled={!isMapReady}
                         className="flex h-11 w-11 items-center justify-center rounded-full border border-[#e6d9c6] bg-white text-[#6b6b6b] shadow-[0_6px_16px_rgba(52,34,18,0.12)] transition-transform duration-200 hover:-translate-y-0.5 hover:scale-105 disabled:cursor-not-allowed disabled:opacity-60"
-                        aria-label="Zoomer la carte"
+                        aria-label={copy.zoomIn}
                       >
                         <svg className="h-5 w-5" viewBox="0 0 24 24" aria-hidden="true">
                           <rect x="5" y="11" width="14" height="2" rx="1" fill="currentColor" />
@@ -182,12 +282,12 @@ function About() {
                             opacity={1}
                             className="map-tooltip"
                           >
-                            je suis là !!
+                            {copy.mapTooltip}
                           </Tooltip>
                         </Marker>
                       </MapContainer>
                       <span className="pointer-events-none absolute left-3 bottom-3 rounded-full bg-white/90 px-3 py-1 text-xs font-semibold text-[#2f2f2f] shadow-[0_6px_16px_rgba(52,34,18,0.12)]">
-                        Lyon, France
+                        {copy.locationValue}
                       </span>
                       <span className="pointer-events-none absolute right-3 bottom-3 text-[9px] font-semibold uppercase tracking-[0.2em] text-[#6b6b6b]">
                         © OpenStreetMap contributors © CARTO
@@ -211,22 +311,22 @@ function About() {
                         />
                       </div>
                       <div>
-                        <p className="text-xs uppercase tracking-[0.26em] text-[#6b6b6b]">Snapshot</p>
+                        <p className="text-xs uppercase tracking-[0.26em] text-[#6b6b6b]">{copy.snapshotLabel}</p>
                         <p className="text-lg font-black text-[#0a0a0a] leading-tight">Quentin / Contreau</p>
                       </div>
                     </div>
 
                     <dl className="grid grid-cols-2 gap-x-6 gap-y-4 text-sm">
                       <div>
-                        <dt className="text-xs uppercase tracking-[0.26em] text-[#6b6b6b]">Localisation</dt>
-                        <dd className="font-semibold text-[#0f0f0f] mt-1">Lyon France</dd>
+                        <dt className="text-xs uppercase tracking-[0.26em] text-[#6b6b6b]">{copy.locationLabel}</dt>
+                        <dd className="font-semibold text-[#0f0f0f] mt-1">{copy.locationValue}</dd>
                       </div>
                       <div>
-                        <dt className="text-xs uppercase tracking-[0.26em] text-[#6b6b6b]">Role</dt>
-                        <dd className="font-semibold text-[#0f0f0f] mt-1">Dev créatif</dd>
+                        <dt className="text-xs uppercase tracking-[0.26em] text-[#6b6b6b]">{copy.roleLabel}</dt>
+                        <dd className="font-semibold text-[#0f0f0f] mt-1">{copy.roleValue}</dd>
                       </div>
                       <div>
-                        <dt className="text-xs uppercase tracking-[0.26em] text-[#6b6b6b]">Technologies</dt>
+                        <dt className="text-xs uppercase tracking-[0.26em] text-[#6b6b6b]">{copy.techLabel}</dt>
                         <dd className="mt-1">
                           <div className="stack-marquee border border-[#e2d6c3] bg-white/80 px-4 py-2 shadow-[0_8px_24px_rgba(52,34,18,0.10)]">
                             <div className="stack-marquee-track text-xs md:text-sm font-semibold uppercase tracking-[0.24em] text-[#0f0f0f]">
@@ -241,21 +341,21 @@ function About() {
                         </dd>
                       </div>
                       <div>
-                        <dt className="text-xs uppercase tracking-[0.26em] text-[#6b6b6b]">Status</dt>
+                        <dt className="text-xs uppercase tracking-[0.26em] text-[#6b6b6b]">{copy.statusLabel}</dt>
                         <dd className="mt-1 flex items-center gap-2 font-semibold text-[#0f0f0f]">
                           <span className="relative flex h-2.5 w-2.5" aria-hidden="true">
                             <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#2bbf6a]/50" />
                             <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-[#2bbf6a] shadow-[0_0_0_4px_rgba(43,191,106,0.18)]" />
                           </span>
-                          <span>Disponible</span>
+                          <span>{copy.statusValue}</span>
                         </dd>
                       </div>
                     </dl>
 
                     <div className="pt-2">
-                      <p className="text-xs uppercase tracking-[0.26em] text-[#6b6b6b] mb-3">Keywords</p>
+                      <p className="text-xs uppercase tracking-[0.26em] text-[#6b6b6b] mb-3">{copy.keywordsLabel}</p>
                       <div className="flex flex-wrap gap-2">
-                        {["Design", "UI", "UX", "Ergonomie", "Simplicité"].map((label) => (
+                        {copy.keywords.map((label) => (
                           <span
                             key={label}
                             className="rounded-full border border-[#d5c5ad] bg-white/80 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.24em] text-[#0f0f0f]"
@@ -270,12 +370,12 @@ function About() {
 
                 <div className="rounded-[30px] border border-[#e6d9c6] bg-white/80 p-7 shadow-[0_18px_60px_rgba(52,34,18,0.10)] reveal-up delay-2 transition-transform duration-300 hover:-translate-y-1">
                   <h2 className="text-sm font-semibold uppercase tracking-[0.24em] text-[#0f0f0f] mb-4">
-                    Ce que j'apporte
+                    {copy.contributeTitle}
                   </h2>
                   <ul className="space-y-3 text-sm md:text-base text-[#3a3a3a] leading-relaxed">
-                    <li>• Developpement Front End .</li>
-                    <li>• Developpement Back End .</li>
-                    <li>• Optimisation de pages web .</li>
+                    {copy.contributeItems.map((item) => (
+                      <li key={item}>• {item}</li>
+                    ))}
                   </ul>
                 </div>
               </aside>
@@ -351,7 +451,7 @@ function About() {
           <div className="self-start rounded-[28px] border border-[#dccfb9] bg-white/80 p-7 shadow-[0_18px_60px_rgba(52,34,18,0.10)]">
             <div className="mb-3 flex items-center justify-between gap-3">
               <h2 className="text-sm font-semibold uppercase tracking-[0.24em] text-[#0f0f0f]">
-                Process'
+                {copy.processTitle}
               </h2>
               <button
                 type="button"
@@ -366,15 +466,12 @@ function About() {
                 />
               </button>
             </div>
-            <p className="text-sm md:text-base text-[#3a3a3a] leading-relaxed">
-              Je démarre par un brief clair, puis je propose une direction visuelle rapide. Ensuite, je développe en
-              itérations courtes avec des points réguliers, avant tests, optimisation et mise en ligne.
-            </p>
+            <p className="text-sm md:text-base text-[#3a3a3a] leading-relaxed">{copy.processBody}</p>
           </div>
           <div className="relative self-start rounded-[28px] border border-[#dccfb9] bg-white/80 p-7 shadow-[0_18px_60px_rgba(52,34,18,0.10)]">
             <div className="mb-3 flex items-center justify-between gap-3">
               <h2 className="text-sm font-semibold uppercase tracking-[0.24em] text-[#0f0f0f]">
-                Outils
+                {copy.toolsTitle}
               </h2>
               <button
                 type="button"
@@ -611,7 +708,7 @@ function About() {
                 type="button"
                 onClick={() => setIsToolsExpanded((prev) => !prev)}
                 className="flex h-8 w-8 items-center justify-center rounded-full border border-[#dccfb9] bg-white/90 text-[#0f0f0f] shadow-[0_8px_18px_rgba(52,34,18,0.12)] transition-transform duration-300 hover:-translate-y-0.5 hover:scale-105"
-                aria-label={isToolsExpanded ? "Réduire la liste des outils" : "Afficher plus d'outils"}
+                aria-label={isToolsExpanded ? copy.toolsCollapseLabel : copy.toolsExpandLabel}
                 aria-expanded={isToolsExpanded}
                 aria-controls="tools-grid"
               >
@@ -635,7 +732,7 @@ function About() {
           <div className="self-start rounded-[28px] border border-[#dccfb9] bg-white/80 p-7 shadow-[0_18px_60px_rgba(52,34,18,0.10)]">
             <div className="mb-3 flex items-center justify-between gap-3">
               <h2 className="text-sm font-semibold uppercase tracking-[0.24em] text-[#0f0f0f]">
-                En dehors du travail
+                {copy.outsideTitle}
               </h2>
               <button
                 type="button"
@@ -650,24 +747,22 @@ function About() {
                 />
               </button>
             </div>
-            <p className="text-sm md:text-base text-[#3a3a3a] leading-relaxed">
-              Passion pour le sport, le dessin, la photo/vidéo, les sports motorisés, la mode, la musique et pouvoir voyager !!
-            </p>
+            <p className="text-sm md:text-base text-[#3a3a3a] leading-relaxed">{copy.outsideBody}</p>
           </div>
         </section>
 
         <div className="flex justify-center py-0">
           <p className="text-[10px] md:text-xs font-amazing tracking-[0.16em] text-[#6b6b6b]">
-           - Contactez-moi pour toute collaboration ou simplement dire bonjour -
+           {copy.contactTagline}
           </p>
         </div>
 
         <div className="mt-4 border-t border-[#e6d9c6] pt-4 text-[11px] md:text-xs text-[#6b6b6b]">
           <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-            <p className="font-amazing tracking-[0.08em]">© 2025 Quentin Contreau. Tous droits réservés.</p>
+            <p className="font-amazing tracking-[0.08em]">{copy.footerRights}</p>
             <div className="flex flex-wrap items-center gap-3 md:gap-5">
               <span className="inline-flex items-center gap-2 font-amazing tracking-[0.08em]">
-                Créé avec
+                {copy.footerBuiltWith}
                 <svg className="h-5 w-5" viewBox="0 0 32 32" aria-hidden="true">
                   <circle cx="16" cy="16" r="2.4" fill="#61dafb" />
                   <ellipse cx="16" cy="16" rx="12" ry="5" fill="none" stroke="#61dafb" strokeWidth="2" />
@@ -705,7 +800,7 @@ function About() {
               </span>
               <span className="hidden md:inline text-[#b7b0a3]">•</span>
               <span className="inline-flex items-center gap-2 font-amazing tracking-[0.08em]">
-                Hébergé sur
+                {copy.footerHostedOn}
                 <img src={logoNetlify} alt="Netlify" className="h-5 w-5 rounded object-contain" loading="lazy" />
               </span>
             </div>

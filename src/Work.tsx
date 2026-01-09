@@ -1,39 +1,84 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import WaterCursor from './components/WaterCursor';
+import LanguageToggle from './components/LanguageToggle';
+import { useLanguage } from './context/LanguageContext';
 
-const projects = [
-  {
-    title: "Langage-Sensei",
-    description: "Sparring linguistique en ligne avec cartes d'expressions, parcours progressifs et micro-interactions.",
-    image: "https://cdn.midjourney.com/bf612167-d186-46f9-8141-ad6e799fa243/0_1.png",
-    link: "https://langage-sensei.netlify.app/",
-    tag: "Product design",
-    accent: "from-emerald-200/80 via-teal-50/85 to-amber-50/85",
-    glow: "radial-gradient(circle at 18% 24%, rgba(52, 211, 153, 0.24), transparent 46%), radial-gradient(circle at 72% 70%, rgba(251, 191, 36, 0.22), transparent 52%)"
+const workCopy = {
+  fr: {
+    projects: [
+      {
+        title: "Langage-Sensei",
+        description:
+          "Sparring linguistique en ligne avec cartes d'expressions, parcours progressifs et micro-interactions.",
+        image: "https://cdn.midjourney.com/bf612167-d186-46f9-8141-ad6e799fa243/0_1.png",
+        link: "https://langage-sensei.netlify.app/",
+        tag: "Product design",
+        accent: "from-emerald-200/80 via-teal-50/85 to-amber-50/85",
+        glow: "radial-gradient(circle at 18% 24%, rgba(52, 211, 153, 0.24), transparent 46%), radial-gradient(circle at 72% 70%, rgba(251, 191, 36, 0.22), transparent 52%)"
+      },
+      {
+        title: "MoveSmart",
+        description:
+          "Assistant d'aménagement intelligent : calcul d'itinéraires, inventaire et suivi des étapes clés.",
+        image: "https://cdn.midjourney.com/c5b6d334-83c3-4d27-ace8-00ca180a65ce/0_2.png",
+        link: "https://movesmart.netlify.app/",
+        tag: "Creative dev",
+        accent: "from-indigo-200/80 via-sky-50/85 to-amber-50/80",
+        glow: "radial-gradient(circle at 76% 16%, rgba(129, 140, 248, 0.26), transparent 48%), radial-gradient(circle at 22% 70%, rgba(56, 189, 248, 0.22), transparent 52%)"
+      },
+      {
+        title: "Blog.V1",
+        description:
+          "Tableau de bord live pour suivre la performance produit : métriques clés, alertes et recommandations d'action.",
+        image: "https://cdn.midjourney.com/a518c278-f137-4339-b5df-27c8643dbb49/0_0.jpeg",
+        link: "https://blogv1qc.netlify.app/",
+        tag: "Product ops",
+        accent: "from-amber-200/80 via-orange-50/85 to-white/90",
+        glow: "radial-gradient(circle at 55% 82%, rgba(251, 191, 36, 0.28), transparent 56%), radial-gradient(circle at 24% 32%, rgba(251, 146, 60, 0.22), transparent 52%)"
+      }
+    ]
   },
-  {
-    title: "MoveSmart",
-    description: "Assistant d'aménagement intelligent : calcul d'itinéraires, inventaire et suivi des étapes clés.",
-    image: "https://cdn.midjourney.com/c5b6d334-83c3-4d27-ace8-00ca180a65ce/0_2.png",
-    link: "https://movesmart.netlify.app/",
-    tag: "Creative dev",
-    accent: "from-indigo-200/80 via-sky-50/85 to-amber-50/80",
-    glow: "radial-gradient(circle at 76% 16%, rgba(129, 140, 248, 0.26), transparent 48%), radial-gradient(circle at 22% 70%, rgba(56, 189, 248, 0.22), transparent 52%)"
-  },
-  {
-    title: "Blog.V1",
-    description: "Tableau de bord live pour suivre la performance produit : métriques clés, alertes et recommandations d'action.",
-    image: "https://cdn.midjourney.com/a518c278-f137-4339-b5df-27c8643dbb49/0_0.jpeg",
-    link: "https://blogv1qc.netlify.app/",
-    tag: "Product ops",
-    accent: "from-amber-200/80 via-orange-50/85 to-white/90",
-    glow: "radial-gradient(circle at 55% 82%, rgba(251, 191, 36, 0.28), transparent 56%), radial-gradient(circle at 24% 32%, rgba(251, 146, 60, 0.22), transparent 52%)"
+  en: {
+    projects: [
+      {
+        title: "Langage-Sensei",
+        description:
+          "Online language sparring with expression cards, progressive paths, and micro-interactions.",
+        image: "https://cdn.midjourney.com/bf612167-d186-46f9-8141-ad6e799fa243/0_1.png",
+        link: "https://langage-sensei.netlify.app/",
+        tag: "Product design",
+        accent: "from-emerald-200/80 via-teal-50/85 to-amber-50/85",
+        glow: "radial-gradient(circle at 18% 24%, rgba(52, 211, 153, 0.24), transparent 46%), radial-gradient(circle at 72% 70%, rgba(251, 191, 36, 0.22), transparent 52%)"
+      },
+      {
+        title: "MoveSmart",
+        description:
+          "Smart moving assistant: route planning, inventory, and key-step tracking.",
+        image: "https://cdn.midjourney.com/c5b6d334-83c3-4d27-ace8-00ca180a65ce/0_2.png",
+        link: "https://movesmart.netlify.app/",
+        tag: "Creative dev",
+        accent: "from-indigo-200/80 via-sky-50/85 to-amber-50/80",
+        glow: "radial-gradient(circle at 76% 16%, rgba(129, 140, 248, 0.26), transparent 48%), radial-gradient(circle at 22% 70%, rgba(56, 189, 248, 0.22), transparent 52%)"
+      },
+      {
+        title: "Blog.V1",
+        description:
+          "Live dashboard to track product performance: key metrics, alerts, and action recommendations.",
+        image: "https://cdn.midjourney.com/a518c278-f137-4339-b5df-27c8643dbb49/0_0.jpeg",
+        link: "https://blogv1qc.netlify.app/",
+        tag: "Product ops",
+        accent: "from-amber-200/80 via-orange-50/85 to-white/90",
+        glow: "radial-gradient(circle at 55% 82%, rgba(251, 191, 36, 0.28), transparent 56%), radial-gradient(circle at 24% 32%, rgba(251, 146, 60, 0.22), transparent 52%)"
+      }
+    ]
   }
-];
+};
 
 function Work() {
   const [activeIndex, setActiveIndex] = useState(0);
+  const { language } = useLanguage();
+  const projects = workCopy[language].projects;
   const activeProject = projects[activeIndex];
 
   const previousProjects = projects.slice(0, activeIndex);
@@ -58,6 +103,9 @@ function Work() {
   return (
     <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-[#f8f3ea] via-[#f2e6d7] to-[#fdf8ef] text-[#0f0f0f] px-4 md:px-8 py-12 md:py-16">
       <div className="pointer-events-none absolute inset-0 opacity-70 bg-[radial-gradient(circle_at_18%_16%,rgba(255,255,255,0.85),transparent_38%),radial-gradient(circle_at_82%_6%,rgba(253,230,205,0.45),transparent_46%),radial-gradient(circle_at_24%_80%,rgba(210,175,140,0.28),transparent_50%)]" />
+      <div className="fixed right-5 top-5 z-50 md:right-8 md:top-8">
+        <LanguageToggle />
+      </div>
 
       <header className="relative max-w-6xl mx-auto flex items-center justify-between mb-10 md:mb-14 px-1 md:px-2 md:hidden">
         <div className="flex items-center gap-6 md:gap-8">
