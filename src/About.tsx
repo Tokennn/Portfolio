@@ -21,6 +21,7 @@ import logoWordpress from "./assets/logos/wordpress.png";
 import logoGmail from "./assets/logos/gmail.png";
 import logoOutlook from "./assets/logos/outlook.png";
 import logoNode from "./assets/logos/node.png";
+import logoAirtable from "./assets/logos/airtable.png";
 import WaterCursor from "./components/WaterCursor";
 
 const stackItems = ["React", "TypeScript", "GSAP", "Framer", "Tailwind", "UI / UX", "lenis"];
@@ -502,6 +503,15 @@ function About() {
                   draggable="false"
                 />
                 <span className="text-[9px] font-semibold uppercase tracking-[0.18em] text-[#3a3a3a]">Node</span>
+              </div>
+              <div className="group flex flex-col items-center gap-2 rounded-2xl border border-[#e6d9c6] bg-white/90 px-2 py-3 text-center shadow-[0_10px_24px_rgba(52,34,18,0.08)] transition-transform duration-300 hover:-translate-y-1">
+                <img
+                  src={logoAirtable}
+                  alt="Airtable logo"
+                  className="h-8 w-8 object-contain transition-transform duration-300 group-hover:scale-110"
+                  draggable="false"
+                />
+                <span className="text-[9px] font-semibold uppercase tracking-[0.18em] text-[#3a3a3a]">Airtable</span>
               </div>
               <div className="group flex flex-col items-center gap-2 rounded-2xl border border-[#e6d9c6] bg-white/90 px-2 py-3 text-center shadow-[0_10px_24px_rgba(52,34,18,0.08)] transition-transform duration-300 hover:-translate-y-1">
                 <img
