@@ -18,6 +18,9 @@ import logoThreejs from "./assets/logos/threejs.png";
 import logoVue from "./assets/logos/vue.png";
 import logoNuxt from "./assets/logos/nuxt.png";
 import logoWordpress from "./assets/logos/wordpress.png";
+import logoGmail from "./assets/logos/gmail.png";
+import logoOutlook from "./assets/logos/outlook.png";
+import logoNode from "./assets/logos/node.png";
 import WaterCursor from "./components/WaterCursor";
 
 const stackItems = ["React", "TypeScript", "GSAP", "Framer", "Tailwind", "UI / UX", "lenis"];
@@ -122,10 +125,10 @@ function About() {
                       Valeurs
                     </h2>
                   <ul className="space-y-3 text-sm md:text-base text-[#3a3a3a] leading-relaxed">
-                    <li>• Esprit d'équipe .</li>
-                    <li>• Créativité .</li>
-                    <li>• Innovation .</li>
-                    <li>• Adaptabilité .</li>
+                    <li>• Esprit d'équipe</li>
+                    <li>• Créativité</li>
+                    <li>• Innovation</li>
+                    <li>• Adaptabilité</li>
                   </ul>
                   </div>
                   <div className="rounded-[26px] border border-[#e6d9c6] bg-white/80 p-4 shadow-[0_14px_40px_rgba(52,34,18,0.10)]">
@@ -327,41 +330,14 @@ function About() {
                 className="flex h-11 w-11 items-center justify-center rounded-full bg-white shadow-[0_8px_18px_rgba(52,34,18,0.12)] transition-transform duration-300 hover:-translate-y-1 hover:scale-105"
                 aria-label="Gmail"
               >
-                <svg className="h-5 w-5" viewBox="0 0 24 24" aria-hidden="true">
-                  <path
-                    d="M4 6.5c0-.55.45-1 1-1h14c.55 0 1 .45 1 1v11c0 .55-.45 1-1 1H5c-.55 0-1-.45-1-1v-11z"
-                    fill="#ffffff"
-                  />
-                  <path
-                    d="M5 7l7 5 7-5v2.2l-7 5-7-5V7z"
-                    fill="#ea4335"
-                  />
-                  <path
-                    d="M5 17.5V9.7l7 5 7-5v7.8c0 .55-.45 1-1 1H6c-.55 0-1-.45-1-1z"
-                    fill="#34a853"
-                  />
-                  <path d="M5 7h14l-7 5-7-5z" fill="#fbbc04" />
-                  <path
-                    d="M5 7l7 5 7-5v2.2l-7 5-7-5V7z"
-                    fill="none"
-                    stroke="#ea4335"
-                    strokeWidth="0.6"
-                  />
-                </svg>
+                <img src={logoGmail} alt="Gmail" className="h-5 w-5 object-contain" loading="lazy" />
               </a>
               <a
                 href="mailto:quentin@ynov.com"
                 className="flex h-11 w-11 items-center justify-center rounded-full bg-white shadow-[0_8px_18px_rgba(52,34,18,0.12)] transition-transform duration-300 hover:-translate-y-1 hover:scale-105"
                 aria-label="Outlook"
               >
-                <svg className="h-5 w-5" viewBox="0 0 24 24" aria-hidden="true">
-                  <rect x="2.5" y="5.2" width="8.4" height="13.6" rx="1.4" fill="#0078d4" />
-                  <rect x="10.2" y="7" width="11.3" height="10" rx="1.6" fill="#2b88d8" />
-                  <path d="M10.2 7l5.65 4 5.65-4" fill="#7ac9ff" />
-                  <path d="M10.2 7l5.65 4 5.65-4" fill="none" stroke="#106ebe" strokeWidth="1" />
-                  <circle cx="6.7" cy="12" r="2.5" fill="#ffffff" />
-                  <circle cx="6.7" cy="12" r="1.4" fill="#0078d4" />
-                </svg>
+                <img src={logoOutlook} alt="Outlook" className="h-5 w-5 object-contain" loading="lazy" />
               </a>
             </div>
             <span className="hidden sm:inline-block h-px w-10 bg-[#e6d9c6]" aria-hidden="true" />
@@ -412,7 +388,7 @@ function About() {
             </div>
             <div
               id="tools-grid"
-              className={`grid grid-cols-3 gap-3 overflow-hidden pb-2 transition-all duration-700 ease-in-out ${isToolsExpanded ? "max-h-[520px]" : "max-h-[160px]"}`}
+              className={`grid grid-cols-3 gap-3 overflow-hidden py-2 transition-all duration-700 ease-in-out ${isToolsExpanded ? "max-h-[600px]" : "max-h-[180px]"}`}
               style={{ willChange: "max-height" }}
             >
               <div className="group flex flex-col items-center gap-2 rounded-2xl border border-[#e6d9c6] bg-white/90 px-2 py-3 text-center shadow-[0_10px_24px_rgba(52,34,18,0.08)] transition-transform duration-300 hover:-translate-y-1">
@@ -517,6 +493,15 @@ function About() {
                   draggable="false"
                 />
                 <span className="text-[9px] font-semibold uppercase tracking-[0.18em] text-[#3a3a3a]">Golang</span>
+              </div>
+              <div className="group flex flex-col items-center gap-2 rounded-2xl border border-[#e6d9c6] bg-white/90 px-2 py-3 text-center shadow-[0_10px_24px_rgba(52,34,18,0.08)] transition-transform duration-300 hover:-translate-y-1">
+                <img
+                  src={logoNode}
+                  alt="Node.js logo"
+                  className="h-8 w-8 object-contain transition-transform duration-300 group-hover:scale-110"
+                  draggable="false"
+                />
+                <span className="text-[9px] font-semibold uppercase tracking-[0.18em] text-[#3a3a3a]">Node</span>
               </div>
               <div className="group flex flex-col items-center gap-2 rounded-2xl border border-[#e6d9c6] bg-white/90 px-2 py-3 text-center shadow-[0_10px_24px_rgba(52,34,18,0.08)] transition-transform duration-300 hover:-translate-y-1">
                 <img
