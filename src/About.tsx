@@ -645,7 +645,7 @@ function About() {
               </button>
             </div>
             <p className="text-sm md:text-base text-[#3a3a3a] leading-relaxed">
-              Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+              Passion pour le sport, le dessin, la photo/vidéo, les sports motorisés, les voyages...
             </p>
           </div>
         </section>
