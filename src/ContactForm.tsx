@@ -170,11 +170,18 @@ const ContactForm = () => {
             animationDirection: tool.spinDirection,
           } as React.CSSProperties;
 
+          const roundedAlt = tool.alt.toLowerCase();
+          const isExtraRounded = roundedAlt === 'vue' || roundedAlt === 'golang' || roundedAlt === 'mysql';
+
           return (
             <div key={`${tool.alt}-${index}`} className="contact-tool" style={floatStyle}>
-              <span className="contact-tool-spin" style={spinStyle}>
-                <img src={tool.src} alt="" className="h-full w-full rounded-2xl object-contain" aria-hidden="true" />
-              </span>
+              <img
+                src={tool.src}
+                alt=""
+                className={`contact-tool-spin ${isExtraRounded ? 'rounded-2xl' : 'rounded-lg'} object-contain`}
+                style={spinStyle}
+                aria-hidden="true"
+              />
             </div>
           );
         })}
