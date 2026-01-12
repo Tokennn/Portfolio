@@ -1,9 +1,27 @@
-import React, { useState, ChangeEvent, FormEvent, useEffect, useRef } from 'react';
+import React, { useState, ChangeEvent, FormEvent, useEffect, useRef, useMemo } from 'react';
 import emailjs from '@emailjs/browser';
 import { motion, AnimatePresence } from 'framer-motion';
 import gsap from 'gsap';
 import LanguageToggle from './components/LanguageToggle';
 import { useLanguage } from './context/LanguageContext';
+import logoCursor from './assets/logos/cursor.png';
+import logoHostinger from './assets/logos/hostinger.png';
+import logoGolang from './assets/logos/golang.png';
+import logoFirebase from './assets/logos/firebase.png';
+import logoSupabase from './assets/logos/supabase.png';
+import logoMysql from './assets/logos/mysql.png';
+import logoGit from './assets/logos/git.png';
+import logoDocker from './assets/logos/dockeur.png';
+import logoThreejs from './assets/logos/threejs.png';
+import logoVue from './assets/logos/vue.png';
+import logoNuxt from './assets/logos/nuxt.png';
+import logoWordpress from './assets/logos/wordpress.png';
+import logoNode from './assets/logos/node.png';
+import logoAirtable from './assets/logos/airtable.png';
+import logoFramer from './assets/logos/framer.png';
+import logoFigma from './assets/logos/figma.png';
+import logoNotion from './assets/logos/notion.png';
+import logoNetlify from './assets/logos/netlify.png';
 
 const contactCopy = {
   fr: {
@@ -14,7 +32,7 @@ const contactCopy = {
     sendLabel: "Envoyer",
     successMessage: "Message envoyé avec succès ✅",
     errorMessage: "Une erreur est survenue ❌",
-    bubble: "Ecris-moi pour toute question ou collaboration !!"
+    bubble: "Ecrivez-moi pour toute question ou collaboration !!"
   },
   en: {
     title: "Contact me 📬",
@@ -28,6 +46,27 @@ const contactCopy = {
   }
 };
 
+const toolIcons = [
+  { src: logoCursor, alt: "Cursor" },
+  { src: logoHostinger, alt: "Hostinger" },
+  { src: logoGolang, alt: "Golang" },
+  { src: logoFirebase, alt: "Firebase" },
+  { src: logoSupabase, alt: "Supabase" },
+  { src: logoMysql, alt: "MySQL" },
+  { src: logoGit, alt: "Git" },
+  { src: logoDocker, alt: "Docker" },
+  { src: logoThreejs, alt: "Three.js" },
+  { src: logoVue, alt: "Vue" },
+  { src: logoNuxt, alt: "Nuxt" },
+  { src: logoWordpress, alt: "WordPress" },
+  { src: logoNode, alt: "Node.js" },
+  { src: logoAirtable, alt: "Airtable" },
+  { src: logoFramer, alt: "Framer" },
+  { src: logoFigma, alt: "Figma" },
+  { src: logoNotion, alt: "Notion" },
+  { src: logoNetlify, alt: "Netlify" },
+];
+
 const ContactForm = () => {
   const [form, setForm] = useState({ name: '', email: '', message: '' });
   const [status, setStatus] = useState<'idle' | 'success' | 'error'>('idle');
@@ -36,6 +75,31 @@ const ContactForm = () => {
 
   const formRef = useRef<HTMLFormElement>(null);
   const inputsRef = useRef<Array<HTMLDivElement | null>>([]);
+  const floatingTools = useMemo(
+    () =>
+      toolIcons.map((tool) => {
+        const driftX = (Math.random() * 360 - 180).toFixed(0);
+        const driftY = (Math.random() * 320 - 160).toFixed(0);
+        const size = (Math.random() * 36 + 44).toFixed(0);
+
+        return {
+          ...tool,
+          driftX,
+          driftY,
+          size,
+          top: (Math.random() * 110 - 5).toFixed(2),
+          left: (Math.random() * 110 - 5).toFixed(2),
+          opacity: (Math.random() * 0.25 + 0.12).toFixed(2),
+          floatDuration: (Math.random() * 16 + 18).toFixed(1),
+          spinDuration: (Math.random() * 10 + 8).toFixed(1),
+          floatDelay: (-Math.random() * 12).toFixed(1),
+          spinDelay: (-Math.random() * 8).toFixed(1),
+          floatDirection: Math.random() > 0.5 ? 'alternate' : 'alternate-reverse',
+          spinDirection: Math.random() > 0.5 ? 'normal' : 'reverse',
+        };
+      }),
+    []
+  );
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -85,6 +149,36 @@ const ContactForm = () => {
   return (
     <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-[#f8f3ea] via-[#f2e6d7] to-[#fdf8ef] text-[#0f0f0f] px-4 md:px-8 py-12 md:py-16">
       <div className="pointer-events-none absolute inset-0 opacity-70 bg-[radial-gradient(circle_at_18%_16%,rgba(255,255,255,0.85),transparent_38%),radial-gradient(circle_at_82%_6%,rgba(253,230,205,0.45),transparent_46%),radial-gradient(circle_at_24%_80%,rgba(210,175,140,0.28),transparent_50%)]" />
+      <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden" aria-hidden="true">
+        {floatingTools.map((tool, index) => {
+          const floatStyle = {
+            top: `${tool.top}%`,
+            left: `${tool.left}%`,
+            width: `${tool.size}px`,
+            height: `${tool.size}px`,
+            opacity: tool.opacity,
+            animationDuration: `${tool.floatDuration}s`,
+            animationDelay: `${tool.floatDelay}s`,
+            animationDirection: tool.floatDirection,
+            ['--drift-x' as never]: `${tool.driftX}px`,
+            ['--drift-y' as never]: `${tool.driftY}px`,
+          } as React.CSSProperties;
+
+          const spinStyle = {
+            animationDuration: `${tool.spinDuration}s`,
+            animationDelay: `${tool.spinDelay}s`,
+            animationDirection: tool.spinDirection,
+          } as React.CSSProperties;
+
+          return (
+            <div key={`${tool.alt}-${index}`} className="contact-tool" style={floatStyle}>
+              <span className="contact-tool-spin" style={spinStyle}>
+                <img src={tool.src} alt="" className="h-full w-full rounded-2xl object-contain" aria-hidden="true" />
+              </span>
+            </div>
+          );
+        })}
+      </div>
       <div className="absolute right-5 top-5 z-30 md:right-8 md:top-8">
         <LanguageToggle />
       </div>

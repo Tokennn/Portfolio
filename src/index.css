@@ -88,7 +88,7 @@
     justify-content: center;
     width: 12px;
     height: 12px;
-    border-radius: 9999px;
+    border-radius: 18px;
     background: #0f0f0f;
     border: 1px solid #0f0f0f;
     color: transparent;
@@ -201,6 +201,34 @@
     pointer-events: none;
   }
 
+  .contact-tool {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation-name: contact-drift;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+    will-change: transform;
+    filter: drop-shadow(0 12px 24px rgba(52, 34, 18, 0.18));
+    border-radius: 9999px;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.35);
+    border: 1px solid rgba(220, 207, 185, 0.6);
+    box-sizing: border-box;
+    padding: 4px;
+  }
+
+  .contact-tool-spin {
+    display: block;
+    width: 100%;
+    height: 100%;
+    animation-name: contact-spin;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    will-change: transform;
+  }
+
   .serpent-path {
     fill: none;
     stroke: rgba(214, 198, 175, 0.9);
@@ -285,6 +313,24 @@
     100% {
       transform: scale(2.2);
       opacity: 0;
+    }
+  }
+
+  @keyframes contact-drift {
+    0% {
+      transform: translate3d(0, 0, 0);
+    }
+    100% {
+      transform: translate3d(var(--drift-x), var(--drift-y), 0);
+    }
+  }
+
+  @keyframes contact-spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
     }
   }
 }

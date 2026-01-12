@@ -23,6 +23,8 @@ import logoOutlook from "./assets/logos/outlook.png";
 import logoNode from "./assets/logos/node.png";
 import logoAirtable from "./assets/logos/airtable.png";
 import logoFramer from "./assets/logos/framer.png";
+import logoFigma from "./assets/logos/figma.png";
+import logoNotion from "./assets/logos/notion.png";
 import logoNetlify from "./assets/logos/netlify.png";
 import WaterCursor from "./components/WaterCursor";
 import LanguageToggle from "./components/LanguageToggle";
@@ -596,6 +598,24 @@ function About() {
               </div>
               <div className="group flex flex-col items-center gap-2 rounded-2xl border border-[#e6d9c6] bg-white/90 px-2 py-3 text-center shadow-[0_10px_24px_rgba(52,34,18,0.08)] transition-transform duration-300 hover:-translate-y-1">
                 <img
+                  src={logoFigma}
+                  alt="Figma logo"
+                  className="h-9 w-9 object-contain transition-transform duration-300 group-hover:scale-110"
+                  draggable="false"
+                />
+                <span className="text-[9px] font-semibold uppercase tracking-[0.18em] text-[#3a3a3a]">Figma</span>
+              </div>
+              <div className="group flex flex-col items-center gap-2 rounded-2xl border border-[#e6d9c6] bg-white/90 px-2 py-3 text-center shadow-[0_10px_24px_rgba(52,34,18,0.08)] transition-transform duration-300 hover:-translate-y-1">
+                <img
+                  src={logoNotion}
+                  alt="Notion logo"
+                  className="h-8 w-8 object-contain transition-transform duration-300 group-hover:scale-110"
+                  draggable="false"
+                />
+                <span className="text-[9px] font-semibold uppercase tracking-[0.18em] text-[#3a3a3a]">Notion</span>
+              </div>
+              <div className="group flex flex-col items-center gap-2 rounded-2xl border border-[#e6d9c6] bg-white/90 px-2 py-3 text-center shadow-[0_10px_24px_rgba(52,34,18,0.08)] transition-transform duration-300 hover:-translate-y-1">
+                <img
                   src={logoGolang}
                   alt="Golang logo"
                   className="h-8 w-8 object-contain transition-transform duration-300 group-hover:scale-110"
@@ -759,9 +779,9 @@ function About() {
 
         <div className="mt-4 border-t border-[#e6d9c6] pt-4 text-[11px] md:text-xs text-[#6b6b6b]">
           <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-            <p className="font-amazing tracking-[0.08em]">{copy.footerRights}</p>
+            <p className="font-sans tracking-[0.08em]">{copy.footerRights}</p>
             <div className="flex flex-wrap items-center gap-3 md:gap-5">
-              <span className="inline-flex items-center gap-2 font-amazing tracking-[0.08em]">
+              <span className="inline-flex items-center gap-2 font-sans tracking-[0.08em]">
                 {copy.footerBuiltWith}
                 <svg className="h-5 w-5" viewBox="0 0 32 32" aria-hidden="true">
                   <circle cx="16" cy="16" r="2.4" fill="#61dafb" />
@@ -799,7 +819,7 @@ function About() {
                 </svg>
               </span>
               <span className="hidden md:inline text-[#b7b0a3]">•</span>
-              <span className="inline-flex items-center gap-2 font-amazing tracking-[0.08em]">
+              <span className="inline-flex items-center gap-2 font-sans tracking-[0.08em]">
                 {copy.footerHostedOn}
                 <img src={logoNetlify} alt="Netlify" className="h-5 w-5 rounded object-contain" loading="lazy" />
               </span>
