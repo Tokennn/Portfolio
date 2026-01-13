@@ -70,14 +70,14 @@ const aboutCopy = {
     toolsTitle: "Outils",
     outsideTitle: "En dehors du travail",
     outsideBody:
-      "Passion pour le sport, le dessin, la photo/vidéo, les sports motorisés, la mode, la musique et pouvoir voyager !!",
+      "Passion pour le sport, le dessin, la photo/vidéo, la mode, la musique et pouvoir voyager ✈️",
     contributeTitle: "Ce que j'apporte",
     contributeItems: [
       "Developpement Front End .",
       "Developpement Back End .",
       "Optimisation de pages web ."
     ],
-    contactTagline: "- Contactez-moi pour toute collaboration ou simplement dire bonjour -",
+    contactTagline: "- Contactez-moi pour toute collaboration ou simplement dire bonjour 🫵 -",
     footerRights: "© 2025 Quentin Contreau. Tous droits réservés.",
     footerBuiltWith: "Créé avec",
     footerHostedOn: "Hébergé sur",
