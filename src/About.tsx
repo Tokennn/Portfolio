@@ -12,6 +12,8 @@ import logoGolang from "./assets/logos/golang.png";
 import logoFirebase from "./assets/logos/firebase.png";
 import logoSupabase from "./assets/logos/supabase.png";
 import logoMysql from "./assets/logos/mysql.png";
+import logoMariadb from "./assets/logos/mariadb.png";
+import logoXamp from "./assets/logos/xamp.png";
 import logoGit from "./assets/logos/git.png";
 import logoDocker from "./assets/logos/dockeur.png";
 import logoThreejs from "./assets/logos/threejs.png";
@@ -667,6 +669,24 @@ function About() {
                   draggable="false"
                 />
                 <span className="text-[9px] font-semibold uppercase tracking-[0.18em] text-[#3a3a3a]">MySQL</span>
+              </div>
+              <div className="group flex flex-col items-center gap-2 rounded-2xl border border-[#e6d9c6] bg-white/90 px-2 py-3 text-center shadow-[0_10px_24px_rgba(52,34,18,0.08)] transition-transform duration-300 hover:-translate-y-1">
+                <img
+                  src={logoMariadb}
+                  alt="MariaDB logo"
+                  className="h-8 w-8 object-contain transition-transform duration-300 group-hover:scale-110"
+                  draggable="false"
+                />
+                <span className="text-[9px] font-semibold uppercase tracking-[0.18em] text-[#3a3a3a]">MariaDB</span>
+              </div>
+              <div className="group flex flex-col items-center gap-2 rounded-2xl border border-[#e6d9c6] bg-white/90 px-2 py-3 text-center shadow-[0_10px_24px_rgba(52,34,18,0.08)] transition-transform duration-300 hover:-translate-y-1">
+                <img
+                  src={logoXamp}
+                  alt="Xamp logo"
+                  className="h-8 w-8 object-contain transition-transform duration-300 group-hover:scale-110"
+                  draggable="false"
+                />
+                <span className="text-[9px] font-semibold uppercase tracking-[0.18em] text-[#3a3a3a]">Xamp</span>
               </div>
               <div className="group flex flex-col items-center gap-2 rounded-2xl border border-[#e6d9c6] bg-white/90 px-2 py-3 text-center shadow-[0_10px_24px_rgba(52,34,18,0.08)] transition-transform duration-300 hover:-translate-y-1">
                 <img

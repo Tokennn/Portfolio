@@ -10,6 +10,8 @@ import logoGolang from './assets/logos/golang.png';
 import logoFirebase from './assets/logos/firebase.png';
 import logoSupabase from './assets/logos/supabase.png';
 import logoMysql from './assets/logos/mysql.png';
+import logoMariadb from './assets/logos/mariadb.png';
+import logoXamp from './assets/logos/xamp.png';
 import logoGit from './assets/logos/git.png';
 import logoDocker from './assets/logos/dockeur.png';
 import logoThreejs from './assets/logos/threejs.png';
@@ -53,6 +55,8 @@ const toolIcons = [
   { src: logoFirebase, alt: "Firebase" },
   { src: logoSupabase, alt: "Supabase" },
   { src: logoMysql, alt: "MySQL" },
+  { src: logoMariadb, alt: "MariaDB" },
+  { src: logoXamp, alt: "Xamp" },
   { src: logoGit, alt: "Git" },
   { src: logoDocker, alt: "Docker" },
   { src: logoThreejs, alt: "Three.js" },
