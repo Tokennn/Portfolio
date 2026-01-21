@@ -495,7 +495,7 @@ function About() {
             </div>
             <div
               id="tools-grid"
-              className={`grid grid-cols-3 gap-3 overflow-hidden py-2 transition-all duration-700 ease-in-out ${isToolsExpanded ? "max-h-[760px] pb-6" : "max-h-[180px]"}`}
+              className={`grid grid-cols-3 gap-3 overflow-hidden py-2 transition-all duration-700 ease-in-out ${isToolsExpanded ? "max-h-[880px] pb-8" : "max-h-[180px]"}`}
               style={{ willChange: "max-height" }}
             >
               <div className="group flex flex-col items-center gap-2 rounded-2xl border border-[#e6d9c6] bg-white/90 px-2 py-3 text-center shadow-[0_10px_24px_rgba(52,34,18,0.08)] transition-transform duration-300 hover:-translate-y-1">
