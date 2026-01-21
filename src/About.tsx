@@ -26,6 +26,8 @@ import logoNode from "./assets/logos/node.png";
 import logoAirtable from "./assets/logos/airtable.png";
 import logoPostman from "./assets/logos/postman.png";
 import logoFramer from "./assets/logos/framer.png";
+import logoGsap from "./assets/logos/gsap.png";
+import logoLenis from "./assets/logos/lenis.png";
 import logoFigma from "./assets/logos/figma.png";
 import logoNotion from "./assets/logos/notion.png";
 import logoNetlify from "./assets/logos/netlify.png";
@@ -598,6 +600,24 @@ function About() {
                   draggable="false"
                 />
                 <span className="text-[9px] font-semibold uppercase tracking-[0.18em] text-[#3a3a3a]">Framer</span>
+              </div>
+              <div className="group flex flex-col items-center gap-2 rounded-2xl border border-[#e6d9c6] bg-white/90 px-2 py-3 text-center shadow-[0_10px_24px_rgba(52,34,18,0.08)] transition-transform duration-300 hover:-translate-y-1">
+                <img
+                  src={logoGsap}
+                  alt="GSAP logo"
+                  className="h-8 w-8 rounded-lg object-contain transition-transform duration-300 group-hover:scale-110"
+                  draggable="false"
+                />
+                <span className="text-[9px] font-semibold uppercase tracking-[0.18em] text-[#3a3a3a]">GSAP</span>
+              </div>
+              <div className="group flex flex-col items-center gap-2 rounded-2xl border border-[#e6d9c6] bg-white/90 px-2 py-3 text-center shadow-[0_10px_24px_rgba(52,34,18,0.08)] transition-transform duration-300 hover:-translate-y-1">
+                <img
+                  src={logoLenis}
+                  alt="Lenis logo"
+                  className="h-8 w-8 rounded-lg object-contain transition-transform duration-300 group-hover:scale-110"
+                  draggable="false"
+                />
+                <span className="text-[9px] font-semibold uppercase tracking-[0.18em] text-[#3a3a3a]">Lenis</span>
               </div>
               <div className="group flex flex-col items-center gap-2 rounded-2xl border border-[#e6d9c6] bg-white/90 px-2 py-3 text-center shadow-[0_10px_24px_rgba(52,34,18,0.08)] transition-transform duration-300 hover:-translate-y-1">
                 <img

@@ -21,8 +21,10 @@ import logoWordpress from './assets/logos/wordpress.png';
 import logoNode from './assets/logos/node.png';
 import logoAirtable from './assets/logos/airtable.png';
 import logoFramer from './assets/logos/framer.png';
+import logoGsap from './assets/logos/gsap.png';
 import logoFigma from './assets/logos/figma.png';
 import logoNotion from './assets/logos/notion.png';
+import logoLenis from './assets/logos/lenis.png';
 import logoNetlify from './assets/logos/netlify.png';
 
 const contactCopy = {
@@ -66,8 +68,10 @@ const toolIcons = [
   { src: logoNode, alt: "Node.js" },
   { src: logoAirtable, alt: "Airtable" },
   { src: logoFramer, alt: "Framer" },
+  { src: logoGsap, alt: "GSAP" },
   { src: logoFigma, alt: "Figma" },
   { src: logoNotion, alt: "Notion" },
+  { src: logoLenis, alt: "Lenis" },
   { src: logoNetlify, alt: "Netlify" },
 ];
 
