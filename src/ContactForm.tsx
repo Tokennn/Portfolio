@@ -175,7 +175,7 @@ const ContactForm = () => {
           } as React.CSSProperties;
 
           const roundedAlt = tool.alt.toLowerCase();
-          const isExtraRounded = roundedAlt === 'vue' || roundedAlt === 'golang' || roundedAlt === 'mysql';
+          const isExtraRounded = roundedAlt === 'vue' || roundedAlt === 'golang' || roundedAlt === 'mysql' || roundedAlt === 'mariadb';
 
           return (
             <div key={`${tool.alt}-${index}`} className="contact-tool" style={floatStyle}>

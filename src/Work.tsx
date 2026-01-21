@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import WaterCursor from './components/WaterCursor';
 import LanguageToggle from './components/LanguageToggle';
@@ -77,6 +77,8 @@ const workCopy = {
 
 function Work() {
   const [activeIndex, setActiveIndex] = useState(0);
+  const [isSwitching, setIsSwitching] = useState(false);
+  const didMountRef = useRef(false);
   const { language } = useLanguage();
   const projects = workCopy[language].projects;
   const activeProject = projects[activeIndex];
@@ -99,6 +101,23 @@ function Work() {
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
+
+  useEffect(() => {
+    projects.forEach((project) => {
+      const preload = new Image();
+      preload.src = project.image;
+    });
+  }, [projects]);
+
+  useEffect(() => {
+    if (!didMountRef.current) {
+      didMountRef.current = true;
+      return;
+    }
+    setIsSwitching(true);
+    const timer = window.setTimeout(() => setIsSwitching(false), 450);
+    return () => window.clearTimeout(timer);
+  }, [activeIndex]);
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-[#f8f3ea] via-[#f2e6d7] to-[#fdf8ef] text-[#0f0f0f] px-4 md:px-8 py-12 md:py-16">
@@ -154,13 +173,16 @@ function Work() {
               </div>
 
               <a
-                key={activeProject.title}
                 href={activeProject.link}
                 target="_blank"
                 rel="noreferrer"
                 className="group relative isolate rounded-[30px] overflow-hidden border border-[#e6d9c6] bg-white shadow-[0_18px_60px_rgba(52,34,18,0.14)] reveal-up delay-2 fade-in transition-all duration-500 ease-[cubic-bezier(.16,1,.3,1)] hover:-translate-y-2 hover:shadow-[0_24px_70px_rgba(52,34,18,0.16)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#d9cbb4]"
               >
-                <div className="relative z-10 flex flex-col gap-6 md:gap-8 p-8 md:p-10 items-center text-center transition-colors duration-500">
+                <div
+                  className={`relative z-10 flex flex-col gap-6 md:gap-8 p-8 md:p-10 items-center text-center transition-colors duration-500 ${
+                    isSwitching ? 'project-swap' : ''
+                  }`}
+                >
                   <div className="flex flex-col items-center gap-3">
                     <span className="rounded-full border border-[#d5c5ad] bg-white/90 px-4 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-[#0f0f0f]">
                       {activeProject.tag}
