@@ -17,6 +17,7 @@ import logoXamp from "./assets/logos/xamp.png";
 import logoGit from "./assets/logos/git.png";
 import logoDocker from "./assets/logos/dockeur.png";
 import logoThreejs from "./assets/logos/threejs.png";
+import logoWebgl from "./assets/logos/webgl.png";
 import logoVue from "./assets/logos/vue.png";
 import logoNuxt from "./assets/logos/nuxt.png";
 import logoWordpress from "./assets/logos/wordpress.png";
@@ -744,6 +745,15 @@ function About() {
                   draggable="false"
                 />
                 <span className="text-[9px] font-semibold uppercase tracking-[0.18em] text-[#3a3a3a]">Three.js</span>
+              </div>
+              <div className="group flex flex-col items-center gap-2 rounded-2xl border border-[#e6d9c6] bg-white/90 px-2 py-3 text-center shadow-[0_10px_24px_rgba(52,34,18,0.08)] transition-transform duration-300 hover:-translate-y-1">
+                <img
+                  src={logoWebgl}
+                  alt="WebGL logo"
+                  className="h-8 w-8 rounded-2xl object-contain transition-transform duration-300 group-hover:scale-110"
+                  draggable="false"
+                />
+                <span className="text-[9px] font-semibold uppercase tracking-[0.18em] text-[#3a3a3a]">WebGL</span>
               </div>
               <div className="group flex flex-col items-center gap-2 rounded-2xl border border-[#e6d9c6] bg-white/90 px-2 py-3 text-center shadow-[0_10px_24px_rgba(52,34,18,0.08)] transition-transform duration-300 hover:-translate-y-1">
                 <img

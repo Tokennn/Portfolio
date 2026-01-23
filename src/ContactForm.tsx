@@ -15,6 +15,7 @@ import logoXamp from './assets/logos/xamp.png';
 import logoGit from './assets/logos/git.png';
 import logoDocker from './assets/logos/dockeur.png';
 import logoThreejs from './assets/logos/threejs.png';
+import logoWebgl from './assets/logos/webgl.png';
 import logoVue from './assets/logos/vue.png';
 import logoNuxt from './assets/logos/nuxt.png';
 import logoWordpress from './assets/logos/wordpress.png';
@@ -62,6 +63,7 @@ const toolIcons = [
   { src: logoGit, alt: "Git" },
   { src: logoDocker, alt: "Docker" },
   { src: logoThreejs, alt: "Three.js" },
+  { src: logoWebgl, alt: "WebGL" },
   { src: logoVue, alt: "Vue" },
   { src: logoNuxt, alt: "Nuxt" },
   { src: logoWordpress, alt: "WordPress" },
@@ -179,7 +181,12 @@ const ContactForm = () => {
           } as React.CSSProperties;
 
           const roundedAlt = tool.alt.toLowerCase();
-          const isExtraRounded = roundedAlt === 'vue' || roundedAlt === 'golang' || roundedAlt === 'mysql' || roundedAlt === 'mariadb';
+          const isExtraRounded =
+            roundedAlt === 'vue' ||
+            roundedAlt === 'golang' ||
+            roundedAlt === 'mysql' ||
+            roundedAlt === 'mariadb' ||
+            roundedAlt === 'webgl';
 
           return (
             <div key={`${tool.alt}-${index}`} className="contact-tool" style={floatStyle}>
