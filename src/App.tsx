@@ -98,12 +98,12 @@ function App() {
               }
             });
           }}
-          className={`enter-button group absolute left-1/2 top-1/2 h-48 w-48 -translate-x-1/2 -translate-y-1/2 transition opacity-100 ${canEnter ? "cursor-pointer" : "cursor-not-allowed opacity-60"}`}
+          className={`enter-button liquid-glass group absolute left-1/2 top-1/2 h-48 w-48 -translate-x-1/2 -translate-y-1/2 transition opacity-100 ${canEnter ? "cursor-pointer" : "cursor-not-allowed opacity-60"}`}
         >
-          <div className="absolute inset-0 border border-white/20 rounded-full transition-transform duration-700 group-hover:scale-110" />
-          <div className="absolute inset-0 border border-white/20 rounded-full transition-transform duration-700 group-hover:scale-125" />
-          <div className="absolute inset-0 flex items-center justify-center">
-            <span className="text-white/80 text-lg tracking-widest font-light transition-all duration-500 group-hover:text-white group-hover:scale-110">
+          <div className="liquid-glass__ring absolute inset-0 rounded-full transition-transform duration-700 group-hover:scale-110" />
+          <div className="liquid-glass__ring liquid-glass__ring--soft absolute inset-0 rounded-full transition-transform duration-700 group-hover:scale-125" />
+          <div className="liquid-glass__content absolute inset-0 flex items-center justify-center">
+            <span className="text-white/85 text-lg tracking-widest font-light transition-all duration-500 group-hover:text-white group-hover:scale-110">
               ENTER
             </span>
           </div>
@@ -219,7 +219,7 @@ function App() {
                     <a 
                       href="https://github.com/Tokennn" 
                       className="text-white hover:text-gray-200" 
-                      title="Ca c'est mon GitHub yep !"
+                      title="Ça c'est mon GitHub yep !"
                     >
                       <Github size={24} />
                     </a>

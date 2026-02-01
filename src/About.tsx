@@ -45,10 +45,10 @@ const aboutCopy = {
     nav: {
       home: "Accueil",
       work: "Projets",
-      about: "A propos",
+      about: "À propos",
       contact: "Contact"
     },
-    badge: "A propos",
+    badge: "À propos",
     title: "Développeur et VibeDev créatif indépendant",
     intro:
       "Développeur créatif basé en France, passionné par l'art numérique, le codage créatif et l'animation 3D. Toujours à la recherche d'opportunités intéressantes en freelance ou en équipe pour développer de belles expériences numériques.",
@@ -57,7 +57,7 @@ const aboutCopy = {
       "Actuellement en formation à Ynov Campus sur Lyon, je suis en 3ème année de Bachelor en développement où je me spécialise dans le développement web. Par la suite de cette formation, à la fin de mon Master, je voudrais plus me spécialiser dans le design web.",
     valuesTitle: "Valeurs",
     values: ["Esprit d'équipe", "Créativité", "Innovation", "Adaptabilité"],
-    zoomOut: "Dezoomer la carte",
+    zoomOut: "Dézoomer la carte",
     zoomIn: "Zoomer la carte",
     mapTooltip: "je suis là !!",
     snapshotLabel: "Snapshot",
@@ -79,8 +79,8 @@ const aboutCopy = {
       "Passion pour le sport, le dessin, la photo/vidéo, la mode, la musique et pouvoir voyager ✈️",
     contributeTitle: "Ce que j'apporte",
     contributeItems: [
-      "Developpement Front End .",
-      "Developpement Back End .",
+      "Développement Front End .",
+      "Développement Back End .",
       "Optimisation de pages web ."
     ],
     contactTagline: "- Contactez-moi pour toute collaboration ou simplement dire bonjour 🫵 -",

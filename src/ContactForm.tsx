@@ -37,7 +37,7 @@ const contactCopy = {
     sendLabel: "Envoyer",
     successMessage: "Message envoyé avec succès ✅",
     errorMessage: "Une erreur est survenue ❌",
-    bubble: "Ecrivez-moi pour toute question ou collaboration !!"
+    bubble: "Écrivez-moi pour toute question ou collaboration !!"
   },
   en: {
     title: "Contact me 📬",
