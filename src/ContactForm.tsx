@@ -3,6 +3,7 @@ import emailjs from '@emailjs/browser';
 import { motion, AnimatePresence } from 'framer-motion';
 import gsap from 'gsap';
 import LanguageToggle from './components/LanguageToggle';
+import WaterCursor from './components/WaterCursor';
 import { useLanguage } from './context/LanguageContext';
 import logoCursor from './assets/logos/cursor.png';
 import logoHostinger from './assets/logos/hostinger.png';
@@ -201,6 +202,7 @@ const ContactForm = () => {
           );
         })}
       </div>
+      <WaterCursor />
       <div className="absolute right-5 top-5 z-30 md:right-8 md:top-8">
         <LanguageToggle />
       </div>
