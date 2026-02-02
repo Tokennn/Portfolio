@@ -30,7 +30,7 @@ import logoNetlify from './assets/logos/netlify.png';
 
 const contactCopy = {
   fr: {
-    title: "Contacte-moi 📬",
+    title: "Contactez-moi 📬",
     nameLabel: "Nom",
     emailLabel: "Email",
     messageLabel: "Message",

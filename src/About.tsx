@@ -232,7 +232,7 @@ function About() {
                       Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero.
                     </p>
                   </div> */}
-                  <div className="rounded-[26px] border border-[#e6d9c6] bg-white/80 p-6 shadow-[0_14px_40px_rgba(52,34,18,0.10)] transition-transform duration-300 hover:-translate-y-1">
+                  <div className="rounded-[26px] border border-[#e6d9c6] bg-white/80 p-6 shadow-[0_14px_40px_rgba(52,34,18,0.10)] transition-transform transition-shadow duration-500 ease-[cubic-bezier(.16,1,.3,1)] hover:-translate-y-1 hover:shadow-[0_20px_50px_rgba(52,34,18,0.16)]">
                     <h2 className="text-sm font-semibold uppercase tracking-[0.24em] text-[#0f0f0f] mb-3">
                       {copy.valuesTitle}
                     </h2>
@@ -242,7 +242,7 @@ function About() {
                     ))}
                   </ul>
                   </div>
-                  <div className="rounded-[26px] border border-[#e6d9c6] bg-white/80 p-4 shadow-[0_14px_40px_rgba(52,34,18,0.10)] transition-transform duration-300 hover:-translate-y-1">
+                  <div className="rounded-[26px] border border-[#e6d9c6] bg-white/80 p-4 shadow-[0_14px_40px_rgba(52,34,18,0.10)] transition-transform transition-shadow duration-500 ease-[cubic-bezier(.16,1,.3,1)] hover:-translate-y-1 hover:shadow-[0_20px_50px_rgba(52,34,18,0.16)]">
                     <div className="mb-2 flex items-center justify-between">
                       <button
                         type="button"
@@ -306,7 +306,7 @@ function About() {
               </div>
 
               <aside className="space-y-4">
-                <div className="relative overflow-hidden rounded-[30px] border border-[#e6d9c6] bg-white p-7 shadow-[0_18px_60px_rgba(52,34,18,0.12)] reveal-up delay-1 transition-transform duration-300 hover:-translate-y-1">
+                <div className="relative overflow-hidden rounded-[30px] border border-[#e6d9c6] bg-white p-7 shadow-[0_18px_60px_rgba(52,34,18,0.12)] reveal-up delay-1 transition-transform transition-shadow duration-500 ease-[cubic-bezier(.16,1,.3,1)] hover:-translate-y-1 hover:shadow-[0_26px_80px_rgba(52,34,18,0.18)]">
                   <div className="pointer-events-none absolute inset-0 opacity-70 bg-[radial-gradient(circle_at_20%_20%,rgba(253,230,205,0.6),transparent_45%),radial-gradient(circle_at_80%_10%,rgba(210,175,140,0.26),transparent_55%)]" />
                   <div className="relative z-10 space-y-6">
                     <div className="flex items-center gap-4">
@@ -376,7 +376,7 @@ function About() {
                   </div>
                 </div>
 
-                <div className="rounded-[30px] border border-[#e6d9c6] bg-white/80 p-7 shadow-[0_18px_60px_rgba(52,34,18,0.10)] reveal-up delay-2 transition-transform duration-300 hover:-translate-y-1">
+                <div className="rounded-[30px] border border-[#e6d9c6] bg-white/80 p-7 shadow-[0_18px_60px_rgba(52,34,18,0.10)] reveal-up delay-2 transition-transform transition-shadow duration-500 ease-[cubic-bezier(.16,1,.3,1)] hover:-translate-y-1 hover:shadow-[0_26px_80px_rgba(52,34,18,0.16)]">
                   <h2 className="text-sm font-semibold uppercase tracking-[0.24em] text-[#0f0f0f] mb-4">
                     {copy.contributeTitle}
                   </h2>
@@ -426,7 +426,7 @@ function About() {
                 href="https://github.com/Tokennn"
                 target="_blank"
                 rel="noreferrer"
-                className="flex h-11 w-11 items-center justify-center rounded-full bg-white shadow-[0_8px_18px_rgba(52,34,18,0.12)] transition-transform duration-300 hover:-translate-y-1 hover:scale-105"
+                className="flex h-11 w-11 items-center justify-center rounded-full bg-white shadow-[0_8px_18px_rgba(52,34,18,0.12)] transition-transform transition-shadow duration-500 ease-[cubic-bezier(.16,1,.3,1)] hover:-translate-y-1 hover:scale-105 hover:shadow-[0_12px_24px_rgba(52,34,18,0.16)]"
                 aria-label="GitHub"
               >
                 <svg className="h-5 w-5 text-[#111111]" viewBox="0 0 24 24" aria-hidden="true">
@@ -438,14 +438,14 @@ function About() {
               </a>
               <a
                 href="mailto:quentin@ynov.com"
-                className="flex h-11 w-11 items-center justify-center rounded-full bg-white shadow-[0_8px_18px_rgba(52,34,18,0.12)] transition-transform duration-300 hover:-translate-y-1 hover:scale-105"
+                className="flex h-11 w-11 items-center justify-center rounded-full bg-white shadow-[0_8px_18px_rgba(52,34,18,0.12)] transition-transform transition-shadow duration-500 ease-[cubic-bezier(.16,1,.3,1)] hover:-translate-y-1 hover:scale-105 hover:shadow-[0_12px_24px_rgba(52,34,18,0.16)]"
                 aria-label="Gmail"
               >
                 <img src={logoGmail} alt="Gmail" className="h-5 w-5 object-contain" loading="lazy" />
               </a>
               <a
                 href="mailto:quentin@ynov.com"
-                className="flex h-11 w-11 items-center justify-center rounded-full bg-white shadow-[0_8px_18px_rgba(52,34,18,0.12)] transition-transform duration-300 hover:-translate-y-1 hover:scale-105"
+                className="flex h-11 w-11 items-center justify-center rounded-full bg-white shadow-[0_8px_18px_rgba(52,34,18,0.12)] transition-transform transition-shadow duration-500 ease-[cubic-bezier(.16,1,.3,1)] hover:-translate-y-1 hover:scale-105 hover:shadow-[0_12px_24px_rgba(52,34,18,0.16)]"
                 aria-label="Outlook"
               >
                 <img src={logoOutlook} alt="Outlook" className="h-5 w-5 object-contain" loading="lazy" />
@@ -456,7 +456,7 @@ function About() {
         </div>
 
         <section className="grid gap-6 md:grid-cols-3 reveal-up delay-1">
-          <div className="self-start rounded-[28px] border border-[#dccfb9] bg-white/80 p-7 shadow-[0_18px_60px_rgba(52,34,18,0.10)]">
+          <div className="self-start rounded-[28px] border border-[#dccfb9] bg-white/80 p-7 shadow-[0_18px_60px_rgba(52,34,18,0.10)] transition-transform transition-shadow duration-500 ease-[cubic-bezier(.16,1,.3,1)] hover:-translate-y-1 hover:shadow-[0_26px_80px_rgba(52,34,18,0.16)]">
             <div className="mb-3 flex items-center justify-between gap-3">
               <h2 className="text-sm font-semibold uppercase tracking-[0.24em] text-[#0f0f0f]">
                 {copy.processTitle}
@@ -476,7 +476,7 @@ function About() {
             </div>
             <p className="text-sm md:text-base text-[#3a3a3a] leading-relaxed">{copy.processBody}</p>
           </div>
-          <div className="relative self-start rounded-[28px] border border-[#dccfb9] bg-white/80 p-7 shadow-[0_18px_60px_rgba(52,34,18,0.10)]">
+          <div className="relative self-start rounded-[28px] border border-[#dccfb9] bg-white/80 p-7 shadow-[0_18px_60px_rgba(52,34,18,0.10)] transition-transform transition-shadow duration-500 ease-[cubic-bezier(.16,1,.3,1)] hover:-translate-y-1 hover:shadow-[0_26px_80px_rgba(52,34,18,0.16)]">
             <div className="mb-3 flex items-center justify-between gap-3">
               <h2 className="text-sm font-semibold uppercase tracking-[0.24em] text-[#0f0f0f]">
                 {copy.toolsTitle}
@@ -499,7 +499,7 @@ function About() {
               className={`grid grid-cols-3 gap-3 overflow-hidden py-2 transition-all duration-700 ease-in-out ${isToolsExpanded ? "max-h-[880px] pb-8" : "max-h-[180px]"}`}
               style={{ willChange: "max-height" }}
             >
-              <div className="group flex flex-col items-center gap-2 rounded-2xl border border-[#e6d9c6] bg-white/90 px-2 py-3 text-center shadow-[0_10px_24px_rgba(52,34,18,0.08)] transition-transform duration-300 hover:-translate-y-1">
+              <div className="group flex flex-col items-center gap-2 rounded-2xl border border-[#e6d9c6] bg-white/90 px-2 py-3 text-center shadow-[0_10px_24px_rgba(52,34,18,0.08)] transition-transform transition-shadow duration-500 ease-[cubic-bezier(.16,1,.3,1)] hover:-translate-y-1 hover:shadow-[0_16px_32px_rgba(52,34,18,0.14)]">
                 <img
                   src={logoCursor}
                   alt="Cursor logo"
@@ -508,7 +508,7 @@ function About() {
                 />
                 <span className="text-[9px] font-semibold uppercase tracking-[0.18em] text-[#3a3a3a]">Cursor</span>
               </div>
-              <div className="group flex flex-col items-center gap-2 rounded-2xl border border-[#e6d9c6] bg-white/90 px-2 py-3 text-center shadow-[0_10px_24px_rgba(52,34,18,0.08)] transition-transform duration-300 hover:-translate-y-1">
+              <div className="group flex flex-col items-center gap-2 rounded-2xl border border-[#e6d9c6] bg-white/90 px-2 py-3 text-center shadow-[0_10px_24px_rgba(52,34,18,0.08)] transition-transform transition-shadow duration-500 ease-[cubic-bezier(.16,1,.3,1)] hover:-translate-y-1 hover:shadow-[0_16px_32px_rgba(52,34,18,0.14)]">
                 <img
                   src={logoHostinger}
                   alt="Hostinger logo"
@@ -517,7 +517,7 @@ function About() {
                 />
                 <span className="text-[9px] font-semibold uppercase tracking-[0.18em] text-[#3a3a3a]">Hostinger</span>
               </div>
-              <div className="group flex flex-col items-center gap-2 rounded-2xl border border-[#e6d9c6] bg-white/90 px-2 py-3 text-center shadow-[0_10px_24px_rgba(52,34,18,0.08)] transition-transform duration-300 hover:-translate-y-1">
+              <div className="group flex flex-col items-center gap-2 rounded-2xl border border-[#e6d9c6] bg-white/90 px-2 py-3 text-center shadow-[0_10px_24px_rgba(52,34,18,0.08)] transition-transform transition-shadow duration-500 ease-[cubic-bezier(.16,1,.3,1)] hover:-translate-y-1 hover:shadow-[0_16px_32px_rgba(52,34,18,0.14)]">
                 <svg
                   className="h-8 w-8 transition-transform duration-300 group-hover:scale-110"
                   viewBox="0 0 40 40"
@@ -548,7 +548,7 @@ function About() {
                 </svg>
                 <span className="text-[9px] font-semibold uppercase tracking-[0.18em] text-[#3a3a3a]">React</span>
               </div>
-              <div className="group flex flex-col items-center gap-2 rounded-2xl border border-[#e6d9c6] bg-white/90 px-2 py-3 text-center shadow-[0_10px_24px_rgba(52,34,18,0.08)] transition-transform duration-300 hover:-translate-y-1">
+              <div className="group flex flex-col items-center gap-2 rounded-2xl border border-[#e6d9c6] bg-white/90 px-2 py-3 text-center shadow-[0_10px_24px_rgba(52,34,18,0.08)] transition-transform transition-shadow duration-500 ease-[cubic-bezier(.16,1,.3,1)] hover:-translate-y-1 hover:shadow-[0_16px_32px_rgba(52,34,18,0.14)]">
                 <svg
                   className="h-8 w-8 transition-transform duration-300 group-hover:scale-110"
                   viewBox="0 0 64 40"
@@ -572,7 +572,7 @@ function About() {
                 </svg>
                 <span className="text-[9px] font-semibold uppercase tracking-[0.18em] text-[#3a3a3a]">Tailwind</span>
               </div>
-              <div className="group flex flex-col items-center gap-2 rounded-2xl border border-[#e6d9c6] bg-white/90 px-2 py-3 text-center shadow-[0_10px_24px_rgba(52,34,18,0.08)] transition-transform duration-300 hover:-translate-y-1">
+              <div className="group flex flex-col items-center gap-2 rounded-2xl border border-[#e6d9c6] bg-white/90 px-2 py-3 text-center shadow-[0_10px_24px_rgba(52,34,18,0.08)] transition-transform transition-shadow duration-500 ease-[cubic-bezier(.16,1,.3,1)] hover:-translate-y-1 hover:shadow-[0_16px_32px_rgba(52,34,18,0.14)]">
                 <svg
                   className="h-8 w-8 transition-transform duration-300 group-hover:scale-110"
                   viewBox="0 0 40 40"
@@ -593,7 +593,7 @@ function About() {
                 </svg>
                 <span className="text-[9px] font-semibold uppercase tracking-[0.18em] text-[#3a3a3a]">TypeScript</span>
               </div>
-              <div className="group flex flex-col items-center gap-2 rounded-2xl border border-[#e6d9c6] bg-white/90 px-2 py-3 text-center shadow-[0_10px_24px_rgba(52,34,18,0.08)] transition-transform duration-300 hover:-translate-y-1">
+              <div className="group flex flex-col items-center gap-2 rounded-2xl border border-[#e6d9c6] bg-white/90 px-2 py-3 text-center shadow-[0_10px_24px_rgba(52,34,18,0.08)] transition-transform transition-shadow duration-500 ease-[cubic-bezier(.16,1,.3,1)] hover:-translate-y-1 hover:shadow-[0_16px_32px_rgba(52,34,18,0.14)]">
                 <img
                   src={logoFramer}
                   alt="Framer logo"
@@ -602,7 +602,7 @@ function About() {
                 />
                 <span className="text-[9px] font-semibold uppercase tracking-[0.18em] text-[#3a3a3a]">Framer</span>
               </div>
-              <div className="group flex flex-col items-center gap-2 rounded-2xl border border-[#e6d9c6] bg-white/90 px-2 py-3 text-center shadow-[0_10px_24px_rgba(52,34,18,0.08)] transition-transform duration-300 hover:-translate-y-1">
+              <div className="group flex flex-col items-center gap-2 rounded-2xl border border-[#e6d9c6] bg-white/90 px-2 py-3 text-center shadow-[0_10px_24px_rgba(52,34,18,0.08)] transition-transform transition-shadow duration-500 ease-[cubic-bezier(.16,1,.3,1)] hover:-translate-y-1 hover:shadow-[0_16px_32px_rgba(52,34,18,0.14)]">
                 <img
                   src={logoGsap}
                   alt="GSAP logo"
@@ -611,7 +611,7 @@ function About() {
                 />
                 <span className="text-[9px] font-semibold uppercase tracking-[0.18em] text-[#3a3a3a]">GSAP</span>
               </div>
-              <div className="group flex flex-col items-center gap-2 rounded-2xl border border-[#e6d9c6] bg-white/90 px-2 py-3 text-center shadow-[0_10px_24px_rgba(52,34,18,0.08)] transition-transform duration-300 hover:-translate-y-1">
+              <div className="group flex flex-col items-center gap-2 rounded-2xl border border-[#e6d9c6] bg-white/90 px-2 py-3 text-center shadow-[0_10px_24px_rgba(52,34,18,0.08)] transition-transform transition-shadow duration-500 ease-[cubic-bezier(.16,1,.3,1)] hover:-translate-y-1 hover:shadow-[0_16px_32px_rgba(52,34,18,0.14)]">
                 <img
                   src={logoLenis}
                   alt="Lenis logo"
@@ -620,7 +620,7 @@ function About() {
                 />
                 <span className="text-[9px] font-semibold uppercase tracking-[0.18em] text-[#3a3a3a]">Lenis</span>
               </div>
-              <div className="group flex flex-col items-center gap-2 rounded-2xl border border-[#e6d9c6] bg-white/90 px-2 py-3 text-center shadow-[0_10px_24px_rgba(52,34,18,0.08)] transition-transform duration-300 hover:-translate-y-1">
+              <div className="group flex flex-col items-center gap-2 rounded-2xl border border-[#e6d9c6] bg-white/90 px-2 py-3 text-center shadow-[0_10px_24px_rgba(52,34,18,0.08)] transition-transform transition-shadow duration-500 ease-[cubic-bezier(.16,1,.3,1)] hover:-translate-y-1 hover:shadow-[0_16px_32px_rgba(52,34,18,0.14)]">
                 <img
                   src={logoFigma}
                   alt="Figma logo"
@@ -629,7 +629,7 @@ function About() {
                 />
                 <span className="text-[9px] font-semibold uppercase tracking-[0.18em] text-[#3a3a3a]">Figma</span>
               </div>
-              <div className="group flex flex-col items-center gap-2 rounded-2xl border border-[#e6d9c6] bg-white/90 px-2 py-3 text-center shadow-[0_10px_24px_rgba(52,34,18,0.08)] transition-transform duration-300 hover:-translate-y-1">
+              <div className="group flex flex-col items-center gap-2 rounded-2xl border border-[#e6d9c6] bg-white/90 px-2 py-3 text-center shadow-[0_10px_24px_rgba(52,34,18,0.08)] transition-transform transition-shadow duration-500 ease-[cubic-bezier(.16,1,.3,1)] hover:-translate-y-1 hover:shadow-[0_16px_32px_rgba(52,34,18,0.14)]">
                 <img
                   src={logoNotion}
                   alt="Notion logo"
@@ -638,7 +638,7 @@ function About() {
                 />
                 <span className="text-[9px] font-semibold uppercase tracking-[0.18em] text-[#3a3a3a]">Notion</span>
               </div>
-              <div className="group flex flex-col items-center gap-2 rounded-2xl border border-[#e6d9c6] bg-white/90 px-2 py-3 text-center shadow-[0_10px_24px_rgba(52,34,18,0.08)] transition-transform duration-300 hover:-translate-y-1">
+              <div className="group flex flex-col items-center gap-2 rounded-2xl border border-[#e6d9c6] bg-white/90 px-2 py-3 text-center shadow-[0_10px_24px_rgba(52,34,18,0.08)] transition-transform transition-shadow duration-500 ease-[cubic-bezier(.16,1,.3,1)] hover:-translate-y-1 hover:shadow-[0_16px_32px_rgba(52,34,18,0.14)]">
                 <img
                   src={logoGolang}
                   alt="Golang logo"
@@ -647,7 +647,7 @@ function About() {
                 />
                 <span className="text-[9px] font-semibold uppercase tracking-[0.18em] text-[#3a3a3a]">Golang</span>
               </div>
-              <div className="group flex flex-col items-center gap-2 rounded-2xl border border-[#e6d9c6] bg-white/90 px-2 py-3 text-center shadow-[0_10px_24px_rgba(52,34,18,0.08)] transition-transform duration-300 hover:-translate-y-1">
+              <div className="group flex flex-col items-center gap-2 rounded-2xl border border-[#e6d9c6] bg-white/90 px-2 py-3 text-center shadow-[0_10px_24px_rgba(52,34,18,0.08)] transition-transform transition-shadow duration-500 ease-[cubic-bezier(.16,1,.3,1)] hover:-translate-y-1 hover:shadow-[0_16px_32px_rgba(52,34,18,0.14)]">
                 <img
                   src={logoNode}
                   alt="Node.js logo"
@@ -656,7 +656,7 @@ function About() {
                 />
                 <span className="text-[9px] font-semibold uppercase tracking-[0.18em] text-[#3a3a3a]">Node</span>
               </div>
-              <div className="group flex flex-col items-center gap-2 rounded-2xl border border-[#e6d9c6] bg-white/90 px-2 py-3 text-center shadow-[0_10px_24px_rgba(52,34,18,0.08)] transition-transform duration-300 hover:-translate-y-1">
+              <div className="group flex flex-col items-center gap-2 rounded-2xl border border-[#e6d9c6] bg-white/90 px-2 py-3 text-center shadow-[0_10px_24px_rgba(52,34,18,0.08)] transition-transform transition-shadow duration-500 ease-[cubic-bezier(.16,1,.3,1)] hover:-translate-y-1 hover:shadow-[0_16px_32px_rgba(52,34,18,0.14)]">
                 <img
                   src={logoAirtable}
                   alt="Airtable logo"
@@ -665,7 +665,7 @@ function About() {
                 />
                 <span className="text-[9px] font-semibold uppercase tracking-[0.18em] text-[#3a3a3a]">Airtable</span>
               </div>
-              <div className="group flex flex-col items-center gap-2 rounded-2xl border border-[#e6d9c6] bg-white/90 px-2 py-3 text-center shadow-[0_10px_24px_rgba(52,34,18,0.08)] transition-transform duration-300 hover:-translate-y-1">
+              <div className="group flex flex-col items-center gap-2 rounded-2xl border border-[#e6d9c6] bg-white/90 px-2 py-3 text-center shadow-[0_10px_24px_rgba(52,34,18,0.08)] transition-transform transition-shadow duration-500 ease-[cubic-bezier(.16,1,.3,1)] hover:-translate-y-1 hover:shadow-[0_16px_32px_rgba(52,34,18,0.14)]">
                 <img
                   src={logoPostman}
                   alt="Postman logo"
@@ -674,7 +674,7 @@ function About() {
                 />
                 <span className="text-[9px] font-semibold uppercase tracking-[0.18em] text-[#3a3a3a]">Postman</span>
               </div>
-              <div className="group flex flex-col items-center gap-2 rounded-2xl border border-[#e6d9c6] bg-white/90 px-2 py-3 text-center shadow-[0_10px_24px_rgba(52,34,18,0.08)] transition-transform duration-300 hover:-translate-y-1">
+              <div className="group flex flex-col items-center gap-2 rounded-2xl border border-[#e6d9c6] bg-white/90 px-2 py-3 text-center shadow-[0_10px_24px_rgba(52,34,18,0.08)] transition-transform transition-shadow duration-500 ease-[cubic-bezier(.16,1,.3,1)] hover:-translate-y-1 hover:shadow-[0_16px_32px_rgba(52,34,18,0.14)]">
                 <img
                   src={logoFirebase}
                   alt="Firebase logo"
@@ -683,7 +683,7 @@ function About() {
                 />
                 <span className="text-[9px] font-semibold uppercase tracking-[0.18em] text-[#3a3a3a]">Firebase</span>
               </div>
-              <div className="group flex flex-col items-center gap-2 rounded-2xl border border-[#e6d9c6] bg-white/90 px-2 py-3 text-center shadow-[0_10px_24px_rgba(52,34,18,0.08)] transition-transform duration-300 hover:-translate-y-1">
+              <div className="group flex flex-col items-center gap-2 rounded-2xl border border-[#e6d9c6] bg-white/90 px-2 py-3 text-center shadow-[0_10px_24px_rgba(52,34,18,0.08)] transition-transform transition-shadow duration-500 ease-[cubic-bezier(.16,1,.3,1)] hover:-translate-y-1 hover:shadow-[0_16px_32px_rgba(52,34,18,0.14)]">
                 <img
                   src={logoSupabase}
                   alt="Supabase logo"
@@ -692,7 +692,7 @@ function About() {
                 />
                 <span className="text-[9px] font-semibold uppercase tracking-[0.18em] text-[#3a3a3a]">Supabase</span>
               </div>
-              <div className="group flex flex-col items-center gap-2 rounded-2xl border border-[#e6d9c6] bg-white/90 px-2 py-3 text-center shadow-[0_10px_24px_rgba(52,34,18,0.08)] transition-transform duration-300 hover:-translate-y-1">
+              <div className="group flex flex-col items-center gap-2 rounded-2xl border border-[#e6d9c6] bg-white/90 px-2 py-3 text-center shadow-[0_10px_24px_rgba(52,34,18,0.08)] transition-transform transition-shadow duration-500 ease-[cubic-bezier(.16,1,.3,1)] hover:-translate-y-1 hover:shadow-[0_16px_32px_rgba(52,34,18,0.14)]">
                 <img
                   src={logoMysql}
                   alt="MySQL logo"
@@ -701,7 +701,7 @@ function About() {
                 />
                 <span className="text-[9px] font-semibold uppercase tracking-[0.18em] text-[#3a3a3a]">MySQL</span>
               </div>
-              <div className="group flex flex-col items-center gap-2 rounded-2xl border border-[#e6d9c6] bg-white/90 px-2 py-3 text-center shadow-[0_10px_24px_rgba(52,34,18,0.08)] transition-transform duration-300 hover:-translate-y-1">
+              <div className="group flex flex-col items-center gap-2 rounded-2xl border border-[#e6d9c6] bg-white/90 px-2 py-3 text-center shadow-[0_10px_24px_rgba(52,34,18,0.08)] transition-transform transition-shadow duration-500 ease-[cubic-bezier(.16,1,.3,1)] hover:-translate-y-1 hover:shadow-[0_16px_32px_rgba(52,34,18,0.14)]">
                 <img
                   src={logoMariadb}
                   alt="MariaDB logo"
@@ -710,7 +710,7 @@ function About() {
                 />
                 <span className="text-[9px] font-semibold uppercase tracking-[0.18em] text-[#3a3a3a]">MariaDB</span>
               </div>
-              <div className="group flex flex-col items-center gap-2 rounded-2xl border border-[#e6d9c6] bg-white/90 px-2 py-3 text-center shadow-[0_10px_24px_rgba(52,34,18,0.08)] transition-transform duration-300 hover:-translate-y-1">
+              <div className="group flex flex-col items-center gap-2 rounded-2xl border border-[#e6d9c6] bg-white/90 px-2 py-3 text-center shadow-[0_10px_24px_rgba(52,34,18,0.08)] transition-transform transition-shadow duration-500 ease-[cubic-bezier(.16,1,.3,1)] hover:-translate-y-1 hover:shadow-[0_16px_32px_rgba(52,34,18,0.14)]">
                 <img
                   src={logoXamp}
                   alt="Xamp logo"
@@ -719,7 +719,7 @@ function About() {
                 />
                 <span className="text-[9px] font-semibold uppercase tracking-[0.18em] text-[#3a3a3a]">Xamp</span>
               </div>
-              <div className="group flex flex-col items-center gap-2 rounded-2xl border border-[#e6d9c6] bg-white/90 px-2 py-3 text-center shadow-[0_10px_24px_rgba(52,34,18,0.08)] transition-transform duration-300 hover:-translate-y-1">
+              <div className="group flex flex-col items-center gap-2 rounded-2xl border border-[#e6d9c6] bg-white/90 px-2 py-3 text-center shadow-[0_10px_24px_rgba(52,34,18,0.08)] transition-transform transition-shadow duration-500 ease-[cubic-bezier(.16,1,.3,1)] hover:-translate-y-1 hover:shadow-[0_16px_32px_rgba(52,34,18,0.14)]">
                 <img
                   src={logoGit}
                   alt="Git logo"
@@ -728,7 +728,7 @@ function About() {
                 />
                 <span className="text-[9px] font-semibold uppercase tracking-[0.18em] text-[#3a3a3a]">Git</span>
               </div>
-              <div className="group flex flex-col items-center gap-2 rounded-2xl border border-[#e6d9c6] bg-white/90 px-2 py-3 text-center shadow-[0_10px_24px_rgba(52,34,18,0.08)] transition-transform duration-300 hover:-translate-y-1">
+              <div className="group flex flex-col items-center gap-2 rounded-2xl border border-[#e6d9c6] bg-white/90 px-2 py-3 text-center shadow-[0_10px_24px_rgba(52,34,18,0.08)] transition-transform transition-shadow duration-500 ease-[cubic-bezier(.16,1,.3,1)] hover:-translate-y-1 hover:shadow-[0_16px_32px_rgba(52,34,18,0.14)]">
                 <img
                   src={logoDocker}
                   alt="Docker logo"
@@ -737,7 +737,7 @@ function About() {
                 />
                 <span className="text-[9px] font-semibold uppercase tracking-[0.18em] text-[#3a3a3a]">Docker</span>
               </div>
-              <div className="group flex flex-col items-center gap-2 rounded-2xl border border-[#e6d9c6] bg-white/90 px-2 py-3 text-center shadow-[0_10px_24px_rgba(52,34,18,0.08)] transition-transform duration-300 hover:-translate-y-1">
+              <div className="group flex flex-col items-center gap-2 rounded-2xl border border-[#e6d9c6] bg-white/90 px-2 py-3 text-center shadow-[0_10px_24px_rgba(52,34,18,0.08)] transition-transform transition-shadow duration-500 ease-[cubic-bezier(.16,1,.3,1)] hover:-translate-y-1 hover:shadow-[0_16px_32px_rgba(52,34,18,0.14)]">
                 <img
                   src={logoThreejs}
                   alt="Three.js logo"
@@ -746,7 +746,7 @@ function About() {
                 />
                 <span className="text-[9px] font-semibold uppercase tracking-[0.18em] text-[#3a3a3a]">Three.js</span>
               </div>
-              <div className="group flex flex-col items-center gap-2 rounded-2xl border border-[#e6d9c6] bg-white/90 px-2 py-3 text-center shadow-[0_10px_24px_rgba(52,34,18,0.08)] transition-transform duration-300 hover:-translate-y-1">
+              <div className="group flex flex-col items-center gap-2 rounded-2xl border border-[#e6d9c6] bg-white/90 px-2 py-3 text-center shadow-[0_10px_24px_rgba(52,34,18,0.08)] transition-transform transition-shadow duration-500 ease-[cubic-bezier(.16,1,.3,1)] hover:-translate-y-1 hover:shadow-[0_16px_32px_rgba(52,34,18,0.14)]">
                 <img
                   src={logoWebgl}
                   alt="WebGL logo"
@@ -755,7 +755,7 @@ function About() {
                 />
                 <span className="text-[9px] font-semibold uppercase tracking-[0.18em] text-[#3a3a3a]">WebGL</span>
               </div>
-              <div className="group flex flex-col items-center gap-2 rounded-2xl border border-[#e6d9c6] bg-white/90 px-2 py-3 text-center shadow-[0_10px_24px_rgba(52,34,18,0.08)] transition-transform duration-300 hover:-translate-y-1">
+              <div className="group flex flex-col items-center gap-2 rounded-2xl border border-[#e6d9c6] bg-white/90 px-2 py-3 text-center shadow-[0_10px_24px_rgba(52,34,18,0.08)] transition-transform transition-shadow duration-500 ease-[cubic-bezier(.16,1,.3,1)] hover:-translate-y-1 hover:shadow-[0_16px_32px_rgba(52,34,18,0.14)]">
                 <img
                   src={logoVue}
                   alt="Vue logo"
@@ -764,7 +764,7 @@ function About() {
                 />
                 <span className="text-[9px] font-semibold uppercase tracking-[0.18em] text-[#3a3a3a]">Vue</span>
               </div>
-              <div className="group flex flex-col items-center gap-2 rounded-2xl border border-[#e6d9c6] bg-white/90 px-2 py-3 text-center shadow-[0_10px_24px_rgba(52,34,18,0.08)] transition-transform duration-300 hover:-translate-y-1">
+              <div className="group flex flex-col items-center gap-2 rounded-2xl border border-[#e6d9c6] bg-white/90 px-2 py-3 text-center shadow-[0_10px_24px_rgba(52,34,18,0.08)] transition-transform transition-shadow duration-500 ease-[cubic-bezier(.16,1,.3,1)] hover:-translate-y-1 hover:shadow-[0_16px_32px_rgba(52,34,18,0.14)]">
                 <img
                   src={logoNuxt}
                   alt="Nuxt logo"
@@ -773,7 +773,7 @@ function About() {
                 />
                 <span className="text-[9px] font-semibold uppercase tracking-[0.18em] text-[#3a3a3a]">Nuxt</span>
               </div>
-              <div className="group flex flex-col items-center gap-2 rounded-2xl border border-[#e6d9c6] bg-white/90 px-2 py-3 text-center shadow-[0_10px_24px_rgba(52,34,18,0.08)] transition-transform duration-300 hover:-translate-y-1">
+              <div className="group flex flex-col items-center gap-2 rounded-2xl border border-[#e6d9c6] bg-white/90 px-2 py-3 text-center shadow-[0_10px_24px_rgba(52,34,18,0.08)] transition-transform transition-shadow duration-500 ease-[cubic-bezier(.16,1,.3,1)] hover:-translate-y-1 hover:shadow-[0_16px_32px_rgba(52,34,18,0.14)]">
                 <img
                   src={logoWordpress}
                   alt="WordPress logo"
@@ -809,7 +809,7 @@ function About() {
               </button>
             </div>
           </div>
-          <div className="self-start rounded-[28px] border border-[#dccfb9] bg-white/80 p-7 shadow-[0_18px_60px_rgba(52,34,18,0.10)]">
+          <div className="self-start rounded-[28px] border border-[#dccfb9] bg-white/80 p-7 shadow-[0_18px_60px_rgba(52,34,18,0.10)] transition-transform transition-shadow duration-500 ease-[cubic-bezier(.16,1,.3,1)] hover:-translate-y-1 hover:shadow-[0_26px_80px_rgba(52,34,18,0.16)]">
             <div className="mb-3 flex items-center justify-between gap-3">
               <h2 className="text-sm font-semibold uppercase tracking-[0.24em] text-[#0f0f0f]">
                 {copy.outsideTitle}
