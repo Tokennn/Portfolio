@@ -35,6 +35,7 @@ import logoNetlify from "./assets/logos/netlify.png";
 import WaterCursor from "./components/WaterCursor";
 import LanguageToggle from "./components/LanguageToggle";
 import { useLanguage } from "./context/LanguageContext";
+import { useTextReveal } from "./hooks/useTextReveal";
 
 const stackItems = ["React", "TypeScript", "GSAP", "Framer", "Tailwind", "UI / UX", "lenis"];
 const lyonPosition: [number, number] = [45.749977593867, 4.8232436066254225];
@@ -153,6 +154,8 @@ const mapMarker = divIcon({
 });
 
 function About() {
+  useTextReveal();
+
   const { language } = useLanguage();
   const copy = aboutCopy[language];
   const mapRef = useRef<LeafletMap | null>(null);
@@ -166,8 +169,8 @@ function About() {
         <LanguageToggle />
       </div>
 
-      <header className="relative max-w-6xl mx-auto flex items-center justify-between mb-10 md:mb-14 px-1 md:px-2 md:hidden">
-        <div className="flex items-center gap-6 md:gap-8">
+      <header className="relative max-w-6xl mx-auto flex flex-col items-center gap-4 mb-8 px-2 md:hidden">
+        <div className="flex flex-wrap items-center justify-center gap-4">
           <Link to="/" className="nav-underline font-amazing text-[#3a3a3a] hover:text-[#0f0f0f]">
             {copy.nav.home}
           </Link>
@@ -175,7 +178,7 @@ function About() {
             {copy.nav.work}
           </Link>
         </div>
-        <div className="flex items-center gap-6 md:gap-8">
+        <div className="flex flex-wrap items-center justify-center gap-4">
           <Link to="/about" className="nav-underline font-amazing text-[#0f0f0f] hover:text-[#0f0f0f]">
             {copy.nav.about}
           </Link>
@@ -216,11 +219,11 @@ function About() {
                 </div>
 
                 <div className="space-y-5 text-base md:text-lg text-[#1f1f1f] leading-relaxed max-w-2xl">
-                  <p>{copy.intro}</p>
+                  <p data-reveal="text">{copy.intro}</p>
                   <h2 className="text-4xl md:text-5xl font-black text-[#0a0a0a] leading-tight">
                     {copy.schoolTitle}
                   </h2>
-                  <p>{copy.schoolBody}</p> 
+                  <p data-reveal="text" data-reveal-immediate="true">{copy.schoolBody}</p> 
                 </div>
 
                 <div className="grid gap-4 sm:grid-cols-2">
@@ -474,7 +477,7 @@ function About() {
                 />
               </button>
             </div>
-            <p className="text-sm md:text-base text-[#3a3a3a] leading-relaxed">{copy.processBody}</p>
+            <p data-reveal="text" className="text-sm md:text-base text-[#3a3a3a] leading-relaxed">{copy.processBody}</p>
           </div>
           <div className="relative self-start rounded-[28px] border border-[#dccfb9] bg-white/80 p-7 shadow-[0_18px_60px_rgba(52,34,18,0.10)] transition-transform transition-shadow duration-500 ease-[cubic-bezier(.16,1,.3,1)] hover:-translate-y-1 hover:shadow-[0_26px_80px_rgba(52,34,18,0.16)]">
             <div className="mb-3 flex items-center justify-between gap-3">
@@ -827,21 +830,21 @@ function About() {
                 />
               </button>
             </div>
-            <p className="text-sm md:text-base text-[#3a3a3a] leading-relaxed">{copy.outsideBody}</p>
+            <p data-reveal="text" className="text-sm md:text-base text-[#3a3a3a] leading-relaxed">{copy.outsideBody}</p>
           </div>
         </section>
 
         <div className="flex justify-center py-0">
-          <p className="text-[10px] md:text-xs font-amazing tracking-[0.16em] text-[#6b6b6b]">
+          <p className="text-center text-[10px] md:text-xs font-amazing tracking-[0.14em] text-[#6b6b6b] leading-relaxed px-3 max-w-[320px]">
            {copy.contactTagline}
           </p>
         </div>
 
         <div className="mt-4 border-t border-[#e6d9c6] pt-4 text-[11px] md:text-xs text-[#6b6b6b]">
-          <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+          <div className="flex flex-col items-center text-center gap-3 md:flex-row md:items-center md:justify-between md:text-left">
             <p className="font-sans tracking-[0.08em]">{copy.footerRights}</p>
-            <div className="flex flex-wrap items-center gap-3 md:gap-5">
-              <span className="inline-flex items-center gap-2 font-sans tracking-[0.08em]">
+            <div className="flex flex-wrap items-center justify-center gap-3 md:gap-5">
+              <span className="inline-flex items-center justify-center gap-2 font-sans tracking-[0.08em]">
                 {copy.footerBuiltWith}
                 <svg className="h-5 w-5" viewBox="0 0 32 32" aria-hidden="true">
                   <circle cx="16" cy="16" r="2.4" fill="#61dafb" />
@@ -879,7 +882,7 @@ function About() {
                 </svg>
               </span>
               <span className="hidden md:inline text-[#b7b0a3]">•</span>
-              <span className="inline-flex items-center gap-2 font-sans tracking-[0.08em]">
+              <span className="inline-flex items-center justify-center gap-2 font-sans tracking-[0.08em]">
                 {copy.footerHostedOn}
                 <img src={logoNetlify} alt="Netlify" className="h-5 w-5 rounded object-contain" loading="lazy" />
               </span>

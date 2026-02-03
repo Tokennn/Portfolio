@@ -98,6 +98,19 @@
     transform: scaleX(1);
   }
 
+  [data-reveal='text'] {
+    visibility: hidden;
+  }
+
+  [data-reveal='text'].reveal-ready {
+    visibility: visible;
+  }
+
+  [data-reveal='text'] .reveal-word {
+    display: inline-block;
+    will-change: transform, opacity;
+  }
+
   .liquid-glass-card {
     position: relative;
     isolation: isolate;
