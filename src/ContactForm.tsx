@@ -202,6 +202,32 @@ const ContactForm = () => {
           );
         })}
       </div>
+      <svg className="absolute h-0 w-0" aria-hidden="true">
+        <filter
+          id="liquid-glass-distortion"
+          x="-20%"
+          y="-20%"
+          width="140%"
+          height="140%"
+          colorInterpolationFilters="sRGB"
+        >
+          <feTurbulence
+            type="fractalNoise"
+            baseFrequency="0.01"
+            numOctaves="2"
+            seed="2"
+            result="noise"
+          >
+            <animate
+              attributeName="baseFrequency"
+              dur="10s"
+              values="0.008;0.014;0.008"
+              repeatCount="indefinite"
+            />
+          </feTurbulence>
+          <feDisplacementMap in="SourceGraphic" in2="noise" scale="16" xChannelSelector="R" yChannelSelector="G" />
+        </filter>
+      </svg>
       <WaterCursor />
       <div className="absolute right-5 top-5 z-30 md:right-8 md:top-8">
         <LanguageToggle />
@@ -231,59 +257,62 @@ const ContactForm = () => {
         <form
           onSubmit={handleSubmit}
           ref={formRef}
-          className="max-w-lg w-full bg-[#f8f3ea] border border-[#dccfb9] shadow-[0_18px_60px_rgba(52,34,18,0.16)] backdrop-blur-sm p-8 rounded-xl space-y-6"
+          className="max-w-lg w-full liquid-glass-card rounded-2xl"
         >
-          <h2 className="text-3xl font-bold text-black text-center">{copy.title}</h2>
+          <span className="liquid-glass-layer" aria-hidden="true" />
+          <div className="liquid-glass-content space-y-6 p-8">
+            <h2 className="text-3xl font-bold text-black text-center">{copy.title}</h2>
 
-          <div ref={el => (inputsRef.current[0] = el)}>
-            <label htmlFor="name" className="block text-sm font-medium text-gray-700">{copy.nameLabel}</label>
-            <input
-              id="name"
-              type="text"
-              name="name"
-              value={form.name}
-              onChange={handleChange}
-              required
-              className="mt-1 p-2 w-full rounded-lg border border-[#dccfb9] bg-[#f8f3ea] text-[#0f0f0f] placeholder:text-[#8c8170]"
-              aria-required="true"
-            />
-          </div>
+            <div ref={el => (inputsRef.current[0] = el)}>
+              <label htmlFor="name" className="block text-sm font-medium text-gray-700">{copy.nameLabel}</label>
+              <input
+                id="name"
+                type="text"
+                name="name"
+                value={form.name}
+                onChange={handleChange}
+                required
+                className="mt-1 p-2 w-full rounded-lg border border-white/60 bg-white/35 backdrop-blur-sm text-[#0f0f0f] placeholder:text-[#7f7566] shadow-[0_8px_20px_rgba(52,34,18,0.12)] focus:outline-none focus:ring-2 focus:ring-white/70"
+                aria-required="true"
+              />
+            </div>
 
-          <div ref={el => (inputsRef.current[1] = el)}>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700">{copy.emailLabel}</label>
-            <input
-              id="email"
-              type="email"
-              name="email"
-              value={form.email}
-              onChange={handleChange}
-              required
-              className="mt-1 p-2 w-full rounded-lg border border-[#dccfb9] bg-[#f8f3ea] text-[#0f0f0f] placeholder:text-[#8c8170]"
-              aria-required="true"
-            />
-          </div>
+            <div ref={el => (inputsRef.current[1] = el)}>
+              <label htmlFor="email" className="block text-sm font-medium text-gray-700">{copy.emailLabel}</label>
+              <input
+                id="email"
+                type="email"
+                name="email"
+                value={form.email}
+                onChange={handleChange}
+                required
+                className="mt-1 p-2 w-full rounded-lg border border-white/60 bg-white/35 backdrop-blur-sm text-[#0f0f0f] placeholder:text-[#7f7566] shadow-[0_8px_20px_rgba(52,34,18,0.12)] focus:outline-none focus:ring-2 focus:ring-white/70"
+                aria-required="true"
+              />
+            </div>
 
-          <div ref={el => (inputsRef.current[2] = el)}>
-            <label htmlFor="message" className="block text-sm font-medium text-gray-700">{copy.messageLabel}</label>
-            <textarea
-              id="message"
-              name="message"
-              value={form.message}
-              onChange={handleChange}
-              rows={4}
-              required
-              className="mt-1 p-2 w-full rounded-lg border border-[#dccfb9] bg-[#f8f3ea] text-[#0f0f0f] placeholder:text-[#8c8170]"
-              aria-required="true"
-            />
-          </div>
+            <div ref={el => (inputsRef.current[2] = el)}>
+              <label htmlFor="message" className="block text-sm font-medium text-gray-700">{copy.messageLabel}</label>
+              <textarea
+                id="message"
+                name="message"
+                value={form.message}
+                onChange={handleChange}
+                rows={4}
+                required
+                className="mt-1 p-2 w-full rounded-lg border border-white/60 bg-white/35 backdrop-blur-sm text-[#0f0f0f] placeholder:text-[#7f7566] shadow-[0_8px_20px_rgba(52,34,18,0.12)] focus:outline-none focus:ring-2 focus:ring-white/70"
+                aria-required="true"
+              />
+            </div>
 
-          <div ref={el => (inputsRef.current[3] = el)}>
-            <button
-              type="submit"
-              className="bg-black text-white py-2 px-4 rounded-lg hover:bg-gray-800 transition"
-            >
-              {copy.sendLabel}
-            </button>
+            <div ref={el => (inputsRef.current[3] = el)}>
+              <button
+                type="submit"
+                className="liquid-glass-button text-[#0f0f0f] py-2 px-4 rounded-lg font-semibold tracking-[0.12em] uppercase text-xs"
+              >
+                {copy.sendLabel}
+              </button>
+            </div>
           </div>
         </form>
       </div>

@@ -5,6 +5,7 @@ import App from '../App';
 import ContactForm from '../ContactForm';
 import Work from '../Work';
 import About from '../About';
+import LenisRoot from './LenisRoot';
 
 function PageShell({
   children,
@@ -65,6 +66,7 @@ function AnimatedRoutes() {
 
   return (
     <AnimatePresence mode="wait" initial={false}>
+      <LenisRoot />
       <Routes location={location} key={location.pathname}>
         <Route
           path="/"
