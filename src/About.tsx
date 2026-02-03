@@ -223,7 +223,7 @@ function About() {
                   <h2 className="text-4xl md:text-5xl font-black text-[#0a0a0a] leading-tight">
                     {copy.schoolTitle}
                   </h2>
-                  <p data-reveal="text" data-reveal-immediate="true">{copy.schoolBody}</p> 
+                  <p data-reveal="text" data-reveal-onload="true">{copy.schoolBody}</p> 
                 </div>
 
                 <div className="grid gap-4 sm:grid-cols-2">
@@ -835,7 +835,7 @@ function About() {
         </section>
 
         <div className="flex justify-center py-0">
-          <p className="text-center text-[10px] md:text-xs font-amazing tracking-[0.14em] text-[#6b6b6b] leading-relaxed px-3 max-w-[320px]">
+          <p className="text-center text-[10px] md:text-xs font-amazing tracking-[0.14em] md:tracking-[0.12em] text-[#6b6b6b] leading-relaxed px-3 max-w-[320px] md:max-w-none md:whitespace-nowrap">
            {copy.contactTagline}
           </p>
         </div>

@@ -29,19 +29,19 @@ export function useTextReveal({
     if (!elements.length) return;
 
     const splitText = (el: HTMLElement) => {
-      if (el.dataset.revealProcessed === "true") return;
+      const hasWords = el.querySelector(".reveal-word");
+      if (el.dataset.revealProcessed === "true" && hasWords) return;
       const text = el.textContent?.trim();
       if (!text) return;
+      const isOnload =
+        el.dataset.revealOnload === "true" ||
+        el.dataset.revealOnload === "1" ||
+        el.dataset.revealImmediate === "true" ||
+        el.dataset.revealImmediate === "1";
       el.dataset.revealProcessed = "true";
-      el.style.visibility = "hidden";
       el.setAttribute("aria-label", text);
       el.setAttribute("role", "text");
       el.textContent = "";
-
-      const srOnly = document.createElement("span");
-      srOnly.className = "sr-only";
-      srOnly.textContent = text;
-      el.appendChild(srOnly);
 
       const words = text.split(/\s+/);
       words.forEach((word, index) => {
@@ -56,23 +56,25 @@ export function useTextReveal({
       });
 
       const wordEls = el.querySelectorAll<HTMLElement>(".reveal-word");
-      gsap.set(wordEls, { y, opacity: 0 });
-      el.classList.add("reveal-ready");
-      el.style.removeProperty("visibility");
-      el.dataset.revealState = "hidden";
-
-      if (el.dataset.revealImmediate === "true" || el.dataset.revealImmediate === "1") {
+      const rect = el.getBoundingClientRect();
+      const inView = rect.top < window.innerHeight && rect.bottom > 0;
+      if (isOnload && inView) {
+        gsap.set(wordEls, { y: 0, opacity: 1 });
         el.dataset.revealState = "visible";
         requestAnimationFrame(() => {
-          gsap.to(wordEls, {
-            y: 0,
-            opacity: 1,
+          gsap.from(wordEls, {
+            y,
+            opacity: 0,
             duration,
             ease: "power3.out",
             stagger
           });
         });
+      } else {
+        gsap.set(wordEls, { y, opacity: 0 });
+        el.dataset.revealState = "hidden";
       }
+
     };
 
     elements.forEach(splitText);
@@ -92,13 +94,17 @@ export function useTextReveal({
           if (entry.isIntersecting) {
             if (el.dataset.revealState !== "visible") {
               el.dataset.revealState = "visible";
-              gsap.to(words, {
-                y: 0,
-                opacity: 1,
-                duration,
-                ease: "power3.out",
-                stagger
-              });
+              gsap.fromTo(
+                words,
+                { y, opacity: 0 },
+                {
+                  y: 0,
+                  opacity: 1,
+                  duration,
+                  ease: "power3.out",
+                  stagger
+                }
+              );
             }
             return;
           }
@@ -120,10 +126,29 @@ export function useTextReveal({
 
     elements.forEach((el) => observer.observe(el));
 
+    let mutationRaf: number | null = null;
+    const mutationObserver = new MutationObserver(() => {
+      if (mutationRaf !== null) return;
+      mutationRaf = requestAnimationFrame(() => {
+        mutationRaf = null;
+        const updated = Array.from(document.querySelectorAll<HTMLElement>(selector));
+        updated.forEach((el) => {
+          splitText(el);
+          observer.observe(el);
+        });
+      });
+    });
+
+    mutationObserver.observe(document.body, { childList: true, subtree: true });
+
     return () => {
       observer.disconnect();
+      mutationObserver.disconnect();
+      if (mutationRaf !== null) {
+        cancelAnimationFrame(mutationRaf);
+      }
     };
-  }, [selector, y, duration, stagger, rootMargin, threshold]);
+  }, [selector, y, duration, stagger, rootMargin, threshold, outDuration]);
 }
 
 export default useTextReveal;
