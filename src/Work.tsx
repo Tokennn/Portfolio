@@ -1,6 +1,5 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from 'react';
 import { Link } from 'react-router-dom';
-import WaterCursor from './components/WaterCursor';
 import LanguageToggle from './components/LanguageToggle';
 import { useLanguage } from './context/LanguageContext';
 
@@ -78,10 +77,22 @@ const workCopy = {
 function Work() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isSwitching, setIsSwitching] = useState(false);
+  const [cursorVisible, setCursorVisible] = useState(false);
+  const [cursorEnabled, setCursorEnabled] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const coarsePointer = window.matchMedia('(pointer: coarse)').matches;
+    return !(reduceMotion || coarsePointer);
+  });
   const didMountRef = useRef(false);
+  const cursorRef = useRef<HTMLDivElement>(null);
+  const cursorRaf = useRef<number | null>(null);
+  const cursorTarget = useRef({ x: 0, y: 0 });
+  const cursorPosition = useRef({ x: 0, y: 0 });
   const { language } = useLanguage();
   const projects = workCopy[language].projects;
   const activeProject = projects[activeIndex];
+  const cursorLabel = language === 'fr' ? 'Voir le projet' : 'View project';
 
   const previousProjects = projects.slice(0, activeIndex);
   const nextProjects = projects.slice(activeIndex + 1);
@@ -110,6 +121,54 @@ function Work() {
   }, [projects]);
 
   useEffect(() => {
+    const reduceMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const coarsePointerQuery = window.matchMedia('(pointer: coarse)');
+    const update = () => {
+      setCursorEnabled(!(reduceMotionQuery.matches || coarsePointerQuery.matches));
+    };
+
+    update();
+    reduceMotionQuery.addEventListener('change', update);
+    coarsePointerQuery.addEventListener('change', update);
+
+    return () => {
+      reduceMotionQuery.removeEventListener('change', update);
+      coarsePointerQuery.removeEventListener('change', update);
+    };
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      if (cursorRaf.current) {
+        cancelAnimationFrame(cursorRaf.current);
+        cursorRaf.current = null;
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    if (cursorEnabled) return;
+    setCursorVisible(false);
+    if (cursorRaf.current) {
+      cancelAnimationFrame(cursorRaf.current);
+      cursorRaf.current = null;
+    }
+  }, [cursorEnabled]);
+
+  useEffect(() => {
+    if (!cursorEnabled || typeof document === 'undefined') return;
+    const body = document.body;
+    if (cursorVisible) {
+      body.classList.add('work-hide-cursor');
+    } else {
+      body.classList.remove('work-hide-cursor');
+    }
+    return () => {
+      body.classList.remove('work-hide-cursor');
+    };
+  }, [cursorVisible, cursorEnabled]);
+
+  useEffect(() => {
     if (!didMountRef.current) {
       didMountRef.current = true;
       return;
@@ -119,12 +178,68 @@ function Work() {
     return () => window.clearTimeout(timer);
   }, [activeIndex]);
 
+  const animateCursor = useCallback(() => {
+    const target = cursorTarget.current;
+    const position = cursorPosition.current;
+    const nextX = position.x + (target.x - position.x) * 0.18;
+    const nextY = position.y + (target.y - position.y) * 0.18;
+    cursorPosition.current = { x: nextX, y: nextY };
+
+    if (cursorRef.current) {
+      cursorRef.current.style.setProperty('--cursor-x', `${nextX}px`);
+      cursorRef.current.style.setProperty('--cursor-y', `${nextY}px`);
+    }
+
+    cursorRaf.current = requestAnimationFrame(animateCursor);
+  }, []);
+
+  const handleCursorEnter = (event: ReactPointerEvent<HTMLAnchorElement>) => {
+    if (!cursorEnabled) return;
+    const { clientX, clientY } = event;
+    cursorTarget.current = { x: clientX, y: clientY };
+    cursorPosition.current = { x: clientX, y: clientY };
+    if (cursorRef.current) {
+      cursorRef.current.style.setProperty('--cursor-x', `${clientX}px`);
+      cursorRef.current.style.setProperty('--cursor-y', `${clientY}px`);
+    }
+    setCursorVisible(true);
+    if (!cursorRaf.current) {
+      cursorRaf.current = requestAnimationFrame(animateCursor);
+    }
+  };
+
+  const handleCursorMove = (event: ReactPointerEvent<HTMLAnchorElement>) => {
+    if (!cursorEnabled) return;
+    cursorTarget.current = { x: event.clientX, y: event.clientY };
+  };
+
+  const handleCursorLeave = () => {
+    if (!cursorEnabled) return;
+    setCursorVisible(false);
+    if (cursorRaf.current) {
+      cancelAnimationFrame(cursorRaf.current);
+      cursorRaf.current = null;
+    }
+  };
+
   return (
     <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-[#f8f3ea] via-[#f2e6d7] to-[#fdf8ef] text-[#0f0f0f] px-4 md:px-8 py-12 md:py-16">
       <div className="pointer-events-none absolute inset-0 opacity-70 bg-[radial-gradient(circle_at_18%_16%,rgba(255,255,255,0.85),transparent_38%),radial-gradient(circle_at_82%_6%,rgba(253,230,205,0.45),transparent_46%),radial-gradient(circle_at_24%_80%,rgba(210,175,140,0.28),transparent_50%)]" />
       <div className="fixed right-5 top-5 z-50 md:right-8 md:top-8">
         <LanguageToggle />
       </div>
+
+      {cursorEnabled && (
+        <div
+          ref={cursorRef}
+          className={`project-cursor ${cursorVisible ? 'is-active' : ''}`}
+          aria-hidden="true"
+        >
+          <div className="project-cursor__bubble">
+            <span>{cursorLabel}</span>
+          </div>
+        </div>
+      )}
 
       <header className="relative max-w-6xl mx-auto flex items-center justify-between mb-10 md:mb-14 px-1 md:px-2 md:hidden">
         <div className="flex items-center gap-6 md:gap-8">
@@ -136,8 +251,6 @@ function Work() {
           <Link to="/contact" className="nav-underline font-amazing text-[#3a3a3a] hover:text-[#0f0f0f]">Contact</Link>
         </div>
       </header>
-
-      <WaterCursor />
 
       <main className="relative max-w-6xl mx-auto space-y-10 md:space-y-14">
         <div className="relative">
@@ -176,7 +289,10 @@ function Work() {
                 href={activeProject.link}
                 target="_blank"
                 rel="noreferrer"
-                className="group relative isolate rounded-[30px] overflow-hidden border border-[#e6d9c6] bg-white shadow-[0_18px_60px_rgba(52,34,18,0.14)] reveal-up delay-2 fade-in transition-all duration-500 ease-[cubic-bezier(.16,1,.3,1)] hover:-translate-y-2 hover:shadow-[0_24px_70px_rgba(52,34,18,0.16)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#d9cbb4]"
+                onPointerEnter={handleCursorEnter}
+                onPointerMove={handleCursorMove}
+                onPointerLeave={handleCursorLeave}
+                className={`group relative isolate rounded-[30px] overflow-hidden border border-[#e6d9c6] bg-white shadow-[0_18px_60px_rgba(52,34,18,0.14)] reveal-up delay-2 fade-in transition-all duration-500 ease-[cubic-bezier(.16,1,.3,1)] hover:-translate-y-2 hover:shadow-[0_24px_70px_rgba(52,34,18,0.16)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#d9cbb4] ${cursorEnabled ? 'cursor-none' : 'cursor-pointer'}`}
               >
                 <div
                   className={`relative z-10 flex flex-col gap-6 md:gap-8 p-8 md:p-10 items-center text-center transition-colors duration-500 ${
