@@ -35,10 +35,10 @@
   body {
     font-family: "Amazing Maret", "Inter", system-ui, -apple-system, sans-serif;
     @apply text-white;
-    background-color: #050507;
-    background-image: radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.04), transparent 40%), radial-gradient(circle at 80% 0%, rgba(255, 255, 255, 0.03), transparent 45%);
+    background-color: #f8f3ea;
+    background-image: linear-gradient(135deg, #f8f3ea 0%, #f2e6d7 45%, #fdf8ef 100%);
     background-position: 0 0;
-    background-size: 800px 800px;
+    background-size: cover;
     position: relative;
     overflow-y: scroll;
   }
@@ -55,10 +55,11 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(120deg, rgba(94, 234, 212, 0.08), rgba(139, 92, 246, 0.08)), radial-gradient(circle at 10% 30%, rgba(59, 130, 246, 0.12), transparent 40%), radial-gradient(circle at 80% 10%, rgba(236, 72, 153, 0.12), transparent 45%);
+    background: radial-gradient(circle at 18% 16%, rgba(255, 255, 255, 0.85), transparent 38%),
+                radial-gradient(circle at 82% 6%, rgba(253, 230, 205, 0.45), transparent 46%),
+                radial-gradient(circle at 24% 80%, rgba(210, 175, 140, 0.28), transparent 50%);
     pointer-events: none;
     z-index: -1;
-    animation: glowShift 18s ease-in-out infinite alternate;
   }
 
 }
@@ -67,6 +68,28 @@
   .font-amazing {
     font-family: "Amazing Maret", "Inter", system-ui, -apple-system, sans-serif;
     letter-spacing: 0.08em;
+  }
+
+  .enter-word {
+    font-size: clamp(12px, 1.4vw, 22px);
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    background: transparent;
+    border: none;
+    padding: 0;
+    color: #0f0f0f;
+    font-weight: 300;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+  }
+
+  .enter-word:hover {
+    animation: enterTypeSwap 0.35s steps(1, end) infinite;
+  }
+
+  .enter-word:focus-visible {
+    outline: 2px solid #0f0f0f;
+    outline-offset: 6px;
+    animation: enterTypeSwap 0.35s steps(1, end) infinite;
   }
 
   .nav-underline {
@@ -470,6 +493,48 @@
   }
 }
 
+@keyframes enterTypeSwap {
+  0% {
+    font-family: "Amazing Maret", "Inter", system-ui, -apple-system, sans-serif;
+  }
+  20% {
+    font-family: "Times New Roman", "Times", serif;
+  }
+  40% {
+    font-family: "Courier New", "SFMono-Regular", Menlo, monospace;
+  }
+  60% {
+    font-family: "Trebuchet MS", "Arial", sans-serif;
+  }
+  80% {
+    font-family: "Impact", "Arial Black", sans-serif;
+  }
+  100% {
+    font-family: "Amazing Maret", "Inter", system-ui, -apple-system, sans-serif;
+  }
+}
+
+@keyframes navTypeSwap {
+  0% {
+    font-family: "Amazing Maret", "Inter", system-ui, -apple-system, sans-serif;
+  }
+  20% {
+    font-family: "Times New Roman", "Times", serif;
+  }
+  40% {
+    font-family: "Courier New", "SFMono-Regular", Menlo, monospace;
+  }
+  60% {
+    font-family: "Georgia", "Times", serif;
+  }
+  80% {
+    font-family: "Impact", "Arial Black", sans-serif;
+  }
+  100% {
+    font-family: "Amazing Maret", "Inter", system-ui, -apple-system, sans-serif;
+  }
+}
+
 .hover\:shadow-glow:hover {
   text-shadow: 0 0 8px rgba(255, 255, 255, 0.8), 0 0 15px rgba(251, 251, 251, 0.8);
 }
@@ -481,8 +546,26 @@
 }
 
 .nav-link:hover {
-  color: #fff;
+  color: currentColor;
   transform: translateY(-2px);
+}
+
+.nav-link-swap {
+  display: inline-block;
+  line-height: 1;
+}
+
+.nav-group:hover .nav-link-swap {
+  animation: none;
+}
+
+.nav-link-swap:hover,
+.nav-link-swap:focus-visible {
+  animation: navTypeSwap 0.35s steps(1, end) infinite;
+}
+
+.type-swap-hover:hover {
+  animation: enterTypeSwap 0.35s steps(1, end) infinite;
 }
 
 .nav-group:hover .nav-link {

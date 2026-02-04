@@ -32,7 +32,7 @@ import logoLenis from "./assets/logos/lenis.png";
 import logoFigma from "./assets/logos/figma.png";
 import logoNotion from "./assets/logos/notion.png";
 import logoNetlify from "./assets/logos/netlify.png";
-import WaterCursor from "./components/WaterCursor";
+// import WaterCursor from "./components/WaterCursor";
 import LanguageToggle from "./components/LanguageToggle";
 import { useLanguage } from "./context/LanguageContext";
 import { useTextReveal } from "./hooks/useTextReveal";
@@ -188,7 +188,7 @@ function About() {
         </div>
       </header>
 
-      <WaterCursor />
+      {/* <WaterCursor /> */}
 
       <main className="relative max-w-6xl mx-auto space-y-10 md:space-y-14">
         <div className="relative">
@@ -223,7 +223,7 @@ function About() {
                   <h2 className="text-4xl md:text-5xl font-black text-[#0a0a0a] leading-tight">
                     {copy.schoolTitle}
                   </h2>
-                  <p data-reveal="text" data-reveal-onload="true">{copy.schoolBody}</p> 
+                  <p data-reveal="text">{copy.schoolBody}</p>
                 </div>
 
                 <div className="grid gap-4 sm:grid-cols-2">

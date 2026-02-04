@@ -11,10 +11,12 @@ function App() {
     return sessionStorage.getItem('introEntered') === 'true';
   });
   const loadingRef = useRef(null);
-  const [loadingPercent, setLoadingPercent] = useState(0);
+  const [loadingPercent, setLoadingPercent] = useState(100);
 
   useEffect(() => {
     if (!entered) {
+      // Temps d'attente sur "ENTER" (commenté pour accès direct)
+      /*
       gsap.to(loadingRef.current, {
         opacity: 0.2,
         duration: 1,
@@ -23,9 +25,6 @@ function App() {
         ease: "power1.inOut"
       });
 
-      
-  
-    
       const obj = { val: 0 };
       gsap.to(obj, {
         val: 100,
@@ -35,6 +34,7 @@ function App() {
           setLoadingPercent(Math.floor(obj.val));
         }
       });
+      */
     }
   }, [entered]);
 
@@ -46,6 +46,8 @@ function App() {
 
   useEffect(() => {
     if (!entered && loadingRef.current) {
+      // Animation de chargement désactivée
+      /*
       gsap.to(loadingRef.current, {
         opacity: 0.2,
         duration: 1,
@@ -53,31 +55,37 @@ function App() {
         yoyo: true,
         ease: "power1.inOut"
       });
+      */
     }
   }, [entered]);
 
 
   if (!entered) {
-    const canEnter = loadingPercent >= 100;
+    const canEnter = true;
 
     return (
-      <div className="fixed inset-0 bg-black flex flex-col items-center justify-center">
-        {/* Spline Background */}
+      <div className="fixed inset-0 flex flex-col items-center justify-center overflow-hidden bg-gradient-to-br from-[#f8f3ea] via-[#f2e6d7] to-[#fdf8ef] text-[#0f0f0f]">
+        {/* Spline Background (commented per request) */}
+        {/*
         <spline-viewer
           url="https://prod.spline.design/phRSX0hJurf0mICV/scene.splinecode"
           className="absolute inset-0 h-full w-full pointer-events-none"
           style={{ filter: 'brightness(0.45)' }}
         />
         <div className="absolute inset-0 bg-black/30 pointer-events-none" />
+        */}
+        <div className="pointer-events-none absolute inset-0 opacity-70 bg-[radial-gradient(circle_at_18%_16%,rgba(255,255,255,0.85),transparent_38%),radial-gradient(circle_at_82%_6%,rgba(253,230,205,0.45),transparent_46%),radial-gradient(circle_at_24%_80%,rgba(210,175,140,0.28),transparent_50%)]" />
 
         <div className="absolute top-6 left-8">
-          <span className="text-xs font-medium text-white block hover:shadow-glow transition-all duration-300">
+          <span className="type-swap-hover text-xs font-medium text-[#0f0f0f] block hover:shadow-glow transition-all duration-300">
             Quentin
           </span>
-          <span className="text-xs font-medium text-white block hover:shadow-glow transition-all duration-300">
-            Ctr
+          <span className="type-swap-hover text-xs font-medium text-[#0f0f0f] block hover:shadow-glow transition-all duration-300">
+            Contreau
           </span>
         </div>
+        {/* ENTER button (commented per request) */}
+        {/*
         <button
           disabled={!canEnter}
           onClick={() => {
@@ -108,6 +116,36 @@ function App() {
             </span>
           </div>
         </button>
+        */}
+
+        <button
+          disabled={!canEnter}
+          onClick={() => {
+            if (!canEnter) return;
+            gsap.to(".enter-word", {
+              scale: 0.8,
+              opacity: 0,
+              duration: 1,
+              ease: "power2.out",
+              onComplete: () => {
+                setEntered(true); 
+                gsap.from(".main-content", {
+                  opacity: 0,
+                  y: 100,
+                  duration: 1,
+                  ease: "power2.out"
+                });
+              }
+            });
+          }}
+          className={`enter-word absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 ${canEnter ? "cursor-pointer opacity-100" : "cursor-not-allowed opacity-40"}`}
+          aria-label="Enter site"
+        >
+          Enter
+        </button>
+
+        {/* Loading bar (commented per request) */}
+        {/*
         <div className="absolute bottom-6 right-6 text-white/80 text-sm font-medium flex flex-col items-end gap-2">
           <div className="flex items-center gap-2">
             <span className="text-xs uppercase tracking-[0.2em] text-white/60">Loading</span>
@@ -120,21 +158,22 @@ function App() {
             />
           </div>
         </div>
+        */}
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen relative text-white">
+    <div className="min-h-screen relative text-[#0f0f0f]">
       <BackgroundOrbs />
       {/* Contenu principal */}
       <div className="relative z-10">
         {/* Nav centrée minimaliste */}
         <nav id="home-nav" className="fixed inset-0 z-40 flex items-center justify-center pointer-events-none px-6">
-          <div className="nav-group flex flex-col items-center text-center space-y-6 text-lg font-black uppercase tracking-[0.18em] pointer-events-auto md:flex-row md:space-y-0 md:space-x-12 md:text-2xl md:tracking-[0.28em]">
-            <Link to="/work" className="nav-link text-white/90">Work</Link>
-            <Link to="/about" className="nav-link text-white/90">About</Link>
-            <Link to="/contact" className="nav-link text-white/90">Contact</Link>
+          <div className="nav-group flex flex-col items-center text-center space-y-4 text-sm font-black uppercase tracking-[0.2em] pointer-events-auto md:flex-row md:space-y-0 md:space-x-10 md:text-lg md:tracking-[0.26em]">
+            <Link to="/work" className="nav-link nav-link-swap text-[#0f0f0f]/80">Work</Link>
+            <Link to="/about" className="nav-link nav-link-swap text-[#0f0f0f]/80">About</Link>
+            <Link to="/contact" className="nav-link nav-link-swap text-[#0f0f0f]/80">Contact</Link>
           </div>
         </nav>
 
@@ -262,12 +301,17 @@ export default App;
 function BackgroundOrbs() {
   return (
     <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
+      {/* Spline Background (commented per request) */}
+      {/*
       <spline-viewer
         url="https://prod.spline.design/phRSX0hJurf0mICV/scene.splinecode"
         className="absolute inset-0 h-full w-full"
         style={{ filter: 'brightness(0.45)' }}
       />
       <div className="absolute inset-0 bg-black/30" />
+      */}
+      <div className="absolute inset-0 bg-gradient-to-br from-[#f8f3ea] via-[#f2e6d7] to-[#fdf8ef]" />
+      <div className="absolute inset-0 opacity-70 bg-[radial-gradient(circle_at_18%_16%,rgba(255,255,255,0.85),transparent_38%),radial-gradient(circle_at_82%_6%,rgba(253,230,205,0.45),transparent_46%),radial-gradient(circle_at_24%_80%,rgba(210,175,140,0.28),transparent_50%)]" />
     </div>
   );
 }

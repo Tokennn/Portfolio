@@ -10,7 +10,7 @@ const workCopy = {
       {
         title: "Langage-Sensei",
         description:
-          "Sparring linguistique en ligne avec cartes d'expressions, parcours progressifs et micro-interactions.",
+          "Parcours progressifs et micro-interactions.",
         image: "https://cdn.midjourney.com/bf612167-d186-46f9-8141-ad6e799fa243/0_1.png",
         link: "https://langage-sensei.netlify.app/",
         tag: "Product design",
@@ -20,7 +20,7 @@ const workCopy = {
       {
         title: "MoveSmart",
         description:
-          "Assistant d'aménagement intelligent : calcul d'itinéraires, inventaire et suivi des étapes clés.",
+          "Calcul d'itinéraires, inventaire et suivi des étapes clés.",
         image: "https://cdn.midjourney.com/c5b6d334-83c3-4d27-ace8-00ca180a65ce/0_2.png",
         link: "https://movesmart.netlify.app/",
         tag: "Creative dev",
@@ -30,7 +30,7 @@ const workCopy = {
       {
         title: "Blog.V1",
         description:
-          "Tableau de bord live pour suivre la performance produit : métriques clés, alertes et recommandations d'action.",
+          "Suivi Personnel",
         image: "https://cdn.midjourney.com/a518c278-f137-4339-b5df-27c8643dbb49/0_0.jpeg",
         link: "https://blogv1qc.netlify.app/",
         tag: "Product ops",
@@ -44,7 +44,7 @@ const workCopy = {
       {
         title: "Langage-Sensei",
         description:
-          "Online language sparring with expression cards, progressive paths, and micro-interactions.",
+          "Progressive pathways and micro-interactions.",
         image: "https://cdn.midjourney.com/bf612167-d186-46f9-8141-ad6e799fa243/0_1.png",
         link: "https://langage-sensei.netlify.app/",
         tag: "Product design",
@@ -54,7 +54,7 @@ const workCopy = {
       {
         title: "MoveSmart",
         description:
-          "Smart moving assistant: route planning, inventory, and key-step tracking.",
+          "Route calculation, inventory and tracking of key stages.",
         image: "https://cdn.midjourney.com/c5b6d334-83c3-4d27-ace8-00ca180a65ce/0_2.png",
         link: "https://movesmart.netlify.app/",
         tag: "Creative dev",
@@ -64,7 +64,7 @@ const workCopy = {
       {
         title: "Blog.V1",
         description:
-          "Live dashboard to track product performance: key metrics, alerts, and action recommendations.",
+          "Personal Monitoring",
         image: "https://cdn.midjourney.com/a518c278-f137-4339-b5df-27c8643dbb49/0_0.jpeg",
         link: "https://blogv1qc.netlify.app/",
         tag: "Product ops",
