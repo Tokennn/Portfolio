@@ -87,6 +87,7 @@ function Work() {
   const didMountRef = useRef(false);
   const cursorRef = useRef<HTMLDivElement>(null);
   const cursorRaf = useRef<number | null>(null);
+  const cursorHideTimeout = useRef<number | null>(null);
   const cursorTarget = useRef({ x: 0, y: 0 });
   const cursorPosition = useRef({ x: 0, y: 0 });
   const { language } = useLanguage();
@@ -156,17 +157,16 @@ function Work() {
   }, [cursorEnabled]);
 
   useEffect(() => {
-    if (!cursorEnabled || typeof document === 'undefined') return;
-    const body = document.body;
-    if (cursorVisible) {
-      body.classList.add('work-hide-cursor');
-    } else {
-      body.classList.remove('work-hide-cursor');
-    }
     return () => {
-      body.classList.remove('work-hide-cursor');
+      if (cursorHideTimeout.current) {
+        window.clearTimeout(cursorHideTimeout.current);
+        cursorHideTimeout.current = null;
+      }
+      if (typeof document !== 'undefined') {
+        document.body.classList.remove('work-hide-cursor');
+      }
     };
-  }, [cursorVisible, cursorEnabled]);
+  }, []);
 
   useEffect(() => {
     if (!didMountRef.current) {
@@ -181,8 +181,8 @@ function Work() {
   const animateCursor = useCallback(() => {
     const target = cursorTarget.current;
     const position = cursorPosition.current;
-    const nextX = position.x + (target.x - position.x) * 0.18;
-    const nextY = position.y + (target.y - position.y) * 0.18;
+    const nextX = position.x + (target.x - position.x) * 0.14;
+    const nextY = position.y + (target.y - position.y) * 0.14;
     cursorPosition.current = { x: nextX, y: nextY };
 
     if (cursorRef.current) {
@@ -195,6 +195,13 @@ function Work() {
 
   const handleCursorEnter = (event: ReactPointerEvent<HTMLAnchorElement>) => {
     if (!cursorEnabled) return;
+    if (cursorHideTimeout.current) {
+      window.clearTimeout(cursorHideTimeout.current);
+      cursorHideTimeout.current = null;
+    }
+    if (typeof document !== 'undefined') {
+      document.body.classList.add('work-hide-cursor');
+    }
     const { clientX, clientY } = event;
     cursorTarget.current = { x: clientX, y: clientY };
     cursorPosition.current = { x: clientX, y: clientY };
@@ -216,6 +223,12 @@ function Work() {
   const handleCursorLeave = () => {
     if (!cursorEnabled) return;
     setCursorVisible(false);
+    if (typeof document !== 'undefined') {
+      cursorHideTimeout.current = window.setTimeout(() => {
+        document.body.classList.remove('work-hide-cursor');
+        cursorHideTimeout.current = null;
+      }, 320);
+    }
     if (cursorRaf.current) {
       cancelAnimationFrame(cursorRaf.current);
       cursorRaf.current = null;
@@ -289,10 +302,7 @@ function Work() {
                 href={activeProject.link}
                 target="_blank"
                 rel="noreferrer"
-                onPointerEnter={handleCursorEnter}
-                onPointerMove={handleCursorMove}
-                onPointerLeave={handleCursorLeave}
-                className={`group relative isolate rounded-[30px] overflow-hidden border border-[#e6d9c6] bg-white shadow-[0_18px_60px_rgba(52,34,18,0.14)] reveal-up delay-2 fade-in transition-all duration-500 ease-[cubic-bezier(.16,1,.3,1)] hover:-translate-y-2 hover:shadow-[0_24px_70px_rgba(52,34,18,0.16)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#d9cbb4] ${cursorEnabled ? 'cursor-none' : 'cursor-pointer'}`}
+                className="group relative isolate rounded-[30px] overflow-hidden border border-[#e6d9c6] bg-white shadow-[0_18px_60px_rgba(52,34,18,0.14)] reveal-up delay-2 fade-in transition-all duration-500 ease-[cubic-bezier(.16,1,.3,1)] hover:-translate-y-2 hover:shadow-[0_24px_70px_rgba(52,34,18,0.16)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#d9cbb4]"
               >
                 <div
                   className={`relative z-10 flex flex-col gap-6 md:gap-8 p-8 md:p-10 items-center text-center transition-colors duration-500 ${
@@ -313,7 +323,12 @@ function Work() {
 
                   <div className="relative w-full">
                     <div className="absolute inset-4 rounded-[26px] border border-[#e2d6c3]/80 shadow-[0_14px_40px_rgba(52,34,18,0.12)] pointer-events-none" />
-                    <div className="relative overflow-hidden rounded-[24px] border border-[#f1e4d2]/70 bg-white shadow-[0_20px_60px_rgba(52,34,18,0.12)] transition duration-700 ease-[cubic-bezier(.16,1,.3,1)] group-hover:-translate-y-1 group-hover:shadow-[0_20px_60px_rgba(52,34,18,0.18)]">
+                    <div
+                      onPointerEnter={handleCursorEnter}
+                      onPointerMove={handleCursorMove}
+                      onPointerLeave={handleCursorLeave}
+                      className={`relative overflow-hidden rounded-[24px] border border-[#f1e4d2]/70 bg-white shadow-[0_20px_60px_rgba(52,34,18,0.12)] transition duration-700 ease-[cubic-bezier(.16,1,.3,1)] group-hover:-translate-y-1 group-hover:shadow-[0_20px_60px_rgba(52,34,18,0.18)] ${cursorEnabled ? 'project-cursor-target' : 'cursor-pointer'}`}
+                    >
                       <img
                         src={activeProject.image}
                         alt={activeProject.title}

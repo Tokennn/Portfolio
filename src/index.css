@@ -202,7 +202,7 @@
     pointer-events: none;
     opacity: 0;
     transform: translate3d(var(--cursor-x, -999px), var(--cursor-y, -999px), 0) translate(-50%, -50%);
-    transition: opacity 0.2s ease;
+    transition: opacity 0.4s ease;
   }
 
   .project-cursor.is-active {
@@ -223,21 +223,51 @@
     font-size: 11px;
     font-weight: 600;
     box-shadow: none;
-    backdrop-filter: invert(1);
-    -webkit-backdrop-filter: invert(1);
+    backdrop-filter: invert(0);
+    -webkit-backdrop-filter: invert(0);
     transform: scale(0.7);
-    transition: transform 0.2s ease;
+    transition: transform 0.3s ease, backdrop-filter 0.45s ease, -webkit-backdrop-filter 0.45s ease;
     font-family: "Amazing Maret", "Inter", system-ui, -apple-system, sans-serif;
     mix-blend-mode: normal;
   }
 
   .project-cursor.is-active .project-cursor__bubble {
     transform: scale(1);
+    backdrop-filter: invert(1);
+    -webkit-backdrop-filter: invert(1);
   }
 
   body.work-hide-cursor,
   body.work-hide-cursor * {
     cursor: none !important;
+  }
+
+  .project-cursor-target {
+    cursor: none;
+  }
+
+  body.has-square-cursor,
+  body.has-square-cursor * {
+    cursor: none !important;
+  }
+
+  .square-cursor {
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 70;
+    width: 10px;
+    height: 10px;
+    background: #0f0f0f;
+    border-radius: 2px;
+    pointer-events: none;
+    transform: translate3d(var(--cursor-x, -999px), var(--cursor-y, -999px), 0) translate(-50%, -50%);
+    transition: opacity 0.2s ease;
+    will-change: transform;
+  }
+
+  body.work-hide-cursor .square-cursor {
+    opacity: 0;
   }
 
   .nav-dot {

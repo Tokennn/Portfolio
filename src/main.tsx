@@ -7,12 +7,14 @@ import { BrowserRouter } from 'react-router-dom';
 import AnimatedRoutes from './components/AnimatedRoutes';
 import WebGLTransition from './components/WebGLTransition';
 import { LanguageProvider } from './context/LanguageContext';
+import SquareCursor from './components/SquareCursor';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <LanguageProvider>
       <BrowserRouter>
         <WebGLTransition />
+        <SquareCursor />
         <AnimatedRoutes />
       </BrowserRouter>
     </LanguageProvider>
