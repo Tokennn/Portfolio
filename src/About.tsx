@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { Link } from "react-router-dom";
 import { MapContainer, Marker, TileLayer, Tooltip } from "react-leaflet";
 import { divIcon, type Map as LeafletMap } from "leaflet";
@@ -32,6 +32,8 @@ import logoLenis from "./assets/logos/lenis.png";
 import logoFigma from "./assets/logos/figma.png";
 import logoNotion from "./assets/logos/notion.png";
 import logoNetlify from "./assets/logos/netlify.png";
+import albumMiskine from "./assets/logos/Miskine.png";
+import audioMiskine from "./song/Miskine.mp3";
 // import WaterCursor from "./components/WaterCursor";
 import LanguageToggle from "./components/LanguageToggle";
 import { useLanguage } from "./context/LanguageContext";
@@ -41,6 +43,15 @@ const stackItems = ["React", "TypeScript", "GSAP", "Framer", "Tailwind", "UI / U
 const lyonPosition: [number, number] = [45.749977593867, 4.8232436066254225];
 const serpentText =
   "Figma • FlutterFlow • Always Data • Airtable • Postman • FireBase • SupaBase • Git • Wix • Wordpress • Bubble";
+const islandBars = [
+  { delay: "0ms", duration: "1.2s" },
+  { delay: "140ms", duration: "0.95s" },
+  { delay: "280ms", duration: "1.15s" },
+  { delay: "420ms", duration: "1.05s" },
+  { delay: "200ms", duration: "1.3s" }
+];
+const islandCoverSrc = albumMiskine;
+const islandAudioSrc = audioMiskine;
 const aboutCopy = {
   fr: {
     nav: {
@@ -161,10 +172,204 @@ function About() {
   const mapRef = useRef<LeafletMap | null>(null);
   const [isMapReady, setIsMapReady] = useState(false);
   const [isToolsExpanded, setIsToolsExpanded] = useState(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const barRefs = useRef<HTMLSpanElement[]>([]);
+  const audioContextRef = useRef<AudioContext | null>(null);
+  const analyserRef = useRef<AnalyserNode | null>(null);
+  const dataArrayRef = useRef<Uint8Array | null>(null);
+  const sourceRef = useRef<MediaElementAudioSourceNode | null>(null);
+  const rafAudioRef = useRef<number | null>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [isReactive, setIsReactive] = useState(false);
+  const autoPlayAttempted = useRef(false);
+
+  const setupAudioContext = () => {
+    if (typeof window === "undefined") return null;
+    const audio = audioRef.current;
+    if (!audio) return null;
+
+    if (!audioContextRef.current) {
+      const AudioContextImpl =
+        window.AudioContext ||
+        (window as typeof window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+      if (!AudioContextImpl) return null;
+      audioContextRef.current = new AudioContextImpl();
+    }
+
+    const audioContext = audioContextRef.current;
+    if (!audioContext) return null;
+
+    if (!sourceRef.current) {
+      sourceRef.current = audioContext.createMediaElementSource(audio);
+    }
+
+    if (!analyserRef.current) {
+      const analyser = audioContext.createAnalyser();
+      analyser.fftSize = 64;
+      analyser.smoothingTimeConstant = 0.75;
+      analyserRef.current = analyser;
+      sourceRef.current.connect(analyser);
+      analyser.connect(audioContext.destination);
+      dataArrayRef.current = new Uint8Array(analyser.frequencyBinCount);
+    }
+
+    setIsReactive(true);
+    return audioContext;
+  };
+
+  const stopVisualization = () => {
+    if (rafAudioRef.current) {
+      cancelAnimationFrame(rafAudioRef.current);
+      rafAudioRef.current = null;
+    }
+    barRefs.current.forEach((bar) => {
+      if (!bar) return;
+      bar.style.setProperty("--bar-scale", "0.35");
+    });
+  };
+
+  const startVisualization = () => {
+    const analyser = analyserRef.current;
+    const dataArray = dataArrayRef.current;
+    if (!analyser || !dataArray) return;
+
+    const bars = barRefs.current;
+    const totalBars = bars.length || islandBars.length;
+    const step = Math.max(1, Math.floor(dataArray.length / totalBars));
+
+    const render = () => {
+      analyser.getByteFrequencyData(dataArray);
+      for (let i = 0; i < totalBars; i += 1) {
+        const bar = bars[i];
+        if (!bar) continue;
+        let sum = 0;
+        const start = i * step;
+        const end = Math.min(start + step, dataArray.length);
+        for (let j = start; j < end; j += 1) {
+          sum += dataArray[j];
+        }
+        const avg = sum / Math.max(1, end - start);
+        const scale = 0.25 + (avg / 255) * 0.75;
+        bar.style.setProperty("--bar-scale", scale.toFixed(2));
+      }
+      rafAudioRef.current = requestAnimationFrame(render);
+    };
+
+    if (rafAudioRef.current) cancelAnimationFrame(rafAudioRef.current);
+    render();
+  };
+
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    const handlePlay = () => {
+      setIsPlaying(true);
+      const context = setupAudioContext();
+      if (context && context.state === "suspended") {
+        context.resume().catch(() => undefined);
+      }
+      startVisualization();
+    };
+    const handlePause = () => {
+      setIsPlaying(false);
+      stopVisualization();
+    };
+    const handleEnded = () => {
+      setIsPlaying(false);
+      stopVisualization();
+    };
+
+    audio.addEventListener("play", handlePlay);
+    audio.addEventListener("pause", handlePause);
+    audio.addEventListener("ended", handleEnded);
+
+    return () => {
+      stopVisualization();
+      audio.pause();
+      audio.currentTime = 0;
+      audio.removeEventListener("play", handlePlay);
+      audio.removeEventListener("pause", handlePause);
+      audio.removeEventListener("ended", handleEnded);
+      if (audioContextRef.current && audioContextRef.current.state !== "closed") {
+        audioContextRef.current.close().catch(() => undefined);
+      }
+      audioContextRef.current = null;
+      analyserRef.current = null;
+      dataArrayRef.current = null;
+      sourceRef.current = null;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (autoPlayAttempted.current) return;
+    autoPlayAttempted.current = true;
+    const audio = audioRef.current;
+    if (!audio) return;
+    audio.play().catch(() => {
+      setIsPlaying(false);
+    });
+  }, []);
+
+  const handleTogglePlayback = async () => {
+    const audio = audioRef.current;
+    if (!audio) return;
+    if (audio.paused) {
+      try {
+        const context = setupAudioContext();
+        if (context && context.state === "suspended") {
+          await context.resume();
+        }
+        await audio.play();
+      } catch {
+        setIsPlaying(false);
+      }
+      return;
+    }
+    audio.pause();
+  };
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-[#f8f3ea] via-[#f2e6d7] to-[#fdf8ef] text-[#0f0f0f] px-4 md:px-8 py-12 md:py-16">
+      <audio ref={audioRef} src={islandAudioSrc} preload="auto" playsInline />
       <div className="pointer-events-none absolute inset-0 opacity-70 bg-[radial-gradient(circle_at_18%_16%,rgba(255,255,255,0.85),transparent_38%),radial-gradient(circle_at_82%_6%,rgba(253,230,205,0.45),transparent_46%),radial-gradient(circle_at_24%_80%,rgba(210,175,140,0.28),transparent_50%)]" />
+      <div className="fixed left-1/2 top-1 z-50 -translate-x-1/2 md:top-4">
+        <button
+          type="button"
+          onClick={handleTogglePlayback}
+          className="dynamic-island dynamic-island--large"
+          aria-label={isPlaying ? "Pause audio" : "Play audio"}
+          aria-pressed={isPlaying}
+          data-playing={isPlaying}
+          data-reactive={isReactive}
+        >
+          <span
+            className="dynamic-island-album"
+            aria-hidden="true"
+            style={{ backgroundImage: `url(${islandCoverSrc})` }}
+          />
+          <div className="dynamic-island-eq-wrap" aria-hidden="true">
+            <div className="dynamic-island-eq">
+              {islandBars.map((bar, index) => (
+                <span
+                  key={`${bar.delay}-${index}`}
+                  className="dynamic-island-bar"
+                  ref={(el) => {
+                    if (el) barRefs.current[index] = el;
+                  }}
+                  style={
+                    {
+                      "--bar-delay": bar.delay,
+                      "--bar-duration": bar.duration,
+                      "--bar-scale": "0.35"
+                    } as CSSProperties
+                  }
+                />
+              ))}
+            </div>
+          </div>
+        </button>
+      </div>
       <div className="fixed right-5 top-5 z-50 md:right-8 md:top-8">
         <LanguageToggle />
       </div>
@@ -369,7 +574,7 @@ function About() {
                         {copy.keywords.map((label) => (
                           <span
                             key={label}
-                            className="rounded-full border border-[#d5c5ad] bg-white/80 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.24em] text-[#0f0f0f]"
+                            className="rounded-full border border-[#d5c5ad] bg-white/80 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.24em] text-[#0f0f0f] transition-transform transition-shadow duration-500 ease-[cubic-bezier(.16,1,.3,1)] hover:-translate-y-0.5 hover:shadow-[0_12px_26px_rgba(52,34,18,0.16)] hover:border-[#cdb99a]"
                           >
                             {label}
                           </span>
