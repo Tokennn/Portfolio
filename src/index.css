@@ -42,6 +42,16 @@
     position: relative;
     overflow-y: scroll;
   }
+
+  ::selection {
+    background: #e7c6a1;
+    color: #0f0f0f;
+  }
+
+  ::-moz-selection {
+    background: #e7c6a1;
+    color: #0f0f0f;
+  }
   
   ::-webkit-scrollbar {
     display: none; 
