@@ -236,6 +236,8 @@ function About() {
     const bars = barRefs.current;
     const totalBars = bars.length || islandBars.length;
     const step = Math.max(1, Math.floor(dataArray.length / totalBars));
+    const minScale = 0.2;
+    const maxScale = 1;
 
     const render = () => {
       analyser.getByteFrequencyData(dataArray);
@@ -249,7 +251,11 @@ function About() {
           sum += dataArray[j];
         }
         const avg = sum / Math.max(1, end - start);
-        const scale = 0.25 + (avg / 255) * 0.75;
+        const normalized = avg / 255;
+        const position = totalBars > 1 ? i / (totalBars - 1) : 0;
+        const tilt = 0.8 + position * 1.1;
+        const adjusted = Math.min(1, Math.pow(normalized, 0.6) * tilt);
+        const scale = minScale + adjusted * (maxScale - minScale);
         bar.style.setProperty("--bar-scale", scale.toFixed(2));
       }
       rafAudioRef.current = requestAnimationFrame(render);
