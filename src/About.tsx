@@ -330,10 +330,53 @@ function About() {
   };
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-[#f8f3ea] via-[#f2e6d7] to-[#fdf8ef] text-[#0f0f0f] px-4 md:px-8 py-12 md:py-16">
+    <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-[#f8f3ea] via-[#f2e6d7] to-[#fdf8ef] text-[#0f0f0f] px-4 md:px-8 pt-28 pb-12 md:py-16">
       <audio ref={audioRef} src={islandAudioSrc} preload="auto" playsInline />
       <div className="pointer-events-none absolute inset-0 opacity-70 bg-[radial-gradient(circle_at_18%_16%,rgba(255,255,255,0.85),transparent_38%),radial-gradient(circle_at_82%_6%,rgba(253,230,205,0.45),transparent_46%),radial-gradient(circle_at_24%_80%,rgba(210,175,140,0.28),transparent_50%)]" />
-      <div className="fixed left-1/2 top-1 z-50 -translate-x-1/2 md:top-4">
+      <div className="fixed inset-x-0 top-0 z-50 flex flex-col gap-2 pt-[calc(env(safe-area-inset-top,0px)+8px)] sm:hidden">
+        <div className="flex justify-center">
+          <button
+            type="button"
+            onClick={handleTogglePlayback}
+            className="dynamic-island dynamic-island--large"
+            aria-label={isPlaying ? "Pause audio" : "Play audio"}
+            aria-pressed={isPlaying}
+            data-playing={isPlaying}
+            data-reactive={isReactive}
+          >
+            <span
+              className="dynamic-island-album"
+              aria-hidden="true"
+              style={{ backgroundImage: `url(${islandCoverSrc})` }}
+            />
+            <div className="dynamic-island-eq-wrap" aria-hidden="true">
+              <div className="dynamic-island-eq">
+                {islandBars.map((bar, index) => (
+                  <span
+                    key={`${bar.delay}-${index}`}
+                    className="dynamic-island-bar"
+                    ref={(el) => {
+                      if (el) barRefs.current[index] = el;
+                    }}
+                    style={
+                      {
+                        "--bar-delay": bar.delay,
+                        "--bar-duration": bar.duration,
+                        "--bar-scale": "0.35"
+                      } as CSSProperties
+                    }
+                  />
+                ))}
+              </div>
+            </div>
+          </button>
+        </div>
+        <div className="flex justify-end pr-4">
+          <LanguageToggle />
+        </div>
+      </div>
+
+      <div className="fixed left-1/2 top-1 z-50 hidden -translate-x-1/2 sm:block md:top-4">
         <button
           type="button"
           onClick={handleTogglePlayback}
@@ -370,7 +413,7 @@ function About() {
           </div>
         </button>
       </div>
-      <div className="fixed right-5 top-5 z-50 md:right-8 md:top-8">
+      <div className="fixed right-5 top-5 z-50 hidden sm:block md:right-8 md:top-8">
         <LanguageToggle />
       </div>
 
