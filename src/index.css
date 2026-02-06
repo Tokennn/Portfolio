@@ -1052,6 +1052,30 @@
   animation: projectSwap 0.45s ease;
 }
 
+.project-dots {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.project-dot {
+  width: 8px;
+  height: 8px;
+  padding: 6px;
+  border-radius: 9999px;
+  background: #d6c7b3;
+  opacity: 0.6;
+  transition: opacity 0.2s ease, transform 0.2s ease, background 0.2s ease, width 0.2s ease;
+}
+
+.project-dot.is-active {
+  width: 22px;
+  background: #0f0f0f;
+  opacity: 1;
+}
+
 .project-swipe-area {
   touch-action: pan-y;
 }

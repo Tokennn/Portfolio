@@ -416,6 +416,22 @@ function Work() {
                 </div>
               </a>
 
+              <div className="project-dots md:hidden" role="tablist" aria-label="Projects">
+                {projects.map((project, idx) => {
+                  const isActive = idx === activeIndex;
+                  return (
+                    <button
+                      key={project.title}
+                      type="button"
+                      className={`project-dot ${isActive ? 'is-active' : ''}`}
+                      aria-label={project.title}
+                      aria-pressed={isActive}
+                      onClick={() => setActiveIndex(idx)}
+                    />
+                  );
+                })}
+              </div>
+
               <div className="hidden md:flex flex-col items-start gap-3 text-sm uppercase tracking-[0.24em] text-[#0f0f0f] pl-2 reveal-up delay-1">
                 {nextProjects.map((project, idx) => {
                   const absoluteIndex = activeIndex + 1 + idx;
