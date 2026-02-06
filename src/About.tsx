@@ -173,7 +173,10 @@ function About() {
   const [isMapReady, setIsMapReady] = useState(false);
   const [isToolsExpanded, setIsToolsExpanded] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  const barRefs = useRef<HTMLSpanElement[]>([]);
+  const barRefs = useRef<{ mobile: HTMLSpanElement[]; desktop: HTMLSpanElement[] }>({
+    mobile: [],
+    desktop: []
+  });
   const audioContextRef = useRef<AudioContext | null>(null);
   const analyserRef = useRef<AnalyserNode | null>(null);
   const dataArrayRef = useRef<Uint8Array | null>(null);
@@ -222,9 +225,12 @@ function About() {
       cancelAnimationFrame(rafAudioRef.current);
       rafAudioRef.current = null;
     }
-    barRefs.current.forEach((bar) => {
-      if (!bar) return;
-      bar.style.setProperty("--bar-scale", "0.35");
+    const { mobile, desktop } = barRefs.current;
+    [mobile, desktop].forEach((group) => {
+      group.forEach((bar) => {
+        if (!bar) return;
+        bar.style.setProperty("--bar-scale", "0.35");
+      });
     });
   };
 
@@ -233,8 +239,8 @@ function About() {
     const dataArray = dataArrayRef.current;
     if (!analyser || !dataArray) return;
 
-    const bars = barRefs.current;
-    const totalBars = bars.length || islandBars.length;
+    const { mobile, desktop } = barRefs.current;
+    const totalBars = islandBars.length;
     const step = Math.max(1, Math.floor(dataArray.length / totalBars));
     const minScale = 0.2;
     const maxScale = 1;
@@ -242,8 +248,6 @@ function About() {
     const render = () => {
       analyser.getByteFrequencyData(dataArray);
       for (let i = 0; i < totalBars; i += 1) {
-        const bar = bars[i];
-        if (!bar) continue;
         let sum = 0;
         const start = i * step;
         const end = Math.min(start + step, dataArray.length);
@@ -256,7 +260,11 @@ function About() {
         const tilt = 0.8 + position * 1.1;
         const adjusted = Math.min(1, Math.pow(normalized, 0.6) * tilt);
         const scale = minScale + adjusted * (maxScale - minScale);
-        bar.style.setProperty("--bar-scale", scale.toFixed(2));
+        const scaleValue = scale.toFixed(2);
+        const mobileBar = mobile[i];
+        if (mobileBar) mobileBar.style.setProperty("--bar-scale", scaleValue);
+        const desktopBar = desktop[i];
+        if (desktopBar) desktopBar.style.setProperty("--bar-scale", scaleValue);
       }
       rafAudioRef.current = requestAnimationFrame(render);
     };
@@ -362,7 +370,7 @@ function About() {
                     key={`${bar.delay}-${index}`}
                     className="dynamic-island-bar"
                     ref={(el) => {
-                      if (el) barRefs.current[index] = el;
+                      if (el) barRefs.current.mobile[index] = el;
                     }}
                     style={
                       {
@@ -404,7 +412,7 @@ function About() {
                   key={`${bar.delay}-${index}`}
                   className="dynamic-island-bar"
                   ref={(el) => {
-                    if (el) barRefs.current[index] = el;
+                    if (el) barRefs.current.desktop[index] = el;
                   }}
                   style={
                     {
