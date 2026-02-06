@@ -90,6 +90,9 @@ function Work() {
   const cursorHideTimeout = useRef<number | null>(null);
   const cursorTarget = useRef({ x: 0, y: 0 });
   const cursorPosition = useRef({ x: 0, y: 0 });
+  const swipeStartRef = useRef<{ x: number; y: number; pointerId: number } | null>(null);
+  const swipeActiveRef = useRef(false);
+  const swipeConsumedRef = useRef(false);
   const { language } = useLanguage();
   const projects = workCopy[language].projects;
   const activeProject = projects[activeIndex];
@@ -235,6 +238,69 @@ function Work() {
     }
   };
 
+  const handleSwipePointerDown = (event: ReactPointerEvent<HTMLAnchorElement>) => {
+    if (event.pointerType !== 'touch') return;
+    swipeConsumedRef.current = false;
+    swipeActiveRef.current = false;
+    swipeStartRef.current = { x: event.clientX, y: event.clientY, pointerId: event.pointerId };
+    event.currentTarget.setPointerCapture(event.pointerId);
+  };
+
+  const handleSwipePointerMove = (event: ReactPointerEvent<HTMLAnchorElement>) => {
+    if (event.pointerType !== 'touch') return;
+    const start = swipeStartRef.current;
+    if (!start) return;
+    const dx = event.clientX - start.x;
+    const dy = event.clientY - start.y;
+    const absX = Math.abs(dx);
+    const absY = Math.abs(dy);
+
+    if (!swipeActiveRef.current) {
+      if (absX > 12 && absX > absY * 1.2) {
+        swipeActiveRef.current = true;
+        swipeConsumedRef.current = true;
+      } else if (absY > 12) {
+        swipeStartRef.current = null;
+      }
+    }
+  };
+
+  const handleSwipePointerUp = (event: ReactPointerEvent<HTMLAnchorElement>) => {
+    if (event.pointerType !== 'touch') return;
+    const start = swipeStartRef.current;
+    if (!start) return;
+    const dx = event.clientX - start.x;
+    const dy = event.clientY - start.y;
+    const absX = Math.abs(dx);
+    const absY = Math.abs(dy);
+
+    if (absX > 48 && absX > absY * 1.2) {
+      if (dx < 0) {
+        goNext();
+      } else {
+        goPrev();
+      }
+    }
+
+    swipeStartRef.current = null;
+    swipeActiveRef.current = false;
+    event.currentTarget.releasePointerCapture(event.pointerId);
+  };
+
+  const handleSwipePointerCancel = (event: ReactPointerEvent<HTMLAnchorElement>) => {
+    if (event.pointerType !== 'touch') return;
+    swipeStartRef.current = null;
+    swipeActiveRef.current = false;
+    event.currentTarget.releasePointerCapture(event.pointerId);
+  };
+
+  const handleProjectClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    if (!swipeConsumedRef.current) return;
+    swipeConsumedRef.current = false;
+    event.preventDefault();
+    event.stopPropagation();
+  };
+
   return (
     <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-[#f8f3ea] via-[#f2e6d7] to-[#fdf8ef] text-[#0f0f0f] px-4 md:px-8 py-12 md:py-16">
       <div className="pointer-events-none absolute inset-0 opacity-70 bg-[radial-gradient(circle_at_18%_16%,rgba(255,255,255,0.85),transparent_38%),radial-gradient(circle_at_82%_6%,rgba(253,230,205,0.45),transparent_46%),radial-gradient(circle_at_24%_80%,rgba(210,175,140,0.28),transparent_50%)]" />
@@ -302,7 +368,12 @@ function Work() {
                 href={activeProject.link}
                 target="_blank"
                 rel="noreferrer"
-                className="group relative isolate rounded-[30px] overflow-hidden border border-[#e6d9c6] bg-white shadow-[0_18px_60px_rgba(52,34,18,0.14)] reveal-up delay-2 fade-in transition-all duration-500 ease-[cubic-bezier(.16,1,.3,1)] hover:-translate-y-2 hover:shadow-[0_24px_70px_rgba(52,34,18,0.16)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#d9cbb4]"
+                className="group project-swipe-area relative isolate rounded-[30px] overflow-hidden border border-[#e6d9c6] bg-white shadow-[0_18px_60px_rgba(52,34,18,0.14)] reveal-up delay-2 fade-in transition-all duration-500 ease-[cubic-bezier(.16,1,.3,1)] hover:-translate-y-2 hover:shadow-[0_24px_70px_rgba(52,34,18,0.16)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#d9cbb4]"
+                onPointerDown={handleSwipePointerDown}
+                onPointerMove={handleSwipePointerMove}
+                onPointerUp={handleSwipePointerUp}
+                onPointerCancel={handleSwipePointerCancel}
+                onClick={handleProjectClick}
               >
                 <div
                   className={`relative z-10 flex flex-col gap-6 md:gap-8 p-8 md:p-10 items-center text-center transition-colors duration-500 ${

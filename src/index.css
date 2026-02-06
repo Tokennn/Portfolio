@@ -1052,6 +1052,10 @@
   animation: projectSwap 0.45s ease;
 }
 
+.project-swipe-area {
+  touch-action: pan-y;
+}
+
 @keyframes projectSwap {
   from {
     opacity: 0;
