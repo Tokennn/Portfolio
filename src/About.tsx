@@ -211,6 +211,9 @@ function About() {
   const outsideCardRef = useRef<HTMLDivElement | null>(null);
   const outsideSectionRef = useRef<HTMLDivElement | null>(null);
   const [outsideCardHeight, setOutsideCardHeight] = useState<number | null>(null);
+  const outsideScrollDistance = outsideCardHeight
+    ? Math.max(0, outsideStackMinHeight - outsideCardHeight)
+    : 0;
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -258,33 +261,35 @@ function About() {
     if (!triggerTarget || !stack) return;
     gsap.registerPlugin(ScrollTrigger);
 
-    const scrollDistance = Math.max(0, outsideStackMinHeight - outsideCardHeight);
+    const scrollDistance = outsideScrollDistance;
     if (scrollDistance === 0) return;
 
     const ctx = gsap.context(() => {
       const pinStart = "center center";
       gsap.set(stack, { y: 0 });
 
-      ScrollTrigger.create({
-        trigger: triggerTarget,
-        start: pinStart,
-        end: () => `+=${scrollDistance}`,
-        pin: true,
-        pinSpacing: true,
-        pinType: "transform",
-        anticipatePin: 1,
-        invalidateOnRefresh: true,
-        id: isDesktop ? "outside-row-pin" : "outside-card-pin"
-      });
+      if (isDesktop) {
+        ScrollTrigger.create({
+          trigger: triggerTarget,
+          start: pinStart,
+          end: () => `+=${scrollDistance}`,
+          pin: true,
+          pinSpacing: true,
+          pinType: "transform",
+          anticipatePin: 1,
+          invalidateOnRefresh: true,
+          id: "outside-row-pin"
+        });
+      }
 
       gsap.to(stack, {
         y: -scrollDistance,
         ease: "none",
         scrollTrigger: {
           trigger: triggerTarget,
-          start: pinStart,
+          start: isDesktop ? pinStart : "top center",
           end: () => `+=${scrollDistance}`,
-          scrub: true,
+          scrub: isDesktop ? true : 0.2,
           invalidateOnRefresh: true,
           id: isDesktop ? "outside-stack-scroll" : "outside-stack-scroll-mobile"
         }
@@ -296,7 +301,7 @@ function About() {
       window.clearTimeout(refreshId);
       ctx.revert();
     };
-  }, [isDesktop, outsideCardHeight, outsideStackMinHeight, language]);
+  }, [isDesktop, outsideCardHeight, outsideScrollDistance, language, outsideStackMinHeight]);
 
   const setupAudioContext = () => {
     if (typeof window === "undefined") return null;
@@ -847,7 +852,8 @@ function About() {
 
         <section
           ref={outsideSectionRef}
-          className="grid gap-6 md:grid-cols-3 reveal-up delay-1"
+          className="outside-section grid gap-6 md:grid-cols-3 reveal-up delay-1"
+          style={!isDesktop && outsideScrollDistance ? { paddingBottom: outsideScrollDistance } : undefined}
         >
           <div className="self-start rounded-[28px] border border-[#dccfb9] bg-white/80 p-7 shadow-[0_18px_60px_rgba(52,34,18,0.10)] transition-transform transition-shadow duration-500 ease-[cubic-bezier(.16,1,.3,1)] hover:-translate-y-1 hover:shadow-[0_26px_80px_rgba(52,34,18,0.16)]">
             <div className="mb-3 flex items-center justify-between gap-3">
@@ -1206,7 +1212,7 @@ function About() {
             </div>
           </div>
           <div
-            className="self-start rounded-[28px] border border-[#dccfb9] bg-white/80 p-7 shadow-[0_18px_60px_rgba(52,34,18,0.10)] transition-transform transition-shadow duration-500 ease-[cubic-bezier(.16,1,.3,1)] hover:-translate-y-1 hover:shadow-[0_26px_80px_rgba(52,34,18,0.16)] overflow-visible flex flex-col"
+            className="outside-card-sticky self-start rounded-[28px] border border-[#dccfb9] bg-white/80 p-7 shadow-[0_18px_60px_rgba(52,34,18,0.10)] transition-transform transition-shadow duration-500 ease-[cubic-bezier(.16,1,.3,1)] hover:-translate-y-1 hover:shadow-[0_26px_80px_rgba(52,34,18,0.16)] overflow-visible flex flex-col"
             ref={outsideCardRef}
             style={outsideCardHeight ? { height: outsideCardHeight } : undefined}
           >

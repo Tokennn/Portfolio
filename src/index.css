@@ -227,6 +227,10 @@
     padding-bottom: 32px;
   }
 
+  .outside-section {
+    position: relative;
+  }
+
   .outside-card-wrapper {
     width: 100%;
     perspective: 700px;
@@ -358,6 +362,18 @@
 
     .outside-card-wrapper {
       margin-bottom: 26px;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .outside-card-sticky {
+      position: sticky;
+      top: calc(env(safe-area-inset-top, 0px) + 80px);
+      z-index: 2;
+    }
+
+    .outside-stack-viewport {
+      clip-path: none;
     }
   }
 
