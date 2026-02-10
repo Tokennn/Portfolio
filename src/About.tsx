@@ -208,22 +208,20 @@ function About() {
   const autoPlayAttempted = useRef(false);
   const outsideStackRef = useRef<HTMLDivElement | null>(null);
   const toolsCardRef = useRef<HTMLDivElement | null>(null);
+  const outsideCardRef = useRef<HTMLDivElement | null>(null);
   const outsideSectionRef = useRef<HTMLDivElement | null>(null);
   const [outsideCardHeight, setOutsideCardHeight] = useState<number | null>(null);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
-    const updateViewport = () => setIsDesktop(window.innerWidth >= 768);
+    const mediaQuery = window.matchMedia("(min-width: 768px)");
+    const updateViewport = () => setIsDesktop(mediaQuery.matches);
     updateViewport();
-    window.addEventListener("resize", updateViewport);
-    return () => window.removeEventListener("resize", updateViewport);
+    mediaQuery.addEventListener("change", updateViewport);
+    return () => mediaQuery.removeEventListener("change", updateViewport);
   }, []);
 
   useLayoutEffect(() => {
-    if (!isDesktop) {
-      setOutsideCardHeight(null);
-      return;
-    }
     const target = toolsCardRef.current;
     if (!target) return;
 
@@ -242,7 +240,7 @@ function About() {
     const observer = new ResizeObserver(updateHeight);
     observer.observe(target);
     return () => observer.disconnect();
-  }, [isDesktop]);
+  }, []);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -252,11 +250,12 @@ function About() {
 
   useEffect(() => {
     if (typeof window === "undefined") return;
-    if (!isDesktop) return;
     if (!outsideCardHeight) return;
     const section = outsideSectionRef.current;
+    const outsideCard = outsideCardRef.current;
     const stack = outsideStackRef.current;
-    if (!section || !stack) return;
+    const triggerTarget = isDesktop ? section : outsideCard;
+    if (!triggerTarget || !stack) return;
     gsap.registerPlugin(ScrollTrigger);
 
     const scrollDistance = Math.max(0, outsideStackMinHeight - outsideCardHeight);
@@ -267,7 +266,7 @@ function About() {
       gsap.set(stack, { y: 0 });
 
       ScrollTrigger.create({
-        trigger: section,
+        trigger: triggerTarget,
         start: pinStart,
         end: () => `+=${scrollDistance}`,
         pin: true,
@@ -275,22 +274,22 @@ function About() {
         pinType: "transform",
         anticipatePin: 1,
         invalidateOnRefresh: true,
-        id: "outside-row-pin"
+        id: isDesktop ? "outside-row-pin" : "outside-card-pin"
       });
 
       gsap.to(stack, {
         y: -scrollDistance,
         ease: "none",
         scrollTrigger: {
-          trigger: section,
+          trigger: triggerTarget,
           start: pinStart,
           end: () => `+=${scrollDistance}`,
           scrub: true,
           invalidateOnRefresh: true,
-          id: "outside-stack-scroll"
+          id: isDesktop ? "outside-stack-scroll" : "outside-stack-scroll-mobile"
         }
       });
-    }, section);
+    }, triggerTarget);
 
     const refreshId = window.setTimeout(() => ScrollTrigger.refresh(), 0);
     return () => {
@@ -1208,6 +1207,7 @@ function About() {
           </div>
           <div
             className="self-start rounded-[28px] border border-[#dccfb9] bg-white/80 p-7 shadow-[0_18px_60px_rgba(52,34,18,0.10)] transition-transform transition-shadow duration-500 ease-[cubic-bezier(.16,1,.3,1)] hover:-translate-y-1 hover:shadow-[0_26px_80px_rgba(52,34,18,0.16)] overflow-visible flex flex-col"
+            ref={outsideCardRef}
             style={outsideCardHeight ? { height: outsideCardHeight } : undefined}
           >
             <div className="mb-3 flex items-center justify-between gap-3">

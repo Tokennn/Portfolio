@@ -33,6 +33,7 @@ export function useLenis(options: UseLenisOptions = {}) {
 
     if (typeof window !== "undefined") {
       gsap.registerPlugin(ScrollTrigger);
+      ScrollTrigger.config({ ignoreMobileResize: true });
       lenis.on("scroll", ScrollTrigger.update);
       const tick = (time: number) => {
         lenis.raf(time * 1000);
