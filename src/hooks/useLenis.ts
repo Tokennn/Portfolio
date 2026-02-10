@@ -1,5 +1,7 @@
 import { useEffect, useRef } from "react";
 import Lenis from "lenis";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 interface UseLenisOptions {
   duration?: number;
@@ -14,7 +16,6 @@ interface UseLenisOptions {
 
 export function useLenis(options: UseLenisOptions = {}) {
   const lenisRef = useRef<Lenis | null>(null);
-  const rafRef = useRef<number>();
 
   useEffect(() => {
     const lenis = new Lenis({
@@ -30,17 +31,25 @@ export function useLenis(options: UseLenisOptions = {}) {
 
     lenisRef.current = lenis;
 
-    const raf = (time: number) => {
-      lenis.raf(time);
-      rafRef.current = requestAnimationFrame(raf);
-    };
+    if (typeof window !== "undefined") {
+      gsap.registerPlugin(ScrollTrigger);
+      lenis.on("scroll", ScrollTrigger.update);
+      const tick = (time: number) => {
+        lenis.raf(time * 1000);
+      };
+      gsap.ticker.add(tick);
+      gsap.ticker.lagSmoothing(0);
+      ScrollTrigger.refresh();
 
-    rafRef.current = requestAnimationFrame(raf);
+      return () => {
+        gsap.ticker.remove(tick);
+        lenis.off("scroll", ScrollTrigger.update);
+        lenis.destroy();
+        lenisRef.current = null;
+      };
+    }
 
     return () => {
-      if (rafRef.current) {
-        cancelAnimationFrame(rafRef.current);
-      }
       lenis.destroy();
       lenisRef.current = null;
     };

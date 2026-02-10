@@ -1,7 +1,9 @@
-import { useEffect, useRef, useState, type CSSProperties } from "react";
+import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties } from "react";
 import { Link } from "react-router-dom";
 import { MapContainer, Marker, TileLayer, Tooltip } from "react-leaflet";
 import { divIcon, type Map as LeafletMap } from "leaflet";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import portrait from "./iip.jpeg";
 import avatarProcess from "./oo-removebg-preview.png";
 import avatarTools from "./ii-removebg-preview.png";
@@ -89,6 +91,14 @@ const aboutCopy = {
     outsideTitle: "En dehors du travail",
     outsideBody:
       "Passion pour le sport, le dessin, la photo/vidéo, la mode, la musique et pouvoir voyager ✈️",
+    outsideItems: [
+      { title: "Sport", text: "Endurance, énergie, esprit d'équipe.", tone: "sport" },
+      { title: "Dessin", text: "Croquis, textures, idées.", tone: "sketch" },
+      { title: "Photo / Vidéo", text: "Capturer des moments.", tone: "photo" },
+      { title: "Mode", text: "Silhouettes, matières.", tone: "fashion" },
+      { title: "Musique", text: "Rythme, ambiance.", tone: "music" },
+      { title: "Voyages", text: "Découvrir, apprendre.", tone: "travel" }
+    ],
     contributeTitle: "Ce que j'apporte",
     contributeItems: [
       "Développement Front End .",
@@ -138,6 +148,14 @@ const aboutCopy = {
     outsideTitle: "Outside work",
     outsideBody:
       "Passion for sports, drawing, photo/video, motorsports, fashion, music, and traveling.",
+    outsideItems: [
+      { title: "Sports", text: "Endurance, energy, team spirit.", tone: "sport" },
+      { title: "Drawing", text: "Sketches, textures, ideas.", tone: "sketch" },
+      { title: "Photo / Video", text: "Capturing moments.", tone: "photo" },
+      { title: "Fashion", text: "Silhouettes, materials.", tone: "fashion" },
+      { title: "Music", text: "Rhythm, ambience.", tone: "music" },
+      { title: "Travel", text: "Explore and learn.", tone: "travel" }
+    ],
     contributeTitle: "What I bring",
     contributeItems: [
       "Front-end development.",
@@ -169,9 +187,12 @@ function About() {
 
   const { language } = useLanguage();
   const copy = aboutCopy[language];
+  const outsideItems = copy.outsideItems ?? [];
+  const outsideStackMinHeight = Math.max(540, outsideItems.length * 220);
   const mapRef = useRef<LeafletMap | null>(null);
   const [isMapReady, setIsMapReady] = useState(false);
   const [isToolsExpanded, setIsToolsExpanded] = useState(false);
+  const [isDesktop, setIsDesktop] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const barRefs = useRef<{ mobile: HTMLSpanElement[]; desktop: HTMLSpanElement[] }>({
     mobile: [],
@@ -185,6 +206,98 @@ function About() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isReactive, setIsReactive] = useState(false);
   const autoPlayAttempted = useRef(false);
+  const outsideStackRef = useRef<HTMLDivElement | null>(null);
+  const toolsCardRef = useRef<HTMLDivElement | null>(null);
+  const outsideSectionRef = useRef<HTMLDivElement | null>(null);
+  const [outsideCardHeight, setOutsideCardHeight] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const updateViewport = () => setIsDesktop(window.innerWidth >= 768);
+    updateViewport();
+    window.addEventListener("resize", updateViewport);
+    return () => window.removeEventListener("resize", updateViewport);
+  }, []);
+
+  useLayoutEffect(() => {
+    if (!isDesktop) {
+      setOutsideCardHeight(null);
+      return;
+    }
+    const target = toolsCardRef.current;
+    if (!target) return;
+
+    const updateHeight = () => {
+      const nextHeight = Math.round(target.getBoundingClientRect().height);
+      setOutsideCardHeight((prev) => (prev === nextHeight ? prev : nextHeight));
+    };
+
+    updateHeight();
+
+    if (typeof ResizeObserver === "undefined") {
+      window.addEventListener("resize", updateHeight);
+      return () => window.removeEventListener("resize", updateHeight);
+    }
+
+    const observer = new ResizeObserver(updateHeight);
+    observer.observe(target);
+    return () => observer.disconnect();
+  }, [isDesktop]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (!outsideCardHeight) return;
+    ScrollTrigger.refresh();
+  }, [outsideCardHeight]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (!isDesktop) return;
+    if (!outsideCardHeight) return;
+    const section = outsideSectionRef.current;
+    const stack = outsideStackRef.current;
+    if (!section || !stack) return;
+    gsap.registerPlugin(ScrollTrigger);
+
+    const scrollDistance = Math.max(0, outsideStackMinHeight - outsideCardHeight);
+    if (scrollDistance === 0) return;
+
+    const ctx = gsap.context(() => {
+      const pinStart = "center center";
+      gsap.set(stack, { y: 0 });
+
+      ScrollTrigger.create({
+        trigger: section,
+        start: pinStart,
+        end: () => `+=${scrollDistance}`,
+        pin: true,
+        pinSpacing: true,
+        pinType: "transform",
+        anticipatePin: 1,
+        invalidateOnRefresh: true,
+        id: "outside-row-pin"
+      });
+
+      gsap.to(stack, {
+        y: -scrollDistance,
+        ease: "none",
+        scrollTrigger: {
+          trigger: section,
+          start: pinStart,
+          end: () => `+=${scrollDistance}`,
+          scrub: true,
+          invalidateOnRefresh: true,
+          id: "outside-stack-scroll"
+        }
+      });
+    }, section);
+
+    const refreshId = window.setTimeout(() => ScrollTrigger.refresh(), 0);
+    return () => {
+      window.clearTimeout(refreshId);
+      ctx.revert();
+    };
+  }, [isDesktop, outsideCardHeight, outsideStackMinHeight, language]);
 
   const setupAudioContext = () => {
     if (typeof window === "undefined") return null;
@@ -323,6 +436,19 @@ function About() {
     audio.play().catch(() => {
       setIsPlaying(false);
     });
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const container = outsideStackRef.current;
+    if (!container) return;
+    gsap.registerPlugin(ScrollTrigger);
+
+    const ctx = gsap.context(() => {
+      gsap.set(container, { willChange: "transform" });
+    }, container);
+
+    return () => ctx.revert();
   }, []);
 
   const handleTogglePlayback = async () => {
@@ -720,7 +846,10 @@ function About() {
           </div>
         </div>
 
-        <section className="grid gap-6 md:grid-cols-3 reveal-up delay-1">
+        <section
+          ref={outsideSectionRef}
+          className="grid gap-6 md:grid-cols-3 reveal-up delay-1"
+        >
           <div className="self-start rounded-[28px] border border-[#dccfb9] bg-white/80 p-7 shadow-[0_18px_60px_rgba(52,34,18,0.10)] transition-transform transition-shadow duration-500 ease-[cubic-bezier(.16,1,.3,1)] hover:-translate-y-1 hover:shadow-[0_26px_80px_rgba(52,34,18,0.16)]">
             <div className="mb-3 flex items-center justify-between gap-3">
               <h2 className="text-sm font-semibold uppercase tracking-[0.24em] text-[#0f0f0f]">
@@ -741,7 +870,10 @@ function About() {
             </div>
             <p data-reveal="text" className="text-sm md:text-base text-[#3a3a3a] leading-relaxed">{copy.processBody}</p>
           </div>
-          <div className="relative self-start rounded-[28px] border border-[#dccfb9] bg-white/80 p-7 shadow-[0_18px_60px_rgba(52,34,18,0.10)] transition-transform transition-shadow duration-500 ease-[cubic-bezier(.16,1,.3,1)] hover:-translate-y-1 hover:shadow-[0_26px_80px_rgba(52,34,18,0.16)]">
+          <div
+            ref={toolsCardRef}
+            className="relative self-start rounded-[28px] border border-[#dccfb9] bg-white/80 p-7 shadow-[0_18px_60px_rgba(52,34,18,0.10)] transition-transform transition-shadow duration-500 ease-[cubic-bezier(.16,1,.3,1)] hover:-translate-y-1 hover:shadow-[0_26px_80px_rgba(52,34,18,0.16)]"
+          >
             <div className="mb-3 flex items-center justify-between gap-3">
               <h2 className="text-sm font-semibold uppercase tracking-[0.24em] text-[#0f0f0f]">
                 {copy.toolsTitle}
@@ -1074,7 +1206,10 @@ function About() {
               </button>
             </div>
           </div>
-          <div className="self-start rounded-[28px] border border-[#dccfb9] bg-white/80 p-7 shadow-[0_18px_60px_rgba(52,34,18,0.10)] transition-transform transition-shadow duration-500 ease-[cubic-bezier(.16,1,.3,1)] hover:-translate-y-1 hover:shadow-[0_26px_80px_rgba(52,34,18,0.16)]">
+          <div
+            className="self-start rounded-[28px] border border-[#dccfb9] bg-white/80 p-7 shadow-[0_18px_60px_rgba(52,34,18,0.10)] transition-transform transition-shadow duration-500 ease-[cubic-bezier(.16,1,.3,1)] hover:-translate-y-1 hover:shadow-[0_26px_80px_rgba(52,34,18,0.16)] overflow-visible flex flex-col"
+            style={outsideCardHeight ? { height: outsideCardHeight } : undefined}
+          >
             <div className="mb-3 flex items-center justify-between gap-3">
               <h2 className="text-sm font-semibold uppercase tracking-[0.24em] text-[#0f0f0f]">
                 {copy.outsideTitle}
@@ -1092,7 +1227,22 @@ function About() {
                 />
               </button>
             </div>
-            <p data-reveal="text" className="text-sm md:text-base text-[#3a3a3a] leading-relaxed">{copy.outsideBody}</p>
+            <div className="flex-1 min-h-0 outside-stack-viewport">
+              <div
+                ref={outsideStackRef}
+                className="outside-stack"
+                style={{ minHeight: outsideStackMinHeight }}
+              >
+                {outsideItems.map((item, index) => (
+                  <div key={`${item.title}-${index}`} className="outside-card-wrapper">
+                    <div className="outside-card" data-tone={item.tone}>
+                      <span className="outside-card-label">{item.title}</span>
+                      <p className="outside-card-text">{item.text}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </section>
 
