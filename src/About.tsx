@@ -209,11 +209,15 @@ function About() {
   const outsideStackRef = useRef<HTMLDivElement | null>(null);
   const toolsCardRef = useRef<HTMLDivElement | null>(null);
   const outsideCardRef = useRef<HTMLDivElement | null>(null);
+  const outsideViewportRef = useRef<HTMLDivElement | null>(null);
   const outsideSectionRef = useRef<HTMLDivElement | null>(null);
   const [outsideCardHeight, setOutsideCardHeight] = useState<number | null>(null);
-  const outsideScrollDistance = outsideCardHeight
-    ? Math.max(0, outsideStackMinHeight - outsideCardHeight)
-    : 0;
+  const [outsideViewportHeight, setOutsideViewportHeight] = useState<number | null>(null);
+  const outsideScrollDistance = outsideViewportHeight
+    ? Math.max(0, outsideStackMinHeight - outsideViewportHeight)
+    : outsideCardHeight
+      ? Math.max(0, outsideStackMinHeight - outsideCardHeight)
+      : 0;
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -245,20 +249,42 @@ function About() {
     return () => observer.disconnect();
   }, []);
 
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    if (!outsideCardHeight) return;
-    ScrollTrigger.refresh();
-  }, [outsideCardHeight]);
+  useLayoutEffect(() => {
+    const viewport = outsideViewportRef.current;
+    if (!viewport) return;
+
+    const updateHeight = () => {
+      const nextHeight = Math.round(viewport.getBoundingClientRect().height);
+      setOutsideViewportHeight((prev) => (prev === nextHeight ? prev : nextHeight));
+    };
+
+    updateHeight();
+
+    if (typeof ResizeObserver === "undefined") {
+      window.addEventListener("resize", updateHeight);
+      return () => window.removeEventListener("resize", updateHeight);
+    }
+
+    const observer = new ResizeObserver(updateHeight);
+    observer.observe(viewport);
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
-    if (!outsideCardHeight) return;
+    if (!outsideCardHeight && !outsideViewportHeight) return;
+    ScrollTrigger.refresh();
+  }, [outsideCardHeight, outsideViewportHeight]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (!outsideCardHeight && !outsideViewportHeight) return;
     const section = outsideSectionRef.current;
     const outsideCard = outsideCardRef.current;
     const stack = outsideStackRef.current;
+    const viewport = outsideViewportRef.current;
     const triggerTarget = isDesktop ? section : outsideCard;
-    if (!triggerTarget || !stack) return;
+    if (!triggerTarget || !stack || !viewport) return;
     gsap.registerPlugin(ScrollTrigger);
 
     const scrollDistance = outsideScrollDistance;
@@ -266,7 +292,58 @@ function About() {
 
     const ctx = gsap.context(() => {
       const pinStart = "center center";
-      gsap.set(stack, { y: 0 });
+      const stackStartY = -scrollDistance;
+      const stackEndY = 0;
+      const wrappers = gsap.utils.toArray<HTMLDivElement>(".outside-card-wrapper", stack);
+      const cardEntries = wrappers
+        .map((wrapper) => {
+          const card = wrapper.querySelector<HTMLElement>(".outside-card");
+          return card ? { wrapper, card } : null;
+        })
+        .filter((entry): entry is { wrapper: HTMLDivElement; card: HTMLElement } => entry !== null);
+      const cards = cardEntries.map((entry) => entry.card);
+      const clampDistance = gsap.utils.clamp(-1.35, 1.35);
+      const enableCardDepth = !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+      const updateCardDepth = (progress: number) => {
+        const viewportHeight = viewport.getBoundingClientRect().height;
+        if (!viewportHeight || !cardEntries.length) return;
+        const translateY = stackStartY + (stackEndY - stackStartY) * progress;
+        const viewportCenter = viewportHeight * 0.5;
+        const influenceRange = Math.max(140, viewportHeight * 0.7);
+
+        cardEntries.forEach(({ wrapper, card }, index) => {
+          const cardCenter = wrapper.offsetTop + wrapper.offsetHeight * 0.5 + translateY;
+          const normalizedDistance = clampDistance((cardCenter - viewportCenter) / influenceRange);
+          const prominence = 1 - Math.min(1, Math.abs(normalizedDistance));
+          const direction = index % 2 === 0 ? -1 : 1;
+
+          gsap.set(wrapper, { zIndex: cardEntries.length - index + Math.round(prominence * 12) });
+          gsap.set(card, {
+            y: normalizedDistance * 32,
+            scale: 0.88 + prominence * 0.16,
+            rotateX: -normalizedDistance * 8,
+            rotateY: direction * (1 - prominence) * 9,
+            rotateZ: direction * normalizedDistance * 2.6,
+            opacity: 0.36 + prominence * 0.64,
+            filter: `saturate(${0.78 + prominence * 0.34}) brightness(${0.92 + prominence * 0.1})`
+          });
+        });
+      };
+
+      gsap.set(stack, { y: stackStartY });
+      gsap.set(wrappers, { zIndex: 1 });
+      if (cards.length) {
+        gsap.set(cards, {
+          transformOrigin: "50% 100%",
+          backfaceVisibility: "hidden"
+        });
+      }
+      if (enableCardDepth) {
+        updateCardDepth(0);
+      } else if (cards.length) {
+        gsap.set(cards, { clearProps: "transform,opacity,filter" });
+      }
 
       if (isDesktop) {
         ScrollTrigger.create({
@@ -282,8 +359,8 @@ function About() {
         });
       }
 
-      gsap.to(stack, {
-        y: -scrollDistance,
+      const stackTween = gsap.to(stack, {
+        y: stackEndY,
         ease: "none",
         scrollTrigger: {
           trigger: triggerTarget,
@@ -291,9 +368,15 @@ function About() {
           end: () => `+=${scrollDistance}`,
           scrub: isDesktop ? true : 0.2,
           invalidateOnRefresh: true,
+          onUpdate: enableCardDepth ? (self) => updateCardDepth(self.progress) : undefined,
+          onRefresh: enableCardDepth ? (self) => updateCardDepth(self.progress) : undefined,
           id: isDesktop ? "outside-stack-scroll" : "outside-stack-scroll-mobile"
         }
       });
+
+      if (enableCardDepth) {
+        updateCardDepth(stackTween.scrollTrigger?.progress ?? 0);
+      }
     }, triggerTarget);
 
     const refreshId = window.setTimeout(() => ScrollTrigger.refresh(), 0);
@@ -301,7 +384,14 @@ function About() {
       window.clearTimeout(refreshId);
       ctx.revert();
     };
-  }, [isDesktop, outsideCardHeight, outsideScrollDistance, language, outsideStackMinHeight]);
+  }, [
+    isDesktop,
+    outsideCardHeight,
+    outsideScrollDistance,
+    outsideViewportHeight,
+    language,
+    outsideStackMinHeight
+  ]);
 
   const setupAudioContext = () => {
     if (typeof window === "undefined") return null;
@@ -1233,7 +1323,7 @@ function About() {
                 />
               </button>
             </div>
-            <div className="flex-1 min-h-0 outside-stack-viewport">
+            <div className="flex-1 min-h-0 outside-stack-viewport" ref={outsideViewportRef}>
               <div
                 ref={outsideStackRef}
                 className="outside-stack"
