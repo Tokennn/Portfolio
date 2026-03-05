@@ -202,32 +202,6 @@ const ContactForm = () => {
           );
         })}
       </div>
-      <svg className="absolute h-0 w-0" aria-hidden="true">
-        <filter
-          id="liquid-glass-distortion"
-          x="-20%"
-          y="-20%"
-          width="140%"
-          height="140%"
-          colorInterpolationFilters="sRGB"
-        >
-          <feTurbulence
-            type="fractalNoise"
-            baseFrequency="0.01"
-            numOctaves="2"
-            seed="2"
-            result="noise"
-          >
-            <animate
-              attributeName="baseFrequency"
-              dur="10s"
-              values="0.008;0.014;0.008"
-              repeatCount="indefinite"
-            />
-          </feTurbulence>
-          <feDisplacementMap in="SourceGraphic" in2="noise" scale="16" xChannelSelector="R" yChannelSelector="G" />
-        </filter>
-      </svg>
       {/* <WaterCursor /> */}
       <div className="absolute right-5 top-5 z-30 md:right-8 md:top-8">
         <LanguageToggle />

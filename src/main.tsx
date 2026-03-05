@@ -8,12 +8,14 @@ import AnimatedRoutes from './components/AnimatedRoutes';
 import WebGLTransition from './components/WebGLTransition';
 import { LanguageProvider } from './context/LanguageContext';
 import SquareCursor from './components/SquareCursor';
+import LiquidGlassDefs from './components/LiquidGlassDefs';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <LanguageProvider>
       <BrowserRouter>
         <WebGLTransition />
+        <LiquidGlassDefs />
         <SquareCursor />
         <AnimatedRoutes />
       </BrowserRouter>

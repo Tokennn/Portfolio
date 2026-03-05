@@ -279,11 +279,10 @@ function About() {
   useEffect(() => {
     if (typeof window === "undefined") return;
     if (!outsideCardHeight && !outsideViewportHeight) return;
-    const section = outsideSectionRef.current;
     const outsideCard = outsideCardRef.current;
     const stack = outsideStackRef.current;
     const viewport = outsideViewportRef.current;
-    const triggerTarget = isDesktop ? section : outsideCard;
+    const triggerTarget = outsideCard;
     if (!triggerTarget || !stack || !viewport) return;
     gsap.registerPlugin(ScrollTrigger);
 
@@ -325,8 +324,7 @@ function About() {
             rotateX: -normalizedDistance * 8,
             rotateY: direction * (1 - prominence) * 9,
             rotateZ: direction * normalizedDistance * 2.6,
-            opacity: 0.36 + prominence * 0.64,
-            filter: `saturate(${0.78 + prominence * 0.34}) brightness(${0.92 + prominence * 0.1})`
+            opacity: 0.36 + prominence * 0.64
           });
         });
       };
@@ -342,7 +340,7 @@ function About() {
       if (enableCardDepth) {
         updateCardDepth(0);
       } else if (cards.length) {
-        gsap.set(cards, { clearProps: "transform,opacity,filter" });
+        gsap.set(cards, { clearProps: "transform,opacity" });
       }
 
       if (isDesktop) {
@@ -564,7 +562,7 @@ function About() {
   };
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-[#f8f3ea] via-[#f2e6d7] to-[#fdf8ef] text-[#0f0f0f] px-4 md:px-8 pt-28 pb-12 md:py-16">
+    <div className="about-liquid-scope relative min-h-screen overflow-hidden bg-gradient-to-br from-[#f8f3ea] via-[#f2e6d7] to-[#fdf8ef] text-[#0f0f0f] px-4 md:px-8 pt-28 pb-12 md:py-16">
       <audio ref={audioRef} src={islandAudioSrc} preload="auto" playsInline />
       <div className="pointer-events-none absolute inset-0 opacity-70 bg-[radial-gradient(circle_at_18%_16%,rgba(255,255,255,0.85),transparent_38%),radial-gradient(circle_at_82%_6%,rgba(253,230,205,0.45),transparent_46%),radial-gradient(circle_at_24%_80%,rgba(210,175,140,0.28),transparent_50%)]" />
       <div className="fixed inset-x-0 top-0 z-50 flex flex-col gap-2 pt-[calc(env(safe-area-inset-top,0px)+8px)] sm:hidden">
@@ -717,7 +715,7 @@ function About() {
                       Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero.
                     </p>
                   </div> */}
-                  <div className="rounded-[26px] border border-[#e6d9c6] bg-white/80 p-6 shadow-[0_14px_40px_rgba(52,34,18,0.10)] transition-transform transition-shadow duration-500 ease-[cubic-bezier(.16,1,.3,1)] hover:-translate-y-1 hover:shadow-[0_20px_50px_rgba(52,34,18,0.16)]">
+                  <div className="liquid-glass-edge rounded-[26px] border border-[#e6d9c6] bg-white/80 p-6 shadow-[0_14px_40px_rgba(52,34,18,0.10)] transition-transform transition-shadow duration-500 ease-[cubic-bezier(.16,1,.3,1)] hover:-translate-y-1 hover:shadow-[0_20px_50px_rgba(52,34,18,0.16)]">
                     <h2 className="text-sm font-semibold uppercase tracking-[0.24em] text-[#0f0f0f] mb-3">
                       {copy.valuesTitle}
                     </h2>
@@ -727,7 +725,7 @@ function About() {
                     ))}
                   </ul>
                   </div>
-                  <div className="rounded-[26px] border border-[#e6d9c6] bg-white/80 p-4 shadow-[0_14px_40px_rgba(52,34,18,0.10)] transition-transform transition-shadow duration-500 ease-[cubic-bezier(.16,1,.3,1)] hover:-translate-y-1 hover:shadow-[0_20px_50px_rgba(52,34,18,0.16)]">
+                  <div className="liquid-glass-edge rounded-[26px] border border-[#e6d9c6] bg-white/80 p-4 shadow-[0_14px_40px_rgba(52,34,18,0.10)] transition-transform transition-shadow duration-500 ease-[cubic-bezier(.16,1,.3,1)] hover:-translate-y-1 hover:shadow-[0_20px_50px_rgba(52,34,18,0.16)]">
                     <div className="mb-2 flex items-center justify-between">
                       <button
                         type="button"
@@ -791,7 +789,7 @@ function About() {
               </div>
 
               <aside className="space-y-4">
-                <div className="relative overflow-hidden rounded-[30px] border border-[#e6d9c6] bg-white p-7 shadow-[0_18px_60px_rgba(52,34,18,0.12)] reveal-up delay-1 transition-transform transition-shadow duration-500 ease-[cubic-bezier(.16,1,.3,1)] hover:-translate-y-1 hover:shadow-[0_26px_80px_rgba(52,34,18,0.18)]">
+                <div className="liquid-glass-edge relative overflow-hidden rounded-[30px] border border-[#e6d9c6] bg-white p-7 shadow-[0_18px_60px_rgba(52,34,18,0.12)] reveal-up delay-1 transition-transform transition-shadow duration-500 ease-[cubic-bezier(.16,1,.3,1)] hover:-translate-y-1 hover:shadow-[0_26px_80px_rgba(52,34,18,0.18)]">
                   <div className="pointer-events-none absolute inset-0 opacity-70 bg-[radial-gradient(circle_at_20%_20%,rgba(253,230,205,0.6),transparent_45%),radial-gradient(circle_at_80%_10%,rgba(210,175,140,0.26),transparent_55%)]" />
                   <div className="relative z-10 space-y-6">
                     <div className="flex items-center gap-4">
@@ -861,7 +859,7 @@ function About() {
                   </div>
                 </div>
 
-                <div className="rounded-[30px] border border-[#e6d9c6] bg-white/80 p-7 shadow-[0_18px_60px_rgba(52,34,18,0.10)] reveal-up delay-2 transition-transform transition-shadow duration-500 ease-[cubic-bezier(.16,1,.3,1)] hover:-translate-y-1 hover:shadow-[0_26px_80px_rgba(52,34,18,0.16)]">
+                <div className="liquid-glass-edge rounded-[30px] border border-[#e6d9c6] bg-white/80 p-7 shadow-[0_18px_60px_rgba(52,34,18,0.10)] reveal-up delay-2 transition-transform transition-shadow duration-500 ease-[cubic-bezier(.16,1,.3,1)] hover:-translate-y-1 hover:shadow-[0_26px_80px_rgba(52,34,18,0.16)]">
                   <h2 className="text-sm font-semibold uppercase tracking-[0.24em] text-[#0f0f0f] mb-4">
                     {copy.contributeTitle}
                   </h2>
@@ -942,10 +940,10 @@ function About() {
 
         <section
           ref={outsideSectionRef}
-          className="outside-section grid gap-6 md:grid-cols-3 reveal-up delay-1"
+          className="outside-section grid grid-cols-1 gap-6 reveal-up delay-1"
           style={!isDesktop && outsideScrollDistance ? { paddingBottom: outsideScrollDistance } : undefined}
         >
-          <div className="self-start rounded-[28px] border border-[#dccfb9] bg-white/80 p-7 shadow-[0_18px_60px_rgba(52,34,18,0.10)] transition-transform transition-shadow duration-500 ease-[cubic-bezier(.16,1,.3,1)] hover:-translate-y-1 hover:shadow-[0_26px_80px_rgba(52,34,18,0.16)]">
+          <div className="overflow-visible self-start rounded-[28px] border border-[#dccfb9] bg-white/80 p-7">
             <div className="mb-3 flex items-center justify-between gap-3">
               <h2 className="text-sm font-semibold uppercase tracking-[0.24em] text-[#0f0f0f]">
                 {copy.processTitle}
@@ -963,11 +961,11 @@ function About() {
                 />
               </button>
             </div>
-            <p data-reveal="text" className="text-sm md:text-base text-[#3a3a3a] leading-relaxed">{copy.processBody}</p>
+            <p data-reveal="text" className="text-sm md:text-base text-[#3a3a3a] leading-relaxed text-justify">{copy.processBody}</p>
           </div>
           <div
             ref={toolsCardRef}
-            className="relative self-start rounded-[28px] border border-[#dccfb9] bg-white/80 p-7 shadow-[0_18px_60px_rgba(52,34,18,0.10)] transition-transform transition-shadow duration-500 ease-[cubic-bezier(.16,1,.3,1)] hover:-translate-y-1 hover:shadow-[0_26px_80px_rgba(52,34,18,0.16)]"
+            className="relative overflow-visible self-start rounded-[28px] border border-[#dccfb9] bg-white/80 p-7"
           >
             <div className="mb-3 flex items-center justify-between gap-3">
               <h2 className="text-sm font-semibold uppercase tracking-[0.24em] text-[#0f0f0f]">
@@ -1302,7 +1300,7 @@ function About() {
             </div>
           </div>
           <div
-            className="outside-card-sticky self-start rounded-[28px] border border-[#dccfb9] bg-white/80 p-7 shadow-[0_18px_60px_rgba(52,34,18,0.10)] transition-transform transition-shadow duration-500 ease-[cubic-bezier(.16,1,.3,1)] hover:-translate-y-1 hover:shadow-[0_26px_80px_rgba(52,34,18,0.16)] overflow-visible flex flex-col"
+            className="outside-card-sticky self-start rounded-[28px] border border-[#dccfb9] bg-white/80 p-7 overflow-visible flex flex-col"
             ref={outsideCardRef}
             style={outsideCardHeight ? { height: outsideCardHeight } : undefined}
           >
