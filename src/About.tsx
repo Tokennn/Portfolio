@@ -672,17 +672,32 @@ function About() {
 
       <main className="relative max-w-6xl mx-auto space-y-10 md:space-y-14">
         <div className="relative">
-          <div className="pointer-events-auto hidden md:flex flex-col gap-10 text-[#0f0f0f] absolute left-[-80px] lg:left-[-90px] top-[42%] -translate-y-1/2 z-20">
-            <Link to="/" className="nav-dot font-amazing" data-label={copy.nav.home} aria-label={copy.nav.home}>
-              <span className="sr-only">{copy.nav.home}</span>
+          <div className="pointer-events-auto hidden md:flex flex-col gap-10 text-[#0f0f0f] absolute left-[-108px] lg:left-[-120px] top-[42%] -translate-y-1/2 z-20">
+            <Link
+              to="/"
+              className="nav-dot nav-dot-liquid font-amazing"
+              data-label={copy.nav.home}
+              aria-label={copy.nav.home}
+            >
+              <span className="nav-dot-liquid__text">{copy.nav.home}</span>
             </Link>
-            <Link to="/work" className="nav-dot font-amazing" data-label={copy.nav.work} aria-label={copy.nav.work}>
-              <span className="sr-only">{copy.nav.work}</span>
+            <Link
+              to="/work"
+              className="nav-dot nav-dot-liquid font-amazing"
+              data-label={copy.nav.work}
+              aria-label={copy.nav.work}
+            >
+              <span className="nav-dot-liquid__text">{copy.nav.work}</span>
             </Link>
           </div>
-          <div className="pointer-events-auto hidden md:flex flex-col gap-10 text-[#0f0f0f] absolute right-[-80px] lg:right-[-90px] top-[42%] -translate-y-1/2 z-20 text-right">
-            <Link to="/contact" className="nav-dot font-amazing" data-label={copy.nav.contact} aria-label={copy.nav.contact}>
-              <span className="sr-only">{copy.nav.contact}</span>
+          <div className="pointer-events-auto hidden md:flex flex-col gap-10 text-[#0f0f0f] absolute right-[-108px] lg:right-[-120px] top-[42%] -translate-y-1/2 z-20 text-right">
+            <Link
+              to="/contact"
+              className="nav-dot nav-dot-liquid font-amazing"
+              data-label={copy.nav.contact}
+              aria-label={copy.nav.contact}
+            >
+              <span className="nav-dot-liquid__text">{copy.nav.contact}</span>
             </Link>
           </div>
 
@@ -847,11 +862,8 @@ function About() {
                       <p className="text-xs uppercase tracking-[0.26em] text-[#6b6b6b] mb-3">{copy.keywordsLabel}</p>
                       <div className="flex flex-wrap gap-2">
                         {copy.keywords.map((label) => (
-                          <span
-                            key={label}
-                            className="rounded-full border border-[#d5c5ad] bg-white/80 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.24em] text-[#0f0f0f] transition-transform transition-shadow duration-500 ease-[cubic-bezier(.16,1,.3,1)] hover:-translate-y-0.5 hover:shadow-[0_12px_26px_rgba(52,34,18,0.16)] hover:border-[#cdb99a]"
-                          >
-                            {label}
+                          <span key={label} className="keyword-liquid-chip" aria-label={label}>
+                            <span className="keyword-liquid-chip__text">{label}</span>
                           </span>
                         ))}
                       </div>
@@ -940,10 +952,10 @@ function About() {
 
         <section
           ref={outsideSectionRef}
-          className="outside-section grid grid-cols-1 gap-6 reveal-up delay-1"
+          className="outside-section mx-auto grid w-full max-w-[1100px] grid-cols-1 gap-5 md:gap-6 reveal-up delay-1"
           style={!isDesktop && outsideScrollDistance ? { paddingBottom: outsideScrollDistance } : undefined}
         >
-          <div className="overflow-visible self-start rounded-[28px] border border-[#dccfb9] bg-white/80 p-7">
+          <div className="w-full overflow-visible self-start rounded-[28px] border border-[#dccfb9] bg-white/80 p-7 md:p-8">
             <div className="mb-3 flex items-center justify-between gap-3">
               <h2 className="text-sm font-semibold uppercase tracking-[0.24em] text-[#0f0f0f]">
                 {copy.processTitle}
@@ -951,12 +963,12 @@ function About() {
               <button
                 type="button"
                 aria-label="Process avatar emoji"
-                className="-mt-5 flex h-32 w-32 items-center justify-center bg-transparent transition-transform duration-500 ease-out hover:-translate-y-4 hover:scale-125 hover:rotate-12 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3a7bb3]"
+                className="-mt-3 md:-mt-5 flex h-24 w-24 md:h-32 md:w-32 items-center justify-center bg-transparent transition-transform duration-500 ease-out hover:-translate-y-4 hover:scale-125 hover:rotate-12 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3a7bb3]"
               >
                 <img
                   src={avatarOutside}
                   alt=""
-                  className="h-32 w-32 object-contain drop-shadow-[0_18px_40px_rgba(0,0,0,0.3)]"
+                  className="h-24 w-24 md:h-32 md:w-32 object-contain drop-shadow-[0_18px_40px_rgba(0,0,0,0.3)]"
                   draggable="false"
                 />
               </button>
@@ -965,7 +977,7 @@ function About() {
           </div>
           <div
             ref={toolsCardRef}
-            className="relative overflow-visible self-start rounded-[28px] border border-[#dccfb9] bg-white/80 p-7"
+            className="w-full relative overflow-visible self-start rounded-[28px] border border-[#dccfb9] bg-white/80 p-7 md:p-8"
           >
             <div className="mb-3 flex items-center justify-between gap-3">
               <h2 className="text-sm font-semibold uppercase tracking-[0.24em] text-[#0f0f0f]">
@@ -974,12 +986,12 @@ function About() {
               <button
                 type="button"
                 aria-label="Tools avatar emoji"
-                className="-mt-5 flex h-32 w-32 items-center justify-center bg-transparent transition-transform duration-500 ease-out hover:-translate-y-4 hover:scale-125 hover:-rotate-12 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#b37b3a]"
+                className="-mt-3 md:-mt-5 flex h-24 w-24 md:h-32 md:w-32 items-center justify-center bg-transparent transition-transform duration-500 ease-out hover:-translate-y-4 hover:scale-125 hover:-rotate-12 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#b37b3a]"
               >
                 <img
                   src={avatarTools}
                   alt=""
-                  className="h-32 w-32 object-contain drop-shadow-[0_18px_40px_rgba(0,0,0,0.3)]"
+                  className="h-24 w-24 md:h-32 md:w-32 object-contain drop-shadow-[0_18px_40px_rgba(0,0,0,0.3)]"
                   draggable="false"
                 />
               </button>
@@ -1300,7 +1312,7 @@ function About() {
             </div>
           </div>
           <div
-            className="outside-card-sticky self-start rounded-[28px] border border-[#dccfb9] bg-white/80 p-7 overflow-visible flex flex-col"
+            className="outside-card-sticky w-full self-start rounded-[28px] border border-[#dccfb9] bg-white/80 p-7 md:p-8 overflow-visible flex flex-col"
             ref={outsideCardRef}
             style={outsideCardHeight ? { height: outsideCardHeight } : undefined}
           >
@@ -1311,12 +1323,12 @@ function About() {
               <button
                 type="button"
                 aria-label="Outside work avatar emoji"
-                className="-mt-5 flex h-32 w-32 items-center justify-center bg-transparent transition-transform duration-500 ease-out hover:-translate-y-4 hover:scale-125 hover:rotate-10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3ab37b]"
+                className="-mt-3 md:-mt-5 flex h-24 w-24 md:h-32 md:w-32 items-center justify-center bg-transparent transition-transform duration-500 ease-out hover:-translate-y-4 hover:scale-125 hover:rotate-10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3ab37b]"
               >
                 <img
                   src={avatarProcess}
                   alt=""
-                  className="h-32 w-32 object-contain drop-shadow-[0_18px_40px_rgba(0,0,0,0.3)]"
+                  className="h-24 w-24 md:h-32 md:w-32 object-contain drop-shadow-[0_18px_40px_rgba(0,0,0,0.3)]"
                   draggable="false"
                 />
               </button>
