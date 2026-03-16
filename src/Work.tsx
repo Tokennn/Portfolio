@@ -334,19 +334,19 @@ function Work() {
       <main className="relative max-w-6xl mx-auto space-y-10 md:space-y-14">
         <div className="relative">
           <div className="pointer-events-auto hidden md:flex flex-col gap-10 text-[#0f0f0f] absolute left-[-80px] lg:left-[-90px] top-[42%] -translate-y-1/2 z-20">
-            <Link to="/" className="nav-dot font-amazing" data-label="Home" aria-label="Home">
-              <span className="sr-only">Home</span>
+            <Link to="/" className="nav-dot nav-dot-liquid font-amazing" data-label="Home" aria-label="Home">
+              <span className="nav-dot-liquid__text">Home</span>
             </Link>
             {/* <a href="/work" className="nav-dot font-amazing" data-label="Work" aria-label="Work">
               <span className="sr-only">Work</span>
             </a> */}
           </div>
-          <div className="pointer-events-auto hidden md:flex flex-col gap-10 text-[#0f0f0f] absolute right-[-80px] lg:right-[-90px] top-[42%] -translate-y-1/2 z-20 text-right">
-            <Link to="/about" className="nav-dot font-amazing" data-label="About" aria-label="About">
-              <span className="sr-only">About</span>
+          <div className="pointer-events-auto hidden md:flex flex-col gap-10 text-[#0f0f0f] absolute right-[-116px] lg:right-[-128px] top-[42%] -translate-y-1/2 z-20 text-right">
+            <Link to="/about" className="nav-dot nav-dot-liquid font-amazing" data-label="About" aria-label="About">
+              <span className="nav-dot-liquid__text">About</span>
             </Link>
-            <Link to="/contact" className="nav-dot font-amazing" data-label="Contact" aria-label="Contact">
-              <span className="sr-only">Contact</span>
+            <Link to="/contact" className="nav-dot nav-dot-liquid font-amazing" data-label="Contact" aria-label="Contact">
+              <span className="nav-dot-liquid__text">Contact</span>
             </Link>
           </div>
 
