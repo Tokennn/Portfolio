@@ -86,7 +86,7 @@ const aboutCopy = {
     keywords: ["Design", "UI", "UX", "Ergonomie", "Simplicité"],
     processTitle: "Process'",
     processBody:
-      "Je démarre par un brief clair, puis je propose une direction visuelle rapide. Ensuite, je développe en itérations courtes avec des points réguliers, avant tests, optimisation et mise en ligne.",
+      "Je démarre par un brief clair, puis je propose une direction visuelle rapide. Ensuite, je développe le MPV, avant landing pour une prémière présentatio au client. Puis, si validation est faite, alors début du développement avec tests et crash avant mise en ligne.",
     toolsTitle: "Outils",
     outsideTitle: "En dehors du travail",
     outsideBody:
