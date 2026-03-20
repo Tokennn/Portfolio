@@ -348,6 +348,22 @@
     text-shadow: 0 1px 0 rgba(255, 255, 255, 0.45);
   }
 
+  .about-corner-orbit {
+    position: absolute;
+    opacity: 0.92;
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  .about-corner-orbit--single {
+    top: 18px;
+    right: 12px;
+  }
+
+  .about-corner-circular {
+    color: #2f2f2f;
+  }
+
   @keyframes liquid-chip-flow {
     0% {
       transform: translate3d(-2.4%, -1.5%, 0) scale(1);
@@ -467,8 +483,8 @@
     color: #0f0f0f;
     background-size: cover;
     background-position: center;
-    border: 1px solid rgba(255, 255, 255, 0.58);
-    box-shadow: 0 12px 30px rgba(52, 34, 18, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.62);
+    border: none;
+    box-shadow: 0 12px 30px rgba(52, 34, 18, 0.1);
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
     overflow: hidden;
@@ -476,6 +492,24 @@
     transform-style: preserve-3d;
     backface-visibility: hidden;
     will-change: transform, opacity;
+  }
+
+  .outside-card--media {
+    padding: 0 !important;
+    width: 100%;
+    height: auto !important;
+    aspect-ratio: 3281 / 1875;
+    background: none !important;
+    background-color: #f5f1e8;
+  }
+
+  .outside-card-media-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
+    display: block;
+    border-radius: inherit;
   }
 
   .outside-card::before,
@@ -545,6 +579,11 @@
       height: 180px;
       padding: 22px;
       border-radius: 22px;
+    }
+
+    .outside-card--media {
+      height: auto !important;
+      padding: 0 !important;
     }
 
     .outside-card-text {

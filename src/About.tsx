@@ -5,9 +5,6 @@ import { divIcon, type Map as LeafletMap } from "leaflet";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import portrait from "./iip.jpeg";
-import avatarProcess from "./oo-removebg-preview.png";
-import avatarTools from "./ii-removebg-preview.png";
-import avatarOutside from "./pp-removebg-preview.png";
 import logoCursor from "./assets/logos/cursor.png";
 import logoHostinger from "./assets/logos/hostinger.png";
 import logoGolang from "./assets/logos/golang.png";
@@ -36,8 +33,12 @@ import logoNotion from "./assets/logos/notion.png";
 import logoNetlify from "./assets/logos/netlify.png";
 import albumMiskine from "./assets/logos/Miskine.png";
 import audioMiskine from "./song/Miskine.mp3";
+import voyageCardImage from "./Voyage.png";
+import musicCardImage from "./Musique.png";
+import modeCardImage from "./Mode.png";
 // import WaterCursor from "./components/WaterCursor";
 import LanguageToggle from "./components/LanguageToggle";
+import CircularText from "./components/CircularText";
 import { useLanguage } from "./context/LanguageContext";
 import { useTextReveal } from "./hooks/useTextReveal";
 
@@ -52,6 +53,14 @@ const islandBars = [
   { delay: "420ms", duration: "1.05s" },
   { delay: "200ms", duration: "1.3s" }
 ];
+const outsideCardImages: Record<string, string> = {
+  music: musicCardImage,
+  travel: voyageCardImage,
+  fashion: modeCardImage
+};
+const outsideImageOnlyTones = new Set(["music", "travel", "fashion"]);
+const getOutsideCardImage = (tone: string) => outsideCardImages[tone] ?? null;
+const isOutsideCardImageOnly = (tone: string) => outsideImageOnlyTones.has(tone);
 const islandCoverSrc = albumMiskine;
 const islandAudioSrc = audioMiskine;
 const aboutCopy = {
@@ -213,10 +222,11 @@ function About() {
   const outsideSectionRef = useRef<HTMLDivElement | null>(null);
   const [outsideCardHeight, setOutsideCardHeight] = useState<number | null>(null);
   const [outsideViewportHeight, setOutsideViewportHeight] = useState<number | null>(null);
+  const [outsideStackHeight, setOutsideStackHeight] = useState<number | null>(null);
   const outsideScrollDistance = outsideViewportHeight
-    ? Math.max(0, outsideStackMinHeight - outsideViewportHeight)
+    ? Math.max(0, (outsideStackHeight ?? outsideStackMinHeight) - outsideViewportHeight)
     : outsideCardHeight
-      ? Math.max(0, outsideStackMinHeight - outsideCardHeight)
+      ? Math.max(0, (outsideStackHeight ?? outsideStackMinHeight) - outsideCardHeight)
       : 0;
 
   useEffect(() => {
@@ -270,11 +280,32 @@ function About() {
     return () => observer.disconnect();
   }, []);
 
+  useLayoutEffect(() => {
+    const stack = outsideStackRef.current;
+    if (!stack) return;
+
+    const updateHeight = () => {
+      const nextHeight = Math.round(stack.scrollHeight);
+      setOutsideStackHeight((prev) => (prev === nextHeight ? prev : nextHeight));
+    };
+
+    updateHeight();
+
+    if (typeof ResizeObserver === "undefined") {
+      window.addEventListener("resize", updateHeight);
+      return () => window.removeEventListener("resize", updateHeight);
+    }
+
+    const observer = new ResizeObserver(updateHeight);
+    observer.observe(stack);
+    return () => observer.disconnect();
+  }, [language, isToolsExpanded]);
+
   useEffect(() => {
     if (typeof window === "undefined") return;
-    if (!outsideCardHeight && !outsideViewportHeight) return;
+    if (!outsideCardHeight && !outsideViewportHeight && !outsideStackHeight) return;
     ScrollTrigger.refresh();
-  }, [outsideCardHeight, outsideViewportHeight]);
+  }, [outsideCardHeight, outsideViewportHeight, outsideStackHeight]);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -401,6 +432,7 @@ function About() {
     isDesktop,
     outsideCardHeight,
     outsideScrollDistance,
+    outsideStackHeight,
     outsideViewportHeight,
     language,
     outsideStackMinHeight
@@ -574,6 +606,22 @@ function About() {
       return;
     }
     audio.pause();
+  };
+
+  const renderCornerOrbit = () => {
+    const orbitText = "vibe coding • styles • minimalist •";
+    return (
+      <div className="about-corner-orbit about-corner-orbit--single" aria-hidden="true">
+        <CircularText
+          text={orbitText}
+          spinDuration={24}
+          onHover={null}
+          size={74}
+          fontSize={9}
+          className="about-corner-circular"
+        />
+      </div>
+    );
   };
 
   return (
@@ -970,23 +1018,12 @@ function About() {
           className="outside-section mx-auto grid w-full max-w-[1100px] grid-cols-1 gap-5 md:gap-6 reveal-up delay-1"
           style={!isDesktop && outsideScrollDistance ? { paddingBottom: outsideScrollDistance } : undefined}
         >
-          <div className="w-full overflow-visible self-start rounded-[28px] border border-[#dccfb9] bg-white/80 p-7 md:p-8">
-            <div className="mb-3 flex items-center justify-between gap-3">
+          <div className="relative w-full overflow-visible self-start rounded-[28px] border border-[#dccfb9] bg-white/80 p-7 md:p-8">
+            {renderCornerOrbit()}
+            <div className="mb-3">
               <h2 className="text-sm font-semibold uppercase tracking-[0.24em] text-[#0f0f0f]">
                 {copy.processTitle}
               </h2>
-              <button
-                type="button"
-                aria-label="Process avatar emoji"
-                className="-mt-3 md:-mt-5 flex h-24 w-24 md:h-32 md:w-32 items-center justify-center bg-transparent transition-transform duration-500 ease-out hover:-translate-y-4 hover:scale-125 hover:rotate-12 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3a7bb3]"
-              >
-                <img
-                  src={avatarOutside}
-                  alt=""
-                  className="h-24 w-24 md:h-32 md:w-32 object-contain drop-shadow-[0_18px_40px_rgba(0,0,0,0.3)]"
-                  draggable="false"
-                />
-              </button>
             </div>
             <p data-reveal="text" className="text-sm md:text-base text-[#3a3a3a] leading-relaxed text-justify">{copy.processBody}</p>
           </div>
@@ -994,22 +1031,11 @@ function About() {
             ref={toolsCardRef}
             className="w-full relative overflow-visible self-start rounded-[28px] border border-[#dccfb9] bg-white/80 p-7 md:p-8"
           >
-            <div className="mb-3 flex items-center justify-between gap-3">
+            {renderCornerOrbit()}
+            <div className="mb-3">
               <h2 className="text-sm font-semibold uppercase tracking-[0.24em] text-[#0f0f0f]">
                 {copy.toolsTitle}
               </h2>
-              <button
-                type="button"
-                aria-label="Tools avatar emoji"
-                className="-mt-3 md:-mt-5 flex h-24 w-24 md:h-32 md:w-32 items-center justify-center bg-transparent transition-transform duration-500 ease-out hover:-translate-y-4 hover:scale-125 hover:-rotate-12 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#b37b3a]"
-              >
-                <img
-                  src={avatarTools}
-                  alt=""
-                  className="h-24 w-24 md:h-32 md:w-32 object-contain drop-shadow-[0_18px_40px_rgba(0,0,0,0.3)]"
-                  draggable="false"
-                />
-              </button>
             </div>
             <div
               id="tools-grid"
@@ -1327,26 +1353,15 @@ function About() {
             </div>
           </div>
           <div
-            className="outside-card-sticky w-full self-start rounded-[28px] border border-[#dccfb9] bg-white/80 p-7 md:p-8 overflow-visible flex flex-col"
+            className="outside-card-sticky relative w-full self-start rounded-[28px] border border-[#dccfb9] bg-white/80 p-7 md:p-8 overflow-visible flex flex-col"
             ref={outsideCardRef}
             style={outsideCardHeight ? { height: outsideCardHeight } : undefined}
           >
-            <div className="mb-3 flex items-center justify-between gap-3">
+            {renderCornerOrbit()}
+            <div className="mb-3">
               <h2 className="text-sm font-semibold uppercase tracking-[0.24em] text-[#0f0f0f]">
                 {copy.outsideTitle}
               </h2>
-              <button
-                type="button"
-                aria-label="Outside work avatar emoji"
-                className="-mt-3 md:-mt-5 flex h-24 w-24 md:h-32 md:w-32 items-center justify-center bg-transparent transition-transform duration-500 ease-out hover:-translate-y-4 hover:scale-125 hover:rotate-10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3ab37b]"
-              >
-                <img
-                  src={avatarProcess}
-                  alt=""
-                  className="h-24 w-24 md:h-32 md:w-32 object-contain drop-shadow-[0_18px_40px_rgba(0,0,0,0.3)]"
-                  draggable="false"
-                />
-              </button>
             </div>
             <div className="flex-1 min-h-0 outside-stack-viewport" ref={outsideViewportRef}>
               <div
@@ -1356,10 +1371,40 @@ function About() {
               >
                 {outsideItems.map((item, index) => (
                   <div key={`${item.title}-${index}`} className="outside-card-wrapper">
-                    <div className="outside-card" data-tone={item.tone}>
-                      <span className="outside-card-label">{item.title}</span>
-                      <p className="outside-card-text">{item.text}</p>
-                    </div>
+                    {(() => {
+                      const imageSrc = getOutsideCardImage(item.tone);
+                      const isImageOnly = isOutsideCardImageOnly(item.tone);
+                      return (
+                        <div
+                          className={`outside-card${isImageOnly ? " outside-card--media" : ""}`}
+                          data-tone={item.tone}
+                          style={
+                            !isImageOnly && imageSrc
+                              ? {
+                                  backgroundImage: `url(${imageSrc})`
+                                }
+                              : undefined
+                          }
+                        >
+                          {isImageOnly && imageSrc ? (
+                            <>
+                              <img
+                                src={imageSrc}
+                                alt={item.title}
+                                className="outside-card-media-image"
+                                loading="lazy"
+                                draggable="false"
+                              />
+                            </>
+                          ) : (
+                        <>
+                          <span className="outside-card-label">{item.title}</span>
+                          <p className="outside-card-text">{item.text}</p>
+                        </>
+                      )}
+                        </div>
+                      );
+                    })()}
                   </div>
                 ))}
               </div>
