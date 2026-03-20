@@ -183,9 +183,9 @@ const mapMarker = divIcon({
 });
 
 function About() {
-  useTextReveal();
-
   const { language } = useLanguage();
+  useTextReveal({ observeMutations: false, watch: language });
+
   const copy = aboutCopy[language];
   const outsideItems = copy.outsideItems ?? [];
   const outsideStackMinHeight = Math.max(540, outsideItems.length * 220);
@@ -302,17 +302,26 @@ function About() {
         .filter((entry): entry is { wrapper: HTMLDivElement; card: HTMLElement } => entry !== null);
       const cards = cardEntries.map((entry) => entry.card);
       const clampDistance = gsap.utils.clamp(-1.35, 1.35);
-      const enableCardDepth = !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const enableCardDepth =
+        isDesktop && !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      let viewportHeight = 0;
+      let viewportCenter = 0;
+      let influenceRange = 0;
+      let cardCenters: number[] = [];
+
+      const measureDepthTargets = () => {
+        viewportHeight = viewport.getBoundingClientRect().height;
+        viewportCenter = viewportHeight * 0.5;
+        influenceRange = Math.max(140, viewportHeight * 0.7);
+        cardCenters = cardEntries.map(({ wrapper }) => wrapper.offsetTop + wrapper.offsetHeight * 0.5);
+      };
 
       const updateCardDepth = (progress: number) => {
-        const viewportHeight = viewport.getBoundingClientRect().height;
         if (!viewportHeight || !cardEntries.length) return;
         const translateY = stackStartY + (stackEndY - stackStartY) * progress;
-        const viewportCenter = viewportHeight * 0.5;
-        const influenceRange = Math.max(140, viewportHeight * 0.7);
 
         cardEntries.forEach(({ wrapper, card }, index) => {
-          const cardCenter = wrapper.offsetTop + wrapper.offsetHeight * 0.5 + translateY;
+          const cardCenter = cardCenters[index] + translateY;
           const normalizedDistance = clampDistance((cardCenter - viewportCenter) / influenceRange);
           const prominence = 1 - Math.min(1, Math.abs(normalizedDistance));
           const direction = index % 2 === 0 ? -1 : 1;
@@ -338,6 +347,7 @@ function About() {
         });
       }
       if (enableCardDepth) {
+        measureDepthTargets();
         updateCardDepth(0);
       } else if (cards.length) {
         gsap.set(cards, { clearProps: "transform,opacity" });
@@ -367,7 +377,12 @@ function About() {
           scrub: isDesktop ? true : 0.2,
           invalidateOnRefresh: true,
           onUpdate: enableCardDepth ? (self) => updateCardDepth(self.progress) : undefined,
-          onRefresh: enableCardDepth ? (self) => updateCardDepth(self.progress) : undefined,
+          onRefresh: enableCardDepth
+            ? (self) => {
+                measureDepthTargets();
+                updateCardDepth(self.progress);
+              }
+            : undefined,
           id: isDesktop ? "outside-stack-scroll" : "outside-stack-scroll-mobile"
         }
       });

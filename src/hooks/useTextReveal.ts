@@ -9,6 +9,8 @@ interface UseTextRevealOptions {
   rootMargin?: string;
   threshold?: number;
   outDuration?: number;
+  observeMutations?: boolean;
+  watch?: string | number | boolean | null | undefined;
 }
 
 export function useTextReveal({
@@ -18,7 +20,9 @@ export function useTextReveal({
   stagger = 0.03,
   rootMargin = "0px 0px -28% 0px",
   threshold = 0.1,
-  outDuration = 0.35
+  outDuration = 0.35,
+  observeMutations = true,
+  watch
 }: UseTextRevealOptions = {}) {
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -127,28 +131,32 @@ export function useTextReveal({
     elements.forEach((el) => observer.observe(el));
 
     let mutationRaf: number | null = null;
-    const mutationObserver = new MutationObserver(() => {
-      if (mutationRaf !== null) return;
-      mutationRaf = requestAnimationFrame(() => {
-        mutationRaf = null;
-        const updated = Array.from(document.querySelectorAll<HTMLElement>(selector));
-        updated.forEach((el) => {
-          splitText(el);
-          observer.observe(el);
+    let mutationObserver: MutationObserver | null = null;
+
+    if (observeMutations) {
+      mutationObserver = new MutationObserver(() => {
+        if (mutationRaf !== null) return;
+        mutationRaf = requestAnimationFrame(() => {
+          mutationRaf = null;
+          const updated = Array.from(document.querySelectorAll<HTMLElement>(selector));
+          updated.forEach((el) => {
+            splitText(el);
+            observer.observe(el);
+          });
         });
       });
-    });
 
-    mutationObserver.observe(document.body, { childList: true, subtree: true });
+      mutationObserver.observe(document.body, { childList: true, subtree: true });
+    }
 
     return () => {
       observer.disconnect();
-      mutationObserver.disconnect();
+      mutationObserver?.disconnect();
       if (mutationRaf !== null) {
         cancelAnimationFrame(mutationRaf);
       }
     };
-  }, [selector, y, duration, stagger, rootMargin, threshold, outDuration]);
+  }, [selector, y, duration, stagger, rootMargin, threshold, outDuration, observeMutations, watch]);
 }
 
 export default useTextReveal;
