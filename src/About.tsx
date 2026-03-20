@@ -367,7 +367,8 @@ function About() {
           const focusFilter = isMediaCard
             ? `saturate(${0.9 + prominence * 0.25}) contrast(${0.92 + prominence * 0.18})`
             : `saturate(${0.95 + prominence * 0.12})`;
-          const revealStart = revealStep * index;
+          const revealIndex = cardEntries.length - 1 - index;
+          const revealStart = revealStep * revealIndex;
           const revealProgress = clampProgress((progress - revealStart) / revealWindow);
           const revealOffset = isMediaCard ? (1 - revealProgress) * 68 : 0;
           const revealScale = isMediaCard ? 0.84 + revealProgress * 0.16 : 1;
