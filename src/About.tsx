@@ -615,9 +615,9 @@ function About() {
         <CircularText
           text={orbitText}
           spinDuration={24}
-          onHover={null}
-          size={74}
-          fontSize={9}
+          onHover="slowDown"
+          size={82}
+          fontSize={8}
           className="about-corner-circular"
         />
       </div>
@@ -1018,7 +1018,7 @@ function About() {
           className="outside-section mx-auto grid w-full max-w-[1100px] grid-cols-1 gap-5 md:gap-6 reveal-up delay-1"
           style={!isDesktop && outsideScrollDistance ? { paddingBottom: outsideScrollDistance } : undefined}
         >
-          <div className="relative w-full overflow-visible self-start rounded-[28px] border border-[#dccfb9] bg-white/80 p-7 md:p-8">
+          <div className="relative w-full overflow-visible self-start rounded-[28px] border border-[#dccfb9] bg-white/80 p-7 pr-24 md:p-8 md:pr-28">
             {renderCornerOrbit()}
             <div className="mb-3">
               <h2 className="text-sm font-semibold uppercase tracking-[0.24em] text-[#0f0f0f]">
@@ -1029,7 +1029,7 @@ function About() {
           </div>
           <div
             ref={toolsCardRef}
-            className="w-full relative overflow-visible self-start rounded-[28px] border border-[#dccfb9] bg-white/80 p-7 md:p-8"
+            className="w-full relative overflow-visible self-start rounded-[28px] border border-[#dccfb9] bg-white/80 p-7 pr-24 md:p-8 md:pr-28"
           >
             {renderCornerOrbit()}
             <div className="mb-3">
@@ -1353,7 +1353,7 @@ function About() {
             </div>
           </div>
           <div
-            className="outside-card-sticky relative w-full self-start rounded-[28px] border border-[#dccfb9] bg-white/80 p-7 md:p-8 overflow-visible flex flex-col"
+            className="outside-card-sticky relative w-full self-start rounded-[28px] border border-[#dccfb9] bg-white/80 p-7 pr-24 md:p-8 md:pr-28 overflow-visible flex flex-col"
             ref={outsideCardRef}
             style={outsideCardHeight ? { height: outsideCardHeight } : undefined}
           >

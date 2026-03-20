@@ -350,18 +350,19 @@
 
   .about-corner-orbit {
     position: absolute;
-    opacity: 0.92;
-    pointer-events: none;
+    opacity: 0.86;
+    pointer-events: auto;
     z-index: 2;
   }
 
   .about-corner-orbit--single {
-    top: 18px;
-    right: 12px;
+    top: 14px;
+    right: 14px;
   }
 
   .about-corner-circular {
     color: #2f2f2f;
+    cursor: pointer;
   }
 
   @keyframes liquid-chip-flow {
