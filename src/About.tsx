@@ -101,9 +101,6 @@ const aboutCopy = {
     outsideBody:
       "Passion pour le sport, le dessin, la photo/vidéo, la mode, la musique et pouvoir voyager ✈️",
     outsideItems: [
-      { title: "Sport", text: "Endurance, énergie, esprit d'équipe.", tone: "sport" },
-      { title: "Dessin", text: "Croquis, textures, idées.", tone: "sketch" },
-      { title: "Photo / Vidéo", text: "Capturer des moments.", tone: "photo" },
       { title: "Mode", text: "Silhouettes, matières.", tone: "fashion" },
       { title: "Musique", text: "Rythme, ambiance.", tone: "music" },
       { title: "Voyages", text: "Découvrir, apprendre.", tone: "travel" }
@@ -158,9 +155,6 @@ const aboutCopy = {
     outsideBody:
       "Passion for sports, drawing, photo/video, motorsports, fashion, music, and traveling.",
     outsideItems: [
-      { title: "Sports", text: "Endurance, energy, team spirit.", tone: "sport" },
-      { title: "Drawing", text: "Sketches, textures, ideas.", tone: "sketch" },
-      { title: "Photo / Video", text: "Capturing moments.", tone: "photo" },
       { title: "Fashion", text: "Silhouettes, materials.", tone: "fashion" },
       { title: "Music", text: "Rhythm, ambience.", tone: "music" },
       { title: "Travel", text: "Explore and learn.", tone: "travel" }
@@ -197,6 +191,7 @@ function About() {
 
   const copy = aboutCopy[language];
   const outsideItems = copy.outsideItems ?? [];
+  const outsideHeadingLines = language === "fr" ? ["En dehors", "du travail"] : ["Outside", "work"];
   const outsideStackMinHeight = Math.max(540, outsideItems.length * 220);
   const mapRef = useRef<LeafletMap | null>(null);
   const [isMapReady, setIsMapReady] = useState(false);
@@ -333,8 +328,10 @@ function About() {
         .filter((entry): entry is { wrapper: HTMLDivElement; card: HTMLElement } => entry !== null);
       const cards = cardEntries.map((entry) => entry.card);
       const clampDistance = gsap.utils.clamp(-1.35, 1.35);
-      const enableCardDepth =
-        isDesktop && !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const enableCardDepth = !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const setViewportSpill = (enabled: boolean) => {
+        viewport.classList.toggle("outside-stack-viewport--spill", enabled);
+      };
       let viewportHeight = 0;
       let viewportCenter = 0;
       let influenceRange = 0;
@@ -350,21 +347,67 @@ function About() {
       const updateCardDepth = (progress: number) => {
         if (!viewportHeight || !cardEntries.length) return;
         const translateY = stackStartY + (stackEndY - stackStartY) * progress;
+        const clampProgress = gsap.utils.clamp(0, 1);
+        const revealStep = cardEntries.length > 0 ? 0.2 : 0;
+        const revealWindow = 0.28;
+        const pageCenterX = window.innerWidth * 0.5;
+        const pageCenterY = window.innerHeight * 0.5;
 
         cardEntries.forEach(({ wrapper, card }, index) => {
           const cardCenter = cardCenters[index] + translateY;
           const normalizedDistance = clampDistance((cardCenter - viewportCenter) / influenceRange);
           const prominence = 1 - Math.min(1, Math.abs(normalizedDistance));
+          const isMediaCard = card.classList.contains("outside-card--media");
+          const depthWeight = isMediaCard ? 30 : 12;
+          const focusScale = isMediaCard ? 0.92 + prominence * 0.52 : 0.88 + prominence * 0.16;
+          const focusOpacity = isMediaCard ? 0.44 + prominence * 0.56 : 0.36 + prominence * 0.64;
+          const liftY = isMediaCard ? normalizedDistance * 14 : normalizedDistance * 32;
           const direction = index % 2 === 0 ? -1 : 1;
+          const shadowStrength = isMediaCard ? 0.2 + prominence * 0.28 : 0.1 + prominence * 0.18;
+          const focusFilter = isMediaCard
+            ? `saturate(${0.9 + prominence * 0.25}) contrast(${0.92 + prominence * 0.18})`
+            : `saturate(${0.95 + prominence * 0.12})`;
+          const revealStart = revealStep * index;
+          const revealProgress = clampProgress((progress - revealStart) / revealWindow);
+          const revealOffset = isMediaCard ? (1 - revealProgress) * 68 : 0;
+          const revealScale = isMediaCard ? 0.84 + revealProgress * 0.16 : 1;
+          const revealOpacity = isMediaCard ? revealProgress : 1;
+          const breakoutTrigger = clampProgress((prominence - 0.42) / 0.58);
+          const breakoutEase = isMediaCard && isDesktop ? breakoutTrigger * breakoutTrigger : 0;
+          const breakoutScale = isMediaCard ? 1 + breakoutEase * 0.66 : 1;
+          const breakoutShadowBoost = breakoutEase * 0.22;
+          let breakoutX = 0;
+          let breakoutY = 0;
 
-          gsap.set(wrapper, { zIndex: cardEntries.length - index + Math.round(prominence * 12) });
+          if (breakoutEase > 0) {
+            const rect = card.getBoundingClientRect();
+            const currentCenterX = rect.left + rect.width * 0.5;
+            const currentCenterY = rect.top + rect.height * 0.5;
+            breakoutX = (pageCenterX - currentCenterX) * breakoutEase;
+            breakoutY = (pageCenterY - currentCenterY) * breakoutEase;
+          }
+
+          gsap.set(wrapper, {
+            zIndex:
+              cardEntries.length -
+              index +
+              Math.round(prominence * depthWeight) +
+              Math.round(breakoutEase * 450)
+          });
           gsap.set(card, {
-            y: normalizedDistance * 32,
-            scale: 0.88 + prominence * 0.16,
-            rotateX: -normalizedDistance * 8,
-            rotateY: direction * (1 - prominence) * 9,
-            rotateZ: direction * normalizedDistance * 2.6,
-            opacity: 0.36 + prominence * 0.64
+            x: breakoutX,
+            y: liftY + revealOffset + breakoutY,
+            scale: focusScale * revealScale * breakoutScale,
+            rotateX: isMediaCard ? -normalizedDistance * 5 : -normalizedDistance * 8,
+            rotateY: isMediaCard
+              ? direction * (1 - prominence) * (4 - breakoutEase * 3.2)
+              : direction * (1 - prominence) * 9,
+            rotateZ: isMediaCard
+              ? direction * normalizedDistance * (1.3 - breakoutEase * 1.1)
+              : direction * normalizedDistance * 2.6,
+            opacity: focusOpacity * revealOpacity,
+            filter: focusFilter,
+            boxShadow: `0 22px 56px rgba(52, 34, 18, ${(shadowStrength + breakoutShadowBoost).toFixed(3)})`
           });
         });
       };
@@ -372,9 +415,12 @@ function About() {
       gsap.set(stack, { y: stackStartY });
       gsap.set(wrappers, { zIndex: 1 });
       if (cards.length) {
-        gsap.set(cards, {
-          transformOrigin: "50% 100%",
-          backfaceVisibility: "hidden"
+        cards.forEach((card) => {
+          const isMediaCard = card.classList.contains("outside-card--media");
+          gsap.set(card, {
+            transformOrigin: isMediaCard ? "50% 50%" : "50% 100%",
+            backfaceVisibility: "hidden"
+          });
         });
       }
       if (enableCardDepth) {
@@ -407,13 +453,25 @@ function About() {
           end: () => `+=${scrollDistance}`,
           scrub: isDesktop ? true : 0.2,
           invalidateOnRefresh: true,
-          onUpdate: enableCardDepth ? (self) => updateCardDepth(self.progress) : undefined,
-          onRefresh: enableCardDepth
-            ? (self) => {
-                measureDepthTargets();
-                updateCardDepth(self.progress);
-              }
-            : undefined,
+          onEnter: () => setViewportSpill(true),
+          onEnterBack: () => setViewportSpill(true),
+          onLeave: () => setViewportSpill(false),
+          onLeaveBack: () => setViewportSpill(false),
+          onToggle: (self) => {
+            setViewportSpill(self.isActive);
+          },
+          onUpdate: (self) => {
+            if (enableCardDepth) {
+              updateCardDepth(self.progress);
+            }
+          },
+          onRefresh: (self) => {
+            setViewportSpill(self.isActive);
+            if (enableCardDepth) {
+              measureDepthTargets();
+              updateCardDepth(self.progress);
+            }
+          },
           id: isDesktop ? "outside-stack-scroll" : "outside-stack-scroll-mobile"
         }
       });
@@ -426,6 +484,7 @@ function About() {
     const refreshId = window.setTimeout(() => ScrollTrigger.refresh(), 0);
     return () => {
       window.clearTimeout(refreshId);
+      viewport.classList.remove("outside-stack-viewport--spill");
       ctx.revert();
     };
   }, [
@@ -1015,7 +1074,7 @@ function About() {
 
         <section
           ref={outsideSectionRef}
-          className="outside-section mx-auto grid w-full max-w-[1100px] grid-cols-1 gap-5 md:gap-6 reveal-up delay-1"
+          className="outside-section mt-20 md:mt-28 mx-auto grid w-full max-w-[1100px] grid-cols-1 gap-5 md:gap-6 reveal-up delay-1"
           style={!isDesktop && outsideScrollDistance ? { paddingBottom: outsideScrollDistance } : undefined}
         >
           <div className="relative w-full overflow-visible self-start rounded-[28px] border border-[#dccfb9] bg-white/80 p-7 pr-24 md:p-8 md:pr-28">
@@ -1353,14 +1412,18 @@ function About() {
             </div>
           </div>
           <div
-            className="outside-card-sticky relative w-full self-start rounded-[28px] border border-[#dccfb9] bg-white/80 p-7 pr-24 md:p-8 md:pr-28 overflow-visible flex flex-col"
+            className="outside-card-sticky outside-stage relative w-full self-start overflow-visible flex flex-col"
             ref={outsideCardRef}
             style={outsideCardHeight ? { height: outsideCardHeight } : undefined}
           >
             {renderCornerOrbit()}
-            <div className="mb-3">
-              <h2 className="text-sm font-semibold uppercase tracking-[0.24em] text-[#0f0f0f]">
-                {copy.outsideTitle}
+            <div className="outside-stage-heading">
+              <h2 className="outside-stage-title" aria-label={copy.outsideTitle}>
+                {outsideHeadingLines.map((line, index) => (
+                  <span key={`${line}-${index}`} className="outside-stage-title-line">
+                    {line}
+                  </span>
+                ))}
               </h2>
             </div>
             <div className="flex-1 min-h-0 outside-stack-viewport" ref={outsideViewportRef}>
@@ -1392,7 +1455,7 @@ function About() {
                                 src={imageSrc}
                                 alt={item.title}
                                 className="outside-card-media-image"
-                                loading="lazy"
+                                loading="eager"
                                 draggable="false"
                               />
                             </>

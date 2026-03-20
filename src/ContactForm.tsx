@@ -31,51 +31,51 @@ import logoNetlify from './assets/logos/netlify.png';
 
 const contactCopy = {
   fr: {
-    title: "Contactez-moi 📬",
-    nameLabel: "Nom",
-    emailLabel: "Email",
-    messageLabel: "Message",
-    sendLabel: "Envoyer",
-    successMessage: "Message envoyé avec succès ✅",
-    errorMessage: "Une erreur est survenue ❌",
-    bubble: "Écrivez-moi pour toute question ou collaboration !!"
+    title: 'Contactez-moi 📬',
+    nameLabel: 'Nom',
+    emailLabel: 'Email',
+    messageLabel: 'Message',
+    sendLabel: 'Envoyer',
+    successMessage: 'Message envoyé avec succès ✅',
+    errorMessage: 'Une erreur est survenue ❌',
+    bubble: 'Écrivez-moi pour toute question ou collaboration !!'
   },
   en: {
-    title: "Contact me 📬",
-    nameLabel: "Name",
-    emailLabel: "Email",
-    messageLabel: "Message",
-    sendLabel: "Send",
-    successMessage: "Message sent successfully ✅",
-    errorMessage: "Something went wrong ❌",
-    bubble: "DM me for any questions or collaborations !!"
+    title: 'Contact me 📬',
+    nameLabel: 'Name',
+    emailLabel: 'Email',
+    messageLabel: 'Message',
+    sendLabel: 'Send',
+    successMessage: 'Message sent successfully ✅',
+    errorMessage: 'Something went wrong ❌',
+    bubble: 'DM me for any questions or collaborations !!'
   }
 };
 
 const toolIcons = [
-  { src: logoCursor, alt: "Cursor" },
-  { src: logoHostinger, alt: "Hostinger" },
-  { src: logoGolang, alt: "Golang" },
-  { src: logoFirebase, alt: "Firebase" },
-  { src: logoSupabase, alt: "Supabase" },
-  { src: logoMysql, alt: "MySQL" },
-  { src: logoMariadb, alt: "MariaDB" },
-  { src: logoXamp, alt: "Xamp" },
-  { src: logoGit, alt: "Git" },
-  { src: logoDocker, alt: "Docker" },
-  { src: logoThreejs, alt: "Three.js" },
-  { src: logoWebgl, alt: "WebGL" },
-  { src: logoVue, alt: "Vue" },
-  { src: logoNuxt, alt: "Nuxt" },
-  { src: logoWordpress, alt: "WordPress" },
-  { src: logoNode, alt: "Node.js" },
-  { src: logoAirtable, alt: "Airtable" },
-  { src: logoFramer, alt: "Framer" },
-  { src: logoGsap, alt: "GSAP" },
-  { src: logoFigma, alt: "Figma" },
-  { src: logoNotion, alt: "Notion" },
-  { src: logoLenis, alt: "Lenis" },
-  { src: logoNetlify, alt: "Netlify" },
+  { src: logoCursor, alt: 'Cursor' },
+  { src: logoHostinger, alt: 'Hostinger' },
+  { src: logoGolang, alt: 'Golang' },
+  { src: logoFirebase, alt: 'Firebase' },
+  { src: logoSupabase, alt: 'Supabase' },
+  { src: logoMysql, alt: 'MySQL' },
+  { src: logoMariadb, alt: 'MariaDB' },
+  { src: logoXamp, alt: 'Xamp' },
+  { src: logoGit, alt: 'Git' },
+  { src: logoDocker, alt: 'Docker' },
+  { src: logoThreejs, alt: 'Three.js' },
+  { src: logoWebgl, alt: 'WebGL' },
+  { src: logoVue, alt: 'Vue' },
+  { src: logoNuxt, alt: 'Nuxt' },
+  { src: logoWordpress, alt: 'WordPress' },
+  { src: logoNode, alt: 'Node.js' },
+  { src: logoAirtable, alt: 'Airtable' },
+  { src: logoFramer, alt: 'Framer' },
+  { src: logoGsap, alt: 'GSAP' },
+  { src: logoFigma, alt: 'Figma' },
+  { src: logoNotion, alt: 'Notion' },
+  { src: logoLenis, alt: 'Lenis' },
+  { src: logoNetlify, alt: 'Netlify' }
 ];
 
 const ContactForm = () => {
@@ -106,7 +106,7 @@ const ContactForm = () => {
           floatDelay: (-Math.random() * 12).toFixed(1),
           spinDelay: (-Math.random() * 8).toFixed(1),
           floatDirection: Math.random() > 0.5 ? 'alternate' : 'alternate-reverse',
-          spinDirection: Math.random() > 0.5 ? 'normal' : 'reverse',
+          spinDirection: Math.random() > 0.5 ? 'normal' : 'reverse'
         };
       }),
     []
@@ -147,7 +147,7 @@ const ContactForm = () => {
     ).then(
       () => {
         setStatus('success');
-        setForm({ name: '', email: '', message: '' });;
+        setForm({ name: '', email: '', message: '' });
         setTimeout(() => setStatus('idle'), 3000);
       },
       () => {
@@ -172,13 +172,13 @@ const ContactForm = () => {
             animationDelay: `${tool.floatDelay}s`,
             animationDirection: tool.floatDirection,
             ['--drift-x' as never]: `${tool.driftX}px`,
-            ['--drift-y' as never]: `${tool.driftY}px`,
+            ['--drift-y' as never]: `${tool.driftY}px`
           } as React.CSSProperties;
 
           const spinStyle = {
             animationDuration: `${tool.spinDuration}s`,
             animationDelay: `${tool.spinDelay}s`,
-            animationDirection: tool.spinDirection,
+            animationDirection: tool.spinDirection
           } as React.CSSProperties;
 
           const roundedAlt = tool.alt.toLowerCase();
@@ -207,13 +207,9 @@ const ContactForm = () => {
         <LanguageToggle />
       </div>
       <div className="relative z-10 flex flex-col items-center justify-center w-full min-h-[70vh] space-y-6">
-        {/* Lottie en dehors du formulaire */}
         <div className="relative mb-2 flex flex-col items-center gap-3">
           <div className="relative flex items-center justify-center">
-            <a
-              href="/"
-              rel="noopener noreferrer"
-            >
+            <a href="/" rel="noopener noreferrer">
               <dotlottie-player
                 src="https://lottie.host/4a30085a-3cbc-4adf-a818-ff35868f7d53/gvgUELm6hu.lottie"
                 background="transparent"
@@ -224,7 +220,7 @@ const ContactForm = () => {
               ></dotlottie-player>
             </a>
             <p className="absolute -top-3 -right-5 max-w-[160px] text-[8px] md:text-[8px] text-[#2f2f2f] leading-snug inline-block bg-white/70 border border-[#dccfb9] px-2 py-1 rounded-full shadow-[0_8px_24px_rgba(52,34,18,0.12)] backdrop-blur-sm text-center">
-            {copy.bubble}
+              {copy.bubble}
             </p>
           </div>
         </div>
@@ -237,8 +233,10 @@ const ContactForm = () => {
           <div className="liquid-glass-content space-y-6 p-8">
             <h2 className="text-3xl font-bold text-black text-center">{copy.title}</h2>
 
-            <div ref={el => (inputsRef.current[0] = el)}>
-              <label htmlFor="name" className="block text-sm font-medium text-gray-700">{copy.nameLabel}</label>
+            <div ref={(el) => (inputsRef.current[0] = el)}>
+              <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+                {copy.nameLabel}
+              </label>
               <input
                 id="name"
                 type="text"
@@ -251,8 +249,10 @@ const ContactForm = () => {
               />
             </div>
 
-            <div ref={el => (inputsRef.current[1] = el)}>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">{copy.emailLabel}</label>
+            <div ref={(el) => (inputsRef.current[1] = el)}>
+              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                {copy.emailLabel}
+              </label>
               <input
                 id="email"
                 type="email"
@@ -265,8 +265,10 @@ const ContactForm = () => {
               />
             </div>
 
-            <div ref={el => (inputsRef.current[2] = el)}>
-              <label htmlFor="message" className="block text-sm font-medium text-gray-700">{copy.messageLabel}</label>
+            <div ref={(el) => (inputsRef.current[2] = el)}>
+              <label htmlFor="message" className="block text-sm font-medium text-gray-700">
+                {copy.messageLabel}
+              </label>
               <textarea
                 id="message"
                 name="message"
@@ -279,7 +281,7 @@ const ContactForm = () => {
               />
             </div>
 
-            <div ref={el => (inputsRef.current[3] = el)}>
+            <div ref={(el) => (inputsRef.current[3] = el)}>
               <button
                 type="submit"
                 className="liquid-glass-button text-[#0f0f0f] py-2 px-4 rounded-lg font-semibold tracking-[0.12em] uppercase text-xs"
@@ -291,7 +293,6 @@ const ContactForm = () => {
         </form>
       </div>
 
-      {/* POPUP animé */}
       <AnimatePresence>
         {status !== 'idle' && (
           <>

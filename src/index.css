@@ -454,6 +454,39 @@
     position: relative;
   }
 
+  .outside-stage {
+    position: relative;
+    padding: 4px 0 0;
+  }
+
+  .outside-stage-heading {
+    margin: 0;
+    padding-right: 120px;
+  }
+
+  .outside-stage-title {
+    margin: 0;
+    display: inline-flex;
+    flex-direction: column;
+    gap: 0.06em;
+    text-transform: uppercase;
+    font-family: "Impact", "Arial Black", sans-serif;
+    font-size: clamp(2.8rem, 12vw, 8.8rem);
+    line-height: 0.82;
+    letter-spacing: 0.01em;
+    color: #0a0a0a;
+  }
+
+  .outside-stage-title-line {
+    display: block;
+  }
+
+  .outside-stage .outside-stack {
+    margin-top: 36px;
+    padding-top: 12px;
+    padding-bottom: 20px;
+  }
+
   .outside-card-wrapper {
     width: 100%;
     perspective: 700px;
@@ -470,6 +503,11 @@
     position: relative;
     overflow: hidden;
     clip-path: inset(0 round 18px);
+  }
+
+  .outside-stack-viewport.outside-stack-viewport--spill {
+    overflow: visible;
+    clip-path: none;
   }
 
   .outside-card {
@@ -502,6 +540,7 @@
     aspect-ratio: 3281 / 1875;
     background: none !important;
     background-color: #f5f1e8;
+    overflow: visible;
   }
 
   .outside-card-media-image {
@@ -511,6 +550,8 @@
     object-position: center;
     display: block;
     border-radius: inherit;
+    transform: none;
+    transition: none;
   }
 
   .outside-card::before,
@@ -576,6 +617,22 @@
   }
 
   @media (min-width: 768px) {
+    .outside-stage-heading {
+      padding-right: 136px;
+    }
+
+    .outside-stage-title {
+      font-size: clamp(4.2rem, 11vw, 10.2rem);
+      line-height: 0.78;
+      letter-spacing: 0.012em;
+    }
+
+    .outside-stage .outside-stack {
+      margin-top: 56px;
+      padding-top: 14px;
+      padding-bottom: 28px;
+    }
+
     .outside-card {
       height: 180px;
       padding: 22px;
@@ -601,6 +658,17 @@
       position: sticky;
       top: calc(env(safe-area-inset-top, 0px) + 80px);
       z-index: 2;
+    }
+
+    .outside-stage-heading {
+      padding-right: 98px;
+    }
+
+    .outside-stage-title {
+      font-size: clamp(2.35rem, 16vw, 4.6rem);
+      line-height: 0.84;
+      letter-spacing: 0.006em;
+      gap: 0.07em;
     }
 
     .outside-stack-viewport {
