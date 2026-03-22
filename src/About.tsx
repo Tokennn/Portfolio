@@ -332,6 +332,12 @@ function About() {
       const setViewportSpill = (enabled: boolean) => {
         viewport.classList.toggle("outside-stack-viewport--spill", enabled);
       };
+      let isStageChromeHidden = false;
+      const setStageChromeHidden = (hidden: boolean) => {
+        if (isStageChromeHidden === hidden) return;
+        isStageChromeHidden = hidden;
+        triggerTarget.classList.toggle("outside-stage--chrome-hidden", hidden);
+      };
       let viewportHeight = 0;
       let viewportCenter = 0;
       let influenceRange = 0;
@@ -345,13 +351,14 @@ function About() {
       };
 
       const updateCardDepth = (progress: number) => {
-        if (!viewportHeight || !cardEntries.length) return;
+        if (!viewportHeight || !cardEntries.length) return false;
         const translateY = stackStartY + (stackEndY - stackStartY) * progress;
         const clampProgress = gsap.utils.clamp(0, 1);
         const revealStep = cardEntries.length > 0 ? 0.2 : 0;
         const revealWindow = 0.28;
         const pageCenterX = window.innerWidth * 0.5;
         const pageCenterY = window.innerHeight * 0.5;
+        let shouldHideChrome = false;
 
         cardEntries.forEach(({ wrapper, card }, index) => {
           const cardCenter = cardCenters[index] + translateY;
@@ -361,8 +368,9 @@ function About() {
           const depthWeight = isMediaCard ? 30 : 12;
           const focusScale = isMediaCard ? 0.92 + prominence * 0.52 : 0.88 + prominence * 0.16;
           const focusOpacity = isMediaCard ? 0.44 + prominence * 0.56 : 0.36 + prominence * 0.64;
-          const liftY = isMediaCard ? normalizedDistance * 14 : normalizedDistance * 32;
+          const liftY = isMediaCard ? normalizedDistance * 10 : normalizedDistance * 32;
           const direction = index % 2 === 0 ? -1 : 1;
+          const mediaDirection = 1;
           const shadowStrength = isMediaCard ? 0.2 + prominence * 0.28 : 0.1 + prominence * 0.18;
           const focusFilter = isMediaCard
             ? `saturate(${0.9 + prominence * 0.25}) contrast(${0.92 + prominence * 0.18})`
@@ -388,6 +396,10 @@ function About() {
             breakoutY = (pageCenterY - currentCenterY) * breakoutEase;
           }
 
+          if (isMediaCard && (revealProgress > 0.4 || breakoutEase > 0.035)) {
+            shouldHideChrome = true;
+          }
+
           gsap.set(wrapper, {
             zIndex:
               cardEntries.length -
@@ -399,18 +411,20 @@ function About() {
             x: breakoutX,
             y: liftY + revealOffset + breakoutY,
             scale: focusScale * revealScale * breakoutScale,
-            rotateX: isMediaCard ? -normalizedDistance * 5 : -normalizedDistance * 8,
+            rotateX: isMediaCard ? -normalizedDistance * 2.4 : -normalizedDistance * 8,
             rotateY: isMediaCard
-              ? direction * (1 - prominence) * (4 - breakoutEase * 3.2)
+              ? mediaDirection * (1 - prominence) * (1.6 - breakoutEase * 1.1)
               : direction * (1 - prominence) * 9,
             rotateZ: isMediaCard
-              ? direction * normalizedDistance * (1.3 - breakoutEase * 1.1)
+              ? mediaDirection * normalizedDistance * (0.45 - breakoutEase * 0.25)
               : direction * normalizedDistance * 2.6,
             opacity: focusOpacity * revealOpacity,
             filter: focusFilter,
             boxShadow: `0 22px 56px rgba(52, 34, 18, ${(shadowStrength + breakoutShadowBoost).toFixed(3)})`
           });
         });
+
+        return shouldHideChrome;
       };
 
       gsap.set(stack, { y: stackStartY });
@@ -426,6 +440,7 @@ function About() {
       }
       if (enableCardDepth) {
         measureDepthTargets();
+        setStageChromeHidden(false);
         updateCardDepth(0);
       } else if (cards.length) {
         gsap.set(cards, { clearProps: "transform,opacity" });
@@ -454,23 +469,47 @@ function About() {
           end: () => `+=${scrollDistance}`,
           scrub: isDesktop ? true : 0.2,
           invalidateOnRefresh: true,
-          onEnter: () => setViewportSpill(true),
-          onEnterBack: () => setViewportSpill(true),
-          onLeave: () => setViewportSpill(false),
-          onLeaveBack: () => setViewportSpill(false),
+          onEnter: () => {
+            setViewportSpill(true);
+            setStageChromeHidden(false);
+          },
+          onEnterBack: () => {
+            setViewportSpill(true);
+            setStageChromeHidden(false);
+          },
+          onLeave: () => {
+            setViewportSpill(false);
+            setStageChromeHidden(false);
+          },
+          onLeaveBack: () => {
+            setViewportSpill(false);
+            setStageChromeHidden(false);
+          },
           onToggle: (self) => {
             setViewportSpill(self.isActive);
+            if (!self.isActive) {
+              setStageChromeHidden(false);
+            }
           },
           onUpdate: (self) => {
             if (enableCardDepth) {
-              updateCardDepth(self.progress);
+              const hideChrome = updateCardDepth(self.progress);
+              setStageChromeHidden(self.isActive && hideChrome);
+            } else {
+              setStageChromeHidden(self.isActive && self.progress > 0.32);
             }
           },
           onRefresh: (self) => {
             setViewportSpill(self.isActive);
+            if (!self.isActive) {
+              setStageChromeHidden(false);
+            }
             if (enableCardDepth) {
               measureDepthTargets();
-              updateCardDepth(self.progress);
+              const hideChrome = updateCardDepth(self.progress);
+              setStageChromeHidden(self.isActive && hideChrome);
+            } else {
+              setStageChromeHidden(self.isActive && self.progress > 0.32);
             }
           },
           id: isDesktop ? "outside-stack-scroll" : "outside-stack-scroll-mobile"
@@ -486,6 +525,7 @@ function About() {
     return () => {
       window.clearTimeout(refreshId);
       viewport.classList.remove("outside-stack-viewport--spill");
+      triggerTarget.classList.remove("outside-stage--chrome-hidden");
       ctx.revert();
     };
   }, [
@@ -1075,7 +1115,7 @@ function About() {
 
         <section
           ref={outsideSectionRef}
-          className="outside-section mt-20 md:mt-28 mx-auto grid w-full max-w-[1100px] grid-cols-1 gap-5 md:gap-6 reveal-up delay-1"
+          className="outside-section mt-20 md:mt-28 mx-auto grid w-full max-w-[1100px] grid-cols-1 gap-5 md:gap-6"
           style={!isDesktop && outsideScrollDistance ? { paddingBottom: outsideScrollDistance } : undefined}
         >
           <div className="relative w-full overflow-visible self-start rounded-[28px] border border-[#dccfb9] bg-white/80 p-7 pr-24 md:p-8 md:pr-28">

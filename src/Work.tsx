@@ -2,6 +2,8 @@ import { useCallback, useEffect, useRef, useState, type PointerEvent as ReactPoi
 import { Link } from 'react-router-dom';
 import LanguageToggle from './components/LanguageToggle';
 import { useLanguage } from './context/LanguageContext';
+import ico from './ico.png';
+import expli from './expli.mov';
 
 const workCopy = {
   fr: {
@@ -35,6 +37,18 @@ const workCopy = {
         tag: "Product ops",
         accent: "from-amber-200/80 via-orange-50/85 to-white/90",
         glow: "radial-gradient(circle at 55% 82%, rgba(251, 191, 36, 0.28), transparent 56%), radial-gradient(circle at 24% 32%, rgba(251, 146, 60, 0.22), transparent 52%)"
+      },
+      {
+        title: "Notch2.0",
+        description:
+          "Notch-bar designée pour MacOs. (Attendre la fin 😉)",
+        
+        image: ico,
+        link: "#",
+        tag: "New project",
+        accent: "from-rose-200/80 via-orange-50/85 to-amber-50/85",
+        glow: "radial-gradient(circle at 24% 24%, rgba(251, 113, 133, 0.24), transparent 46%), radial-gradient(circle at 72% 72%, rgba(251, 146, 60, 0.2), transparent 52%)",
+        previewVideo: expli
       }
     ]
   },
@@ -69,6 +83,17 @@ const workCopy = {
         tag: "Product ops",
         accent: "from-amber-200/80 via-orange-50/85 to-white/90",
         glow: "radial-gradient(circle at 55% 82%, rgba(251, 191, 36, 0.28), transparent 56%), radial-gradient(circle at 24% 32%, rgba(251, 146, 60, 0.22), transparent 52%)"
+      },
+      {
+        title: "Notch2.0",
+        description:
+          "New project with custom visual.",
+        image: ico,
+        link: "#",
+        tag: "New project",
+        accent: "from-rose-200/80 via-orange-50/85 to-amber-50/85",
+        glow: "radial-gradient(circle at 24% 24%, rgba(251, 113, 133, 0.24), transparent 46%), radial-gradient(circle at 72% 72%, rgba(251, 146, 60, 0.2), transparent 52%)",
+        previewVideo: expli
       }
     ]
   }
@@ -78,6 +103,7 @@ function Work() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isSwitching, setIsSwitching] = useState(false);
   const [cursorVisible, setCursorVisible] = useState(false);
+  const [isPreviewVisible, setIsPreviewVisible] = useState(false);
   const [cursorEnabled, setCursorEnabled] = useState(() => {
     if (typeof window === 'undefined') return false;
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -96,6 +122,7 @@ function Work() {
   const { language } = useLanguage();
   const projects = workCopy[language].projects;
   const activeProject = projects[activeIndex];
+  const previewVisible = Boolean(activeProject.previewVideo && isPreviewVisible);
   const cursorLabel = language === 'fr' ? 'Voir le projet' : 'View project';
 
   const previousProjects = projects.slice(0, activeIndex);
@@ -177,6 +204,7 @@ function Work() {
       return;
     }
     setIsSwitching(true);
+    setIsPreviewVisible(false);
     const timer = window.setTimeout(() => setIsSwitching(false), 450);
     return () => window.clearTimeout(timer);
   }, [activeIndex]);
@@ -197,6 +225,22 @@ function Work() {
   }, []);
 
   const handleCursorEnter = (event: ReactPointerEvent<HTMLAnchorElement>) => {
+    if (activeProject.previewVideo) {
+      setIsPreviewVisible(true);
+      setCursorVisible(false);
+      if (cursorHideTimeout.current) {
+        window.clearTimeout(cursorHideTimeout.current);
+        cursorHideTimeout.current = null;
+      }
+      if (cursorRaf.current) {
+        cancelAnimationFrame(cursorRaf.current);
+        cursorRaf.current = null;
+      }
+      if (typeof document !== 'undefined') {
+        document.body.classList.remove('work-hide-cursor');
+      }
+      return;
+    }
     if (!cursorEnabled) return;
     if (cursorHideTimeout.current) {
       window.clearTimeout(cursorHideTimeout.current);
@@ -219,11 +263,19 @@ function Work() {
   };
 
   const handleCursorMove = (event: ReactPointerEvent<HTMLAnchorElement>) => {
+    if (activeProject.previewVideo) return;
     if (!cursorEnabled) return;
     cursorTarget.current = { x: event.clientX, y: event.clientY };
   };
 
   const handleCursorLeave = () => {
+    if (activeProject.previewVideo) {
+      setIsPreviewVisible(false);
+      if (typeof document !== 'undefined') {
+        document.body.classList.remove('work-hide-cursor');
+      }
+      return;
+    }
     if (!cursorEnabled) return;
     setCursorVisible(false);
     if (typeof document !== 'undefined') {
@@ -308,7 +360,7 @@ function Work() {
         <LanguageToggle />
       </div>
 
-      {cursorEnabled && (
+      {cursorEnabled && !activeProject.previewVideo && (
         <div
           ref={cursorRef}
           className={`project-cursor ${cursorVisible ? 'is-active' : ''}`}
@@ -316,6 +368,41 @@ function Work() {
         >
           <div className="project-cursor__bubble">
             <span>{cursorLabel}</span>
+          </div>
+        </div>
+      )}
+
+      {activeProject.previewVideo && (
+        <div
+          aria-hidden="true"
+          className={`pointer-events-none fixed inset-0 z-40 flex items-center justify-center px-2 md:px-6 transition-opacity duration-500 ease-[cubic-bezier(.16,1,.3,1)] ${
+            previewVisible ? 'opacity-100' : 'opacity-0'
+          }`}
+        >
+          <div
+            className={`absolute inset-0 transition-opacity duration-700 ease-[cubic-bezier(.16,1,.3,1)] ${
+              previewVisible ? 'bg-[#0f0f0f]/28 opacity-100' : 'bg-[#0f0f0f]/0 opacity-0'
+            }`}
+          />
+          <div
+            className={`absolute inset-0 bg-white/10 transition-[opacity,backdrop-filter] duration-700 ease-[cubic-bezier(.16,1,.3,1)] ${
+              previewVisible ? 'opacity-100 backdrop-blur-2xl' : 'opacity-0 backdrop-blur-0'
+            }`}
+          />
+          <div
+            className={`relative w-[min(96vw,1600px)] h-[min(90vh,980px)] overflow-hidden rounded-[34px] border border-white/55 bg-white/30 shadow-[0_40px_120px_rgba(15,15,15,0.42)] transition-[opacity,transform,box-shadow] duration-700 ease-[cubic-bezier(.16,1,.3,1)] ${
+              previewVisible ? 'translate-y-0 scale-100 opacity-100 shadow-[0_50px_140px_rgba(15,15,15,0.5)]' : 'translate-y-10 scale-[0.94] opacity-0'
+            }`}
+          >
+            <video
+              src={activeProject.previewVideo}
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="metadata"
+              className="h-full w-full bg-[#080808] object-contain"
+            />
           </div>
         </div>
       )}
@@ -398,7 +485,7 @@ function Work() {
                       onPointerEnter={handleCursorEnter}
                       onPointerMove={handleCursorMove}
                       onPointerLeave={handleCursorLeave}
-                      className={`relative overflow-hidden rounded-[24px] border border-[#f1e4d2]/70 bg-white shadow-[0_20px_60px_rgba(52,34,18,0.12)] transition duration-700 ease-[cubic-bezier(.16,1,.3,1)] group-hover:-translate-y-1 group-hover:shadow-[0_20px_60px_rgba(52,34,18,0.18)] ${cursorEnabled ? 'project-cursor-target' : 'cursor-pointer'}`}
+                      className={`relative overflow-hidden rounded-[24px] border border-[#f1e4d2]/70 bg-white shadow-[0_20px_60px_rgba(52,34,18,0.12)] transition duration-700 ease-[cubic-bezier(.16,1,.3,1)] group-hover:-translate-y-1 group-hover:shadow-[0_20px_60px_rgba(52,34,18,0.18)] ${cursorEnabled && !activeProject.previewVideo ? 'project-cursor-target' : 'cursor-pointer'}`}
                     >
                       <img
                         src={activeProject.image}

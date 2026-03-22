@@ -487,6 +487,17 @@
     padding-bottom: 20px;
   }
 
+  .outside-stage.outside-stage--chrome-hidden .outside-stage-heading,
+  .outside-stage.outside-stage--chrome-hidden .about-corner-orbit--single {
+    opacity: 0;
+    transform: translateY(-12px) scale(0.96);
+    pointer-events: none;
+  }
+
+  .outside-stage.outside-stage--chrome-hidden .outside-stack {
+    margin-top: 12px;
+  }
+
   .outside-card-wrapper {
     width: 100%;
     perspective: 700px;
@@ -631,6 +642,10 @@
       margin-top: 56px;
       padding-top: 14px;
       padding-bottom: 28px;
+    }
+
+    .outside-stage.outside-stage--chrome-hidden .outside-stack {
+      margin-top: 18px;
     }
 
     .outside-card {
