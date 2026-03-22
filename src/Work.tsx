@@ -375,18 +375,18 @@ function Work() {
       {activeProject.previewVideo && (
         <div
           aria-hidden="true"
-          className={`pointer-events-none fixed inset-0 z-40 flex items-center justify-center px-2 md:px-6 transition-opacity duration-500 ease-[cubic-bezier(.16,1,.3,1)] ${
+          className={`pointer-events-none fixed inset-0 z-40 flex items-center justify-center px-2 md:px-6 transition-opacity duration-700 ease-[cubic-bezier(.22,1,.36,1)] ${
             previewVisible ? 'opacity-100' : 'opacity-0'
           }`}
         >
           <div
-            className={`absolute inset-0 transition-opacity duration-700 ease-[cubic-bezier(.16,1,.3,1)] ${
+            className={`absolute inset-0 transition-opacity duration-800 ease-[cubic-bezier(.22,1,.36,1)] ${
               previewVisible ? 'bg-[#0f0f0f]/28 opacity-100' : 'bg-[#0f0f0f]/0 opacity-0'
             }`}
           />
           <div
-            className={`absolute inset-0 bg-white/10 transition-[opacity,backdrop-filter] duration-700 ease-[cubic-bezier(.16,1,.3,1)] ${
-              previewVisible ? 'opacity-100 backdrop-blur-2xl' : 'opacity-0 backdrop-blur-0'
+            className={`absolute inset-0 bg-white/10 backdrop-blur-2xl transition-opacity duration-900 ease-[cubic-bezier(.22,1,.36,1)] ${
+              previewVisible ? 'opacity-100' : 'opacity-0'
             }`}
           />
           <div
