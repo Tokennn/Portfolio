@@ -103,7 +103,7 @@ const aboutCopy = {
     keywords: ["Design", "UI", "UX", "Ergonomie", "Simplicité"],
     processTitle: "Process'",
     processBody:
-      "Je démarre par un brief clair, puis je propose une direction visuelle rapide. Ensuite, je développe le MPV, avant landing pour une prémière présentatio au client. Puis, si validation est faite, alors début du développement avec tests et crash avant mise en ligne.",
+      "Je démarre par un brief clair, puis je propose une direction visuelle rapide. Ensuite, je développe le MPV, avant landing pour une prémière présentation au client. Puis, si validation est faite, alors début du développement avec tests et crash avant mise en ligne.",
     toolsTitle: "Outils",
     outsideTitle: "En dehors du travail",
     outsideBody:
@@ -204,6 +204,7 @@ function About() {
   const mapRef = useRef<LeafletMap | null>(null);
   const [isMapReady, setIsMapReady] = useState(false);
   const [isToolsExpanded, setIsToolsExpanded] = useState(false);
+  const [toolsGridExpandedHeight, setToolsGridExpandedHeight] = useState(0);
   const [isDesktop, setIsDesktop] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const barRefs = useRef<{ mobile: HTMLSpanElement[]; desktop: HTMLSpanElement[] }>({
@@ -219,6 +220,7 @@ function About() {
   const [isReactive, setIsReactive] = useState(false);
   const autoPlayAttempted = useRef(false);
   const outsideStackRef = useRef<HTMLDivElement | null>(null);
+  const toolsGridRef = useRef<HTMLDivElement | null>(null);
   const toolsCardRef = useRef<HTMLDivElement | null>(null);
   const outsideCardRef = useRef<HTMLDivElement | null>(null);
   const outsideTitleRef = useRef<HTMLHeadingElement | null>(null);
@@ -232,6 +234,15 @@ function About() {
     : outsideCardHeight
       ? Math.max(0, (outsideStackHeight ?? outsideStackMinHeight) - outsideCardHeight)
       : 0;
+  const toolsGridCollapsedHeight = 180;
+  const toolsGridTargetHeight = isToolsExpanded
+    ? Math.max(toolsGridCollapsedHeight, toolsGridExpandedHeight)
+    : toolsGridCollapsedHeight;
+  const toolsGridStyle: CSSProperties = {
+    maxHeight: toolsGridTargetHeight,
+    paddingBottom: isToolsExpanded ? 32 : 0,
+    willChange: "max-height,padding"
+  };
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -262,6 +273,27 @@ function About() {
     observer.observe(target);
     return () => observer.disconnect();
   }, []);
+
+  useLayoutEffect(() => {
+    const grid = toolsGridRef.current;
+    if (!grid) return;
+
+    const updateHeight = () => {
+      const nextHeight = Math.ceil(grid.scrollHeight);
+      setToolsGridExpandedHeight((prev) => (prev === nextHeight ? prev : nextHeight));
+    };
+
+    updateHeight();
+
+    if (typeof ResizeObserver === "undefined") {
+      window.addEventListener("resize", updateHeight);
+      return () => window.removeEventListener("resize", updateHeight);
+    }
+
+    const observer = new ResizeObserver(updateHeight);
+    observer.observe(grid);
+    return () => observer.disconnect();
+  }, [language, isDesktop, isToolsExpanded]);
 
   useLayoutEffect(() => {
     const viewport = outsideViewportRef.current;
@@ -329,8 +361,12 @@ function About() {
     const baseScrollDistance = outsideScrollDistance;
     if (baseScrollDistance === 0) return;
     const introHoldDistance = isDesktop ? 220 : 140;
-    const totalScrollDistance = baseScrollDistance + introHoldDistance;
+    const perCardHoldDistance = isDesktop ? 190 : 130;
+    const cardsHoldDistance = outsideItems.length * perCardHoldDistance;
+    const totalScrollDistance = baseScrollDistance + introHoldDistance + cardsHoldDistance;
     const introHoldRatio = introHoldDistance / totalScrollDistance;
+    const endStateProgressThreshold = 0.985;
+    const reverseRevealProgressThreshold = 0.9;
     const progressNormalizer = gsap.utils.clamp(0, 1);
     const getDelayedProgress = (progress: number) =>
       progressNormalizer((progress - introHoldRatio) / Math.max(0.0001, 1 - introHoldRatio));
@@ -403,8 +439,11 @@ function About() {
         if (!viewportHeight || !cardEntries.length) return false;
         const translateY = stackStartY + (stackEndY - stackStartY) * progress;
         const clampProgress = gsap.utils.clamp(0, 1);
+        const smoothStep = (value: number) => value * value * (3 - 2 * value);
         const revealStep = cardEntries.length > 0 ? 0.2 : 0;
         const revealWindow = 0.28;
+        const endExitStart = 0.78;
+        const endExitWindow = 0.22;
         const pageCenterX = window.innerWidth * 0.5;
         const pageCenterY = window.innerHeight * 0.5;
         let shouldHideChrome = false;
@@ -427,13 +466,22 @@ function About() {
           const revealIndex = cardEntries.length - 1 - index;
           const revealStart = revealStep * revealIndex;
           const revealProgress = clampProgress((progress - revealStart) / revealWindow);
+          const revealEase = smoothStep(revealProgress);
           const revealOffset = isMediaCard ? (1 - revealProgress) * 68 : 0;
-          const revealScale = isMediaCard ? 0.84 + revealProgress * 0.16 : 1;
-          const revealOpacity = isMediaCard ? revealProgress : 1;
+          const revealScale = isMediaCard ? 0.84 + revealEase * 0.16 : 1;
+          const revealOpacity = isMediaCard ? revealEase : 1;
           const breakoutTrigger = clampProgress((prominence - 0.42) / 0.58);
           const breakoutEase = isMediaCard && isDesktop ? breakoutTrigger * breakoutTrigger : 0;
           const breakoutScale = isMediaCard ? 1 + breakoutEase * 0.66 : 1;
           const breakoutShadowBoost = breakoutEase * 0.22;
+          const endExitDelay = revealIndex * 0.04;
+          const endExitProgress = clampProgress((progress - (endExitStart + endExitDelay)) / endExitWindow);
+          const endExitEase = smoothStep(endExitProgress);
+          const exitScale = 1 - endExitEase * (isMediaCard ? 0.16 : 0.08);
+          const exitOpacity = 1 - endExitEase * (isMediaCard ? 0.58 : 0.32);
+          const exitOffsetY = endExitEase * (isMediaCard ? 52 : 24);
+          const exitRotationFactor = 1 - endExitEase * 0.4;
+          const exitBlur = isMediaCard ? endExitEase * 1.3 : endExitEase * 0.7;
           let breakoutX = 0;
           let breakoutY = 0;
 
@@ -445,7 +493,7 @@ function About() {
             breakoutY = (pageCenterY - currentCenterY) * breakoutEase;
           }
 
-          if (isMediaCard && (revealProgress > 0.4 || breakoutEase > 0.035)) {
+          if (isMediaCard && (revealProgress > 0.4 || breakoutEase > 0.035) && endExitProgress < 0.86) {
             shouldHideChrome = true;
           }
 
@@ -454,22 +502,26 @@ function About() {
               cardEntries.length -
               index +
               Math.round(prominence * depthWeight) +
-              Math.round(breakoutEase * 450)
+              Math.round(breakoutEase * 450) -
+              Math.round(endExitEase * 140)
           });
           gsap.set(card, {
             x: breakoutX,
-            y: liftY + revealOffset + breakoutY,
-            scale: focusScale * revealScale * breakoutScale,
-            rotateX: isMediaCard ? -normalizedDistance * 2.4 : -normalizedDistance * 8,
+            y: liftY + revealOffset + breakoutY + exitOffsetY,
+            scale: focusScale * revealScale * breakoutScale * exitScale,
+            rotateX: (isMediaCard ? -normalizedDistance * 2.4 : -normalizedDistance * 8) * exitRotationFactor,
             rotateY: isMediaCard
-              ? mediaDirection * (1 - prominence) * (1.6 - breakoutEase * 1.1)
-              : direction * (1 - prominence) * 9,
+              ? mediaDirection * (1 - prominence) * (1.6 - breakoutEase * 1.1) * exitRotationFactor
+              : direction * (1 - prominence) * 9 * exitRotationFactor,
             rotateZ: isMediaCard
-              ? mediaDirection * normalizedDistance * (0.45 - breakoutEase * 0.25)
-              : direction * normalizedDistance * 2.6,
-            opacity: focusOpacity * revealOpacity,
-            filter: focusFilter,
-            boxShadow: `0 22px 56px rgba(52, 34, 18, ${(shadowStrength + breakoutShadowBoost).toFixed(3)})`
+              ? mediaDirection * normalizedDistance * (0.45 - breakoutEase * 0.25) * exitRotationFactor
+              : direction * normalizedDistance * 2.6 * exitRotationFactor,
+            opacity: focusOpacity * revealOpacity * exitOpacity,
+            filter: `${focusFilter} blur(${exitBlur.toFixed(2)}px)`,
+            boxShadow: `0 22px 56px rgba(52, 34, 18, ${(
+              (shadowStrength + breakoutShadowBoost) *
+              (1 - endExitEase * 0.45)
+            ).toFixed(3)})`
           });
         });
 
@@ -514,14 +566,19 @@ function About() {
 
       const stackDriver = { progress: 0 };
       const updateStageByProgress = (rawProgress: number, isActive: boolean) => {
-        const delayedProgress = getDelayedProgress(rawProgress);
+        const normalizedRawProgress = progressNormalizer(rawProgress);
+        const delayedProgress = getDelayedProgress(normalizedRawProgress);
         const translateY = stackStartY + (stackEndY - stackStartY) * delayedProgress;
+        const isComplete = normalizedRawProgress >= endStateProgressThreshold;
+        const shouldSpill = isActive && normalizedRawProgress < reverseRevealProgressThreshold;
         gsap.set(stack, { y: translateY });
+        setViewportSpill(shouldSpill);
         if (enableCardDepth) {
           const hideChrome = updateCardDepth(delayedProgress);
-          setStageChromeHidden(isActive && hideChrome);
+          const keepChromeHiddenNearEnd = isActive && normalizedRawProgress >= reverseRevealProgressThreshold;
+          setStageChromeHidden(isComplete || keepChromeHiddenNearEnd || (isActive && hideChrome));
         } else {
-          setStageChromeHidden(isActive && delayedProgress > 0.32);
+          setStageChromeHidden(isComplete || (isActive && delayedProgress > 0.32));
         }
       };
 
@@ -535,18 +592,11 @@ function About() {
           scrub: isDesktop ? true : 0.2,
           invalidateOnRefresh: true,
           onEnter: () => {
-            setViewportSpill(true);
-            setStageChromeHidden(false);
-            playTitleReveal();
-          },
-          onEnterBack: () => {
-            setViewportSpill(true);
-            setStageChromeHidden(false);
             playTitleReveal();
           },
           onLeave: () => {
             setViewportSpill(false);
-            setStageChromeHidden(false);
+            setStageChromeHidden(true);
           },
           onLeaveBack: () => {
             setViewportSpill(false);
@@ -555,19 +605,14 @@ function About() {
             setTitleRevealState(false);
           },
           onToggle: (self) => {
-            setViewportSpill(self.isActive);
             if (!self.isActive) {
-              setStageChromeHidden(false);
+              setStageChromeHidden(self.progress >= endStateProgressThreshold);
             }
           },
           onUpdate: (self) => {
             updateStageByProgress(self.progress, self.isActive);
           },
           onRefresh: (self) => {
-            setViewportSpill(self.isActive);
-            if (!self.isActive) {
-              setStageChromeHidden(false);
-            }
             if (enableCardDepth) measureDepthTargets();
             updateStageByProgress(self.progress, self.isActive);
           },
@@ -596,7 +641,8 @@ function About() {
     outsideStackHeight,
     outsideViewportHeight,
     language,
-    outsideStackMinHeight
+    outsideStackMinHeight,
+    outsideItems.length
   ]);
 
   const setupAudioContext = () => {
@@ -1200,8 +1246,10 @@ function About() {
             </div>
             <div
               id="tools-grid"
-              className={`grid grid-cols-3 gap-3 overflow-hidden py-2 transition-all duration-700 ease-in-out ${isToolsExpanded ? "max-h-[880px] pb-8" : "max-h-[180px]"}`}
-              style={{ willChange: "max-height" }}
+              ref={toolsGridRef}
+              data-expanded={isToolsExpanded ? "true" : "false"}
+              className="tools-grid grid grid-cols-3 gap-3 overflow-hidden py-2"
+              style={toolsGridStyle}
             >
               <div className="group flex flex-col items-center gap-2 rounded-2xl border border-[#e6d9c6] bg-white/90 px-2 py-3 text-center shadow-[0_10px_24px_rgba(52,34,18,0.08)] transition-transform transition-shadow duration-500 ease-[cubic-bezier(.16,1,.3,1)] hover:-translate-y-1 hover:shadow-[0_16px_32px_rgba(52,34,18,0.14)]">
                 <img
