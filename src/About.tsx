@@ -317,9 +317,14 @@ function About() {
     const outsideCard = outsideCardRef.current;
     const stack = outsideStackRef.current;
     const viewport = outsideViewportRef.current;
+    const title = outsideTitleRef.current;
     const triggerTarget = outsideCard;
     if (!triggerTarget || !stack || !viewport) return;
     gsap.registerPlugin(ScrollTrigger);
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const lineTargets = title ? Array.from(title.querySelectorAll<HTMLElement>(".outside-stage-title-line")) : [];
+    const titleTargets: HTMLElement[] = title ? (lineTargets.length ? lineTargets : [title]) : [];
+    let hasPlayedTitleReveal = false;
 
     const baseScrollDistance = outsideScrollDistance;
     if (baseScrollDistance === 0) return;
@@ -334,6 +339,35 @@ function About() {
       const pinStart = "center center";
       const stackStartY = -baseScrollDistance;
       const stackEndY = 0;
+      const setTitleRevealState = (revealed: boolean) => {
+        if (!titleTargets.length || prefersReducedMotion) return;
+        gsap.killTweensOf(titleTargets);
+        if (!revealed) {
+          gsap.set(titleTargets, {
+            autoAlpha: 0,
+            y: 22,
+            filter: "blur(1.5px)",
+            transformOrigin: "50% 100%"
+          });
+          return;
+        }
+        gsap.to(titleTargets, {
+          y: 0,
+          autoAlpha: 1,
+          filter: "blur(0px)",
+          duration: 0.78,
+          ease: "power3.out",
+          stagger: 0.06,
+          overwrite: "auto",
+          clearProps: "transform,opacity,visibility,filter"
+        });
+      };
+      const playTitleReveal = () => {
+        if (hasPlayedTitleReveal || prefersReducedMotion || !titleTargets.length) return;
+        hasPlayedTitleReveal = true;
+        setTitleRevealState(true);
+      };
+
       const wrappers = gsap.utils.toArray<HTMLDivElement>(".outside-card-wrapper", stack);
       const cardEntries = wrappers
         .map((wrapper) => {
@@ -444,6 +478,9 @@ function About() {
 
       gsap.set(stack, { y: stackStartY });
       gsap.set(wrappers, { zIndex: 1 });
+      if (!prefersReducedMotion && titleTargets.length) {
+        setTitleRevealState(false);
+      }
       if (cards.length) {
         cards.forEach((card) => {
           const isMediaCard = card.classList.contains("outside-card--media");
@@ -500,10 +537,12 @@ function About() {
           onEnter: () => {
             setViewportSpill(true);
             setStageChromeHidden(false);
+            playTitleReveal();
           },
           onEnterBack: () => {
             setViewportSpill(true);
             setStageChromeHidden(false);
+            playTitleReveal();
           },
           onLeave: () => {
             setViewportSpill(false);
@@ -512,6 +551,8 @@ function About() {
           onLeaveBack: () => {
             setViewportSpill(false);
             setStageChromeHidden(false);
+            hasPlayedTitleReveal = false;
+            setTitleRevealState(false);
           },
           onToggle: (self) => {
             setViewportSpill(self.isActive);
@@ -542,6 +583,10 @@ function About() {
       window.clearTimeout(refreshId);
       viewport.classList.remove("outside-stack-viewport--spill");
       triggerTarget.classList.remove("outside-stage--chrome-hidden");
+      if (titleTargets.length) {
+        gsap.killTweensOf(titleTargets);
+        gsap.set(titleTargets, { clearProps: "transform,opacity,visibility,filter" });
+      }
       ctx.revert();
     };
   }, [
@@ -553,66 +598,6 @@ function About() {
     language,
     outsideStackMinHeight
   ]);
-
-  useLayoutEffect(() => {
-    if (typeof window === "undefined") return;
-    const title = outsideTitleRef.current;
-    if (!title) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-
-    gsap.registerPlugin(ScrollTrigger);
-
-    const lineTargets = Array.from(title.querySelectorAll<HTMLElement>(".outside-stage-title-line"));
-    const targets: HTMLElement[] = lineTargets.length ? lineTargets : [title];
-    gsap.set(targets, {
-      autoAlpha: 0,
-      y: 22,
-      filter: "blur(1.5px)",
-      transformOrigin: "50% 100%"
-    });
-
-    const playReveal = () => {
-      gsap.killTweensOf(targets);
-      gsap.to(targets, {
-        y: 0,
-        autoAlpha: 1,
-        filter: "blur(0px)",
-        duration: 0.78,
-        ease: "power3.out",
-        stagger: 0.06,
-        overwrite: "auto",
-        clearProps: "transform,opacity,visibility,filter"
-      });
-    };
-    const isTitleInRevealZone = () => {
-      const rect = title.getBoundingClientRect();
-      const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
-      const triggerLine = viewportHeight * 0.88;
-      return rect.top <= triggerLine && rect.bottom >= 0;
-    };
-
-    const trigger = ScrollTrigger.create({
-      trigger: title,
-      start: "top 88%",
-      end: "bottom top",
-      onEnter: playReveal,
-      onEnterBack: playReveal,
-      onLeaveBack: () => {
-        gsap.set(targets, { autoAlpha: 0, y: 22, filter: "blur(1.5px)" });
-      },
-      id: "outside-title-reveal"
-    });
-
-    if (isTitleInRevealZone()) {
-      playReveal();
-    }
-
-    return () => {
-      trigger.kill();
-      gsap.killTweensOf(targets);
-      gsap.set(targets, { clearProps: "transform,opacity,visibility,filter" });
-    };
-  }, [language]);
 
   const setupAudioContext = () => {
     if (typeof window === "undefined") return null;
