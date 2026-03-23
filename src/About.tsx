@@ -61,6 +61,14 @@ const outsideCardImages: Record<string, string> = {
 const outsideImageOnlyTones = new Set(["music", "travel", "fashion"]);
 const getOutsideCardImage = (tone: string) => outsideCardImages[tone] ?? null;
 const isOutsideCardImageOnly = (tone: string) => outsideImageOnlyTones.has(tone);
+const aboutPanelTitleStyle: CSSProperties = {
+  textTransform: "uppercase",
+  fontFamily: '"Impact", "Arial Black", sans-serif',
+  fontSize: "clamp(2.2rem, 7.8vw, 3.8rem)",
+  lineHeight: 0.86,
+  letterSpacing: "0.01em",
+  color: "#0a0a0a"
+};
 const islandCoverSrc = albumMiskine;
 const islandAudioSrc = audioMiskine;
 const aboutCopy = {
@@ -213,6 +221,7 @@ function About() {
   const outsideStackRef = useRef<HTMLDivElement | null>(null);
   const toolsCardRef = useRef<HTMLDivElement | null>(null);
   const outsideCardRef = useRef<HTMLDivElement | null>(null);
+  const outsideTitleRef = useRef<HTMLHeadingElement | null>(null);
   const outsideViewportRef = useRef<HTMLDivElement | null>(null);
   const outsideSectionRef = useRef<HTMLDivElement | null>(null);
   const [outsideCardHeight, setOutsideCardHeight] = useState<number | null>(null);
@@ -312,12 +321,18 @@ function About() {
     if (!triggerTarget || !stack || !viewport) return;
     gsap.registerPlugin(ScrollTrigger);
 
-    const scrollDistance = outsideScrollDistance;
-    if (scrollDistance === 0) return;
+    const baseScrollDistance = outsideScrollDistance;
+    if (baseScrollDistance === 0) return;
+    const introHoldDistance = isDesktop ? 220 : 140;
+    const totalScrollDistance = baseScrollDistance + introHoldDistance;
+    const introHoldRatio = introHoldDistance / totalScrollDistance;
+    const progressNormalizer = gsap.utils.clamp(0, 1);
+    const getDelayedProgress = (progress: number) =>
+      progressNormalizer((progress - introHoldRatio) / Math.max(0.0001, 1 - introHoldRatio));
 
     const ctx = gsap.context(() => {
       const pinStart = "center center";
-      const stackStartY = -scrollDistance;
+      const stackStartY = -baseScrollDistance;
       const stackEndY = 0;
       const wrappers = gsap.utils.toArray<HTMLDivElement>(".outside-card-wrapper", stack);
       const cardEntries = wrappers
@@ -450,7 +465,7 @@ function About() {
         ScrollTrigger.create({
           trigger: triggerTarget,
           start: pinStart,
-          end: () => `+=${scrollDistance}`,
+          end: () => `+=${totalScrollDistance}`,
           pin: true,
           pinSpacing: true,
           pinType: "transform",
@@ -460,13 +475,26 @@ function About() {
         });
       }
 
-      const stackTween = gsap.to(stack, {
-        y: stackEndY,
+      const stackDriver = { progress: 0 };
+      const updateStageByProgress = (rawProgress: number, isActive: boolean) => {
+        const delayedProgress = getDelayedProgress(rawProgress);
+        const translateY = stackStartY + (stackEndY - stackStartY) * delayedProgress;
+        gsap.set(stack, { y: translateY });
+        if (enableCardDepth) {
+          const hideChrome = updateCardDepth(delayedProgress);
+          setStageChromeHidden(isActive && hideChrome);
+        } else {
+          setStageChromeHidden(isActive && delayedProgress > 0.32);
+        }
+      };
+
+      const stackTween = gsap.to(stackDriver, {
+        progress: 1,
         ease: "none",
         scrollTrigger: {
           trigger: triggerTarget,
           start: isDesktop ? pinStart : "top center",
-          end: () => `+=${scrollDistance}`,
+          end: () => `+=${totalScrollDistance}`,
           scrub: isDesktop ? true : 0.2,
           invalidateOnRefresh: true,
           onEnter: () => {
@@ -492,33 +520,21 @@ function About() {
             }
           },
           onUpdate: (self) => {
-            if (enableCardDepth) {
-              const hideChrome = updateCardDepth(self.progress);
-              setStageChromeHidden(self.isActive && hideChrome);
-            } else {
-              setStageChromeHidden(self.isActive && self.progress > 0.32);
-            }
+            updateStageByProgress(self.progress, self.isActive);
           },
           onRefresh: (self) => {
             setViewportSpill(self.isActive);
             if (!self.isActive) {
               setStageChromeHidden(false);
             }
-            if (enableCardDepth) {
-              measureDepthTargets();
-              const hideChrome = updateCardDepth(self.progress);
-              setStageChromeHidden(self.isActive && hideChrome);
-            } else {
-              setStageChromeHidden(self.isActive && self.progress > 0.32);
-            }
+            if (enableCardDepth) measureDepthTargets();
+            updateStageByProgress(self.progress, self.isActive);
           },
           id: isDesktop ? "outside-stack-scroll" : "outside-stack-scroll-mobile"
         }
       });
 
-      if (enableCardDepth) {
-        updateCardDepth(stackTween.scrollTrigger?.progress ?? 0);
-      }
+      updateStageByProgress(stackTween.scrollTrigger?.progress ?? 0, stackTween.scrollTrigger?.isActive ?? false);
     }, triggerTarget);
 
     const refreshId = window.setTimeout(() => ScrollTrigger.refresh(), 0);
@@ -537,6 +553,66 @@ function About() {
     language,
     outsideStackMinHeight
   ]);
+
+  useLayoutEffect(() => {
+    if (typeof window === "undefined") return;
+    const title = outsideTitleRef.current;
+    if (!title) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    gsap.registerPlugin(ScrollTrigger);
+
+    const lineTargets = Array.from(title.querySelectorAll<HTMLElement>(".outside-stage-title-line"));
+    const targets: HTMLElement[] = lineTargets.length ? lineTargets : [title];
+    gsap.set(targets, {
+      autoAlpha: 0,
+      y: 22,
+      filter: "blur(1.5px)",
+      transformOrigin: "50% 100%"
+    });
+
+    const playReveal = () => {
+      gsap.killTweensOf(targets);
+      gsap.to(targets, {
+        y: 0,
+        autoAlpha: 1,
+        filter: "blur(0px)",
+        duration: 0.78,
+        ease: "power3.out",
+        stagger: 0.06,
+        overwrite: "auto",
+        clearProps: "transform,opacity,visibility,filter"
+      });
+    };
+    const isTitleInRevealZone = () => {
+      const rect = title.getBoundingClientRect();
+      const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+      const triggerLine = viewportHeight * 0.88;
+      return rect.top <= triggerLine && rect.bottom >= 0;
+    };
+
+    const trigger = ScrollTrigger.create({
+      trigger: title,
+      start: "top 88%",
+      end: "bottom top",
+      onEnter: playReveal,
+      onEnterBack: playReveal,
+      onLeaveBack: () => {
+        gsap.set(targets, { autoAlpha: 0, y: 22, filter: "blur(1.5px)" });
+      },
+      id: "outside-title-reveal"
+    });
+
+    if (isTitleInRevealZone()) {
+      playReveal();
+    }
+
+    return () => {
+      trigger.kill();
+      gsap.killTweensOf(targets);
+      gsap.set(targets, { clearProps: "transform,opacity,visibility,filter" });
+    };
+  }, [language]);
 
   const setupAudioContext = () => {
     if (typeof window === "undefined") return null;
@@ -1121,7 +1197,7 @@ function About() {
           <div className="relative w-full overflow-visible self-start rounded-[28px] border border-[#dccfb9] bg-white/80 p-7 pr-24 md:p-8 md:pr-28">
             {renderCornerOrbit()}
             <div className="mb-3">
-              <h2 className="text-sm font-semibold uppercase tracking-[0.24em] text-[#0f0f0f]">
+              <h2 style={aboutPanelTitleStyle}>
                 {copy.processTitle}
               </h2>
             </div>
@@ -1133,7 +1209,7 @@ function About() {
           >
             {renderCornerOrbit()}
             <div className="mb-3">
-              <h2 className="text-sm font-semibold uppercase tracking-[0.24em] text-[#0f0f0f]">
+              <h2 style={aboutPanelTitleStyle}>
                 {copy.toolsTitle}
               </h2>
             </div>
@@ -1459,7 +1535,7 @@ function About() {
           >
             {renderCornerOrbit()}
             <div className="outside-stage-heading">
-              <h2 className="outside-stage-title" aria-label={copy.outsideTitle}>
+              <h2 ref={outsideTitleRef} className="outside-stage-title" aria-label={copy.outsideTitle}>
                 {outsideHeadingLines.map((line, index) => (
                   <span key={`${line}-${index}`} className="outside-stage-title-line">
                     {line}

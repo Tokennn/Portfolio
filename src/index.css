@@ -471,8 +471,18 @@
     gap: 0.06em;
     text-transform: uppercase;
     font-family: "Impact", "Arial Black", sans-serif;
-    font-size: clamp(2.8rem, 12vw, 8.8rem);
+    font-size: clamp(2.4rem, 10.5vw, 7.6rem);
     line-height: 0.82;
+    letter-spacing: 0.01em;
+    color: #0a0a0a;
+  }
+
+  .about-panel-title {
+    margin: 0;
+    text-transform: uppercase;
+    font-family: "Impact", "Arial Black", sans-serif;
+    font-size: clamp(2rem, 7vw, 3.4rem);
+    line-height: 0.86;
     letter-spacing: 0.01em;
     color: #0a0a0a;
   }
@@ -633,9 +643,14 @@
     }
 
     .outside-stage-title {
-      font-size: clamp(4.2rem, 11vw, 10.2rem);
+      font-size: clamp(3.5rem, 9.8vw, 8.8rem);
       line-height: 0.78;
       letter-spacing: 0.012em;
+    }
+
+    .about-panel-title {
+      font-size: clamp(2.4rem, 5vw, 4rem);
+      line-height: 0.84;
     }
 
     .outside-stage .outside-stack {
@@ -680,10 +695,15 @@
     }
 
     .outside-stage-title {
-      font-size: clamp(2.35rem, 16vw, 4.6rem);
+      font-size: clamp(2.05rem, 14vw, 4rem);
       line-height: 0.84;
       letter-spacing: 0.006em;
       gap: 0.07em;
+    }
+
+    .about-panel-title {
+      font-size: clamp(2rem, 10vw, 3rem);
+      line-height: 0.88;
     }
 
     .outside-stack-viewport {
