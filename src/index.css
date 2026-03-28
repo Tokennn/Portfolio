@@ -81,25 +81,34 @@
   }
 
   .enter-word {
-    font-size: clamp(12px, 1.4vw, 22px);
-    letter-spacing: 0.4em;
+    font-size: clamp(20px, 3vw, 44px);
+    letter-spacing: 0.28em;
     text-transform: uppercase;
     background: transparent;
     border: none;
     padding: 0;
     color: #0f0f0f;
-    font-weight: 300;
+    font-family: "Sharpie", "Amazing Maret", "Inter", system-ui, -apple-system, sans-serif;
+    font-weight: 700;
+    width: clamp(220px, 24vw, 420px);
+    text-align: center;
+    white-space: nowrap;
+    clip-path: inset(0 100% 0 0);
+    will-change: clip-path, font-family, font-weight, letter-spacing;
+    text-shadow: 0 0 0 rgba(160, 102, 48, 0.18);
+    animation: enterWordRewrite 0.9s cubic-bezier(0.35, 0.05, 0.2, 1) infinite,
+      enterWordTypefaceCycle 9.9s steps(1, end) infinite,
+      enterWordGlow 0.9s ease-in-out infinite;
     transition: opacity 0.3s ease, transform 0.3s ease;
   }
 
   .enter-word:hover {
-    animation: enterTypeSwapRich 0.75s steps(1, end) infinite;
+    filter: brightness(0.9);
   }
 
   .enter-word:focus-visible {
     outline: 2px solid #0f0f0f;
     outline-offset: 6px;
-    animation: enterTypeSwapRich 0.75s steps(1, end) infinite;
   }
 
   .nav-underline {
@@ -1310,6 +1319,12 @@
   .dynamic-island-bar {
     animation: none;
   }
+
+  .enter-word {
+    animation: none;
+    clip-path: inset(0 0 0 0);
+    opacity: 1;
+  }
 }
 
 /* Enter button animations */
@@ -1329,19 +1344,118 @@
 }
 
 
-/* Animation de transition du bouton ENTER */
-@keyframes enterAnimation {
+@keyframes enterWordRewrite {
   0% {
-    transform: scale(1);
+    clip-path: inset(0 100% 0 0);
+    opacity: 0.15;
+  }
+  12% {
     opacity: 1;
   }
-  50% {
-    transform: scale(0.8);
-    opacity: 0.5;
+  54% {
+    clip-path: inset(0 0 0 0);
+    opacity: 1;
+  }
+  76% {
+    clip-path: inset(0 0 0 0);
+    opacity: 1;
   }
   100% {
-    transform: scale(1.2);
-    opacity: 0;
+    clip-path: inset(0 100% 0 0);
+    opacity: 0.15;
+  }
+}
+
+@keyframes enterWordTypefaceCycle {
+  0%,
+  9.08% {
+    font-family: "Sharpie", "Amazing Maret", "Inter", system-ui, -apple-system, sans-serif;
+    font-style: normal;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+  }
+  9.09%,
+  18.17% {
+    font-family: "Nippo", "Trebuchet MS", "Arial", sans-serif;
+    font-style: normal;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+  }
+  18.18%,
+  27.26% {
+    font-family: "Pramukh Rounded", "Helvetica Neue", "Arial", sans-serif;
+    font-style: normal;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+  }
+  27.27%,
+  36.35% {
+    font-family: "Technor", "Avenir Next", "Helvetica Neue", sans-serif;
+    font-style: normal;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+  }
+  36.36%,
+  45.44% {
+    font-family: "Array", "Arial", sans-serif;
+    font-style: normal;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+  }
+  45.45%,
+  54.53% {
+    font-family: "Styro", "Arial", sans-serif;
+    font-style: normal;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+  }
+  54.54%,
+  63.62% {
+    font-family: "Boxing", "Arial", sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    letter-spacing: 0.18em;
+  }
+  63.63%,
+  72.71% {
+    font-family: "Panchang", "Arial", sans-serif;
+    font-style: normal;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+  }
+  72.72%,
+  81.8% {
+    font-family: "Stardom", "Arial", sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    letter-spacing: 0.12em;
+  }
+  81.81%,
+  90.89% {
+    font-family: "Pally", "Arial", sans-serif;
+    font-style: normal;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+  }
+  90.9%,
+  100% {
+    font-family: "Pencerio", "Arial", sans-serif;
+    font-style: normal;
+    font-weight: 50;
+    letter-spacing: 0.1em;
+  }
+}
+
+@keyframes enterWordGlow {
+  0%,
+  100% {
+    text-shadow: 0 0 0 rgba(160, 102, 48, 0.18);
+  }
+  45% {
+    text-shadow: 0 0 12px rgba(182, 118, 58, 0.3), 0 0 24px rgba(135, 78, 28, 0.2);
+  }
+  70% {
+    text-shadow: 0 0 8px rgba(148, 94, 45, 0.24), 0 0 18px rgba(122, 69, 25, 0.16);
   }
 }
 

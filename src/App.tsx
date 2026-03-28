@@ -141,7 +141,7 @@ function App() {
           className={`enter-word absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 ${canEnter ? "cursor-pointer opacity-100" : "cursor-not-allowed opacity-40"}`}
           aria-label="Enter site"
         >
-          Enter
+          ENTRER
         </button>
 
         {/* Loading bar (commented per request) */}
