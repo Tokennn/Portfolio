@@ -63,7 +63,7 @@ const getOutsideCardImage = (tone: string) => outsideCardImages[tone] ?? null;
 const isOutsideCardImageOnly = (tone: string) => outsideImageOnlyTones.has(tone);
 const aboutPanelTitleStyle: CSSProperties = {
   textTransform: "uppercase",
-  fontFamily: '"Impact", "Arial Black", sans-serif',
+  fontFamily: '"Boxing", "Inter", system-ui, -apple-system, sans-serif',
   fontSize: "clamp(2.2rem, 7.8vw, 3.8rem)",
   lineHeight: 0.86,
   letterSpacing: "0.01em",
@@ -198,6 +198,7 @@ function About() {
   useTextReveal({ observeMutations: false, watch: language });
 
   const copy = aboutCopy[language];
+  const localeDisplayFontClass = "font-boxing";
   const outsideItems = copy.outsideItems ?? [];
   const outsideHeadingLines = language === "fr" ? ["En dehors", "du travail"] : ["Outside", "work"];
   const outsideStackMinHeight = Math.max(540, outsideItems.length * 220);
@@ -832,7 +833,10 @@ function About() {
   };
 
   return (
-    <div className="about-liquid-scope relative min-h-screen overflow-hidden bg-gradient-to-br from-[#f8f3ea] via-[#f2e6d7] to-[#fdf8ef] text-[#0f0f0f] px-4 md:px-8 pt-28 pb-12 md:py-16">
+    <div
+      className="about-liquid-scope font-boxing relative min-h-screen overflow-hidden bg-gradient-to-br from-[#f8f3ea] via-[#f2e6d7] to-[#fdf8ef] text-[#0f0f0f] px-4 md:px-8 pt-28 pb-12 md:py-16"
+      lang={language === "fr" ? "fr" : "en"}
+    >
       <audio ref={audioRef} src={islandAudioSrc} preload="auto" playsInline />
       <div className="pointer-events-none absolute inset-0 opacity-70 bg-[radial-gradient(circle_at_18%_16%,rgba(255,255,255,0.85),transparent_38%),radial-gradient(circle_at_82%_6%,rgba(253,230,205,0.45),transparent_46%),radial-gradient(circle_at_24%_80%,rgba(210,175,140,0.28),transparent_50%)]" />
       <div className="fixed inset-x-0 top-0 z-50 flex flex-col gap-2 pt-[calc(env(safe-area-inset-top,0px)+8px)] sm:hidden">
@@ -929,7 +933,7 @@ function About() {
           </Link>
         </div>
         <div className="flex flex-wrap items-center justify-center gap-4">
-          <Link to="/about" className="nav-underline font-amazing text-[#0f0f0f] hover:text-[#0f0f0f]">
+          <Link to="/about" className={`nav-underline ${localeDisplayFontClass} text-[#0f0f0f] hover:text-[#0f0f0f]`}>
             {copy.nav.about}
           </Link>
           <Link to="/contact" className="nav-underline font-amazing text-[#3a3a3a] hover:text-[#0f0f0f]">
@@ -1001,10 +1005,10 @@ function About() {
                     </p>
                   </div> */}
                   <div className="liquid-glass-edge rounded-[26px] border border-[#e6d9c6] bg-white/80 p-6 shadow-[0_14px_40px_rgba(52,34,18,0.10)] transition-transform transition-shadow duration-500 ease-[cubic-bezier(.16,1,.3,1)] hover:-translate-y-1 hover:shadow-[0_20px_50px_rgba(52,34,18,0.16)]">
-                    <h2 className="text-sm font-semibold uppercase tracking-[0.24em] text-[#0f0f0f] mb-3">
+                    <h2 className="text-sm font-amazing font-semibold uppercase tracking-[0.24em] text-[#0f0f0f] mb-3">
                       {copy.valuesTitle}
                     </h2>
-                  <ul className="space-y-3 text-sm md:text-base text-[#3a3a3a] leading-relaxed">
+                  <ul className="space-y-3 text-sm md:text-base font-amazing text-[#3a3a3a] leading-relaxed">
                     {copy.values.map((value) => (
                       <li key={value}>• {value}</li>
                     ))}
@@ -1076,7 +1080,7 @@ function About() {
               <aside className="space-y-4">
                 <div className="liquid-glass-edge relative overflow-hidden rounded-[30px] border border-[#e6d9c6] bg-white p-7 shadow-[0_18px_60px_rgba(52,34,18,0.12)] reveal-up delay-1 transition-transform transition-shadow duration-500 ease-[cubic-bezier(.16,1,.3,1)] hover:-translate-y-1 hover:shadow-[0_26px_80px_rgba(52,34,18,0.18)]">
                   <div className="pointer-events-none absolute inset-0 opacity-70 bg-[radial-gradient(circle_at_20%_20%,rgba(253,230,205,0.6),transparent_45%),radial-gradient(circle_at_80%_10%,rgba(210,175,140,0.26),transparent_55%)]" />
-                  <div className="relative z-10 space-y-6">
+                  <div className="relative z-10 space-y-6 font-amazing">
                     <div className="flex items-center gap-4">
                       <div className="h-14 w-14 overflow-hidden rounded-2xl border border-[#e2d6c3] bg-white/70 shadow-[0_10px_26px_rgba(52,34,18,0.12)]">
                         <img
@@ -1087,7 +1091,7 @@ function About() {
                         />
                       </div>
                       <div>
-                        <p className="text-xs uppercase tracking-[0.26em] text-[#6b6b6b]">{copy.snapshotLabel}</p>
+                        <p className="text-xs font-semibold uppercase tracking-[0.26em] text-[#6b6b6b]">{copy.snapshotLabel}</p>
                         <p className="text-lg font-black text-[#0a0a0a] leading-tight">Quentin / Contreau</p>
                       </div>
                     </div>
@@ -1142,10 +1146,10 @@ function About() {
                 </div>
 
                 <div className="liquid-glass-edge rounded-[30px] border border-[#e6d9c6] bg-white/80 p-7 shadow-[0_18px_60px_rgba(52,34,18,0.10)] reveal-up delay-2 transition-transform transition-shadow duration-500 ease-[cubic-bezier(.16,1,.3,1)] hover:-translate-y-1 hover:shadow-[0_26px_80px_rgba(52,34,18,0.16)]">
-                  <h2 className="text-sm font-semibold uppercase tracking-[0.24em] text-[#0f0f0f] mb-4">
+                  <h2 className="text-sm font-amazing font-semibold uppercase tracking-[0.24em] text-[#0f0f0f] mb-4">
                     {copy.contributeTitle}
                   </h2>
-                  <ul className="space-y-3 text-sm md:text-base text-[#3a3a3a] leading-relaxed">
+                  <ul className="space-y-3 text-sm md:text-base font-amazing text-[#3a3a3a] leading-relaxed">
                     {copy.contributeItems.map((item) => (
                       <li key={item}>• {item}</li>
                     ))}
@@ -1626,16 +1630,16 @@ function About() {
         </section>
 
         <div className="flex justify-center py-0">
-          <p className="text-center text-[10px] md:text-xs font-amazing tracking-[0.14em] md:tracking-[0.12em] text-[#6b6b6b] leading-relaxed px-3 max-w-[320px] md:max-w-none md:whitespace-nowrap">
+          <p className={`text-center text-[10px] md:text-xs ${localeDisplayFontClass} tracking-[0.14em] md:tracking-[0.12em] text-[#6b6b6b] leading-relaxed px-3 max-w-[320px] md:max-w-none md:whitespace-nowrap`}>
            {copy.contactTagline}
           </p>
         </div>
 
         <div className="mt-4 border-t border-[#e6d9c6] pt-4 text-[11px] md:text-xs text-[#6b6b6b]">
           <div className="flex flex-col items-center text-center gap-3 md:flex-row md:items-center md:justify-between md:text-left">
-            <p className="font-sans tracking-[0.08em]">{copy.footerRights}</p>
+            <p className="font-boxing tracking-[0.08em]">{copy.footerRights}</p>
             <div className="flex flex-wrap items-center justify-center gap-3 md:gap-5">
-              <span className="inline-flex items-center justify-center gap-2 font-sans tracking-[0.08em]">
+              <span className="inline-flex items-center justify-center gap-2 font-boxing tracking-[0.08em]">
                 {copy.footerBuiltWith}
                 <svg className="h-5 w-5" viewBox="0 0 32 32" aria-hidden="true">
                   <circle cx="16" cy="16" r="2.4" fill="#61dafb" />
@@ -1673,7 +1677,7 @@ function About() {
                 </svg>
               </span>
               <span className="hidden md:inline text-[#b7b0a3]">•</span>
-              <span className="inline-flex items-center justify-center gap-2 font-sans tracking-[0.08em]">
+              <span className="inline-flex items-center justify-center gap-2 font-boxing tracking-[0.08em]">
                 {copy.footerHostedOn}
                 <img src={logoNetlify} alt="Netlify" className="h-5 w-5 rounded object-contain" loading="lazy" />
               </span>
