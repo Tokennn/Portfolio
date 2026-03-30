@@ -104,6 +104,7 @@ function Work() {
   const [isSwitching, setIsSwitching] = useState(false);
   const [cursorVisible, setCursorVisible] = useState(false);
   const [isPreviewVisible, setIsPreviewVisible] = useState(false);
+  const [isMobilePreviewOpen, setIsMobilePreviewOpen] = useState(false);
   const [cursorEnabled, setCursorEnabled] = useState(() => {
     if (typeof window === 'undefined') return false;
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -116,6 +117,7 @@ function Work() {
   const cursorHideTimeout = useRef<number | null>(null);
   const cursorTarget = useRef({ x: 0, y: 0 });
   const cursorPosition = useRef({ x: 0, y: 0 });
+  const mobilePreviewVideoRef = useRef<HTMLVideoElement>(null);
   const swipeStartRef = useRef<{ x: number; y: number; pointerId: number } | null>(null);
   const swipeActiveRef = useRef(false);
   const swipeConsumedRef = useRef(false);
@@ -123,7 +125,12 @@ function Work() {
   const projects = workCopy[language].projects;
   const activeProject = projects[activeIndex];
   const previewVisible = Boolean(activeProject.previewVideo && isPreviewVisible);
+  const isNotchProject = activeProject.title.toLowerCase() === 'notch2.0';
+  const isMobileNotchPreviewProject = Boolean(activeProject.previewVideo && isNotchProject);
+  const opensExternalLink = activeProject.link !== '#';
   const cursorLabel = language === 'fr' ? 'Voir le projet' : 'View project';
+  const mobilePreviewTitle = language === 'fr' ? 'Apercu Notch2.0' : 'Notch2.0 Preview';
+  const mobilePreviewCloseLabel = language === 'fr' ? 'Fermer' : 'Close';
 
   const previousProjects = projects.slice(0, activeIndex);
   const nextProjects = projects.slice(activeIndex + 1);
@@ -205,9 +212,28 @@ function Work() {
     }
     setIsSwitching(true);
     setIsPreviewVisible(false);
+    setIsMobilePreviewOpen(false);
     const timer = window.setTimeout(() => setIsSwitching(false), 450);
     return () => window.clearTimeout(timer);
   }, [activeIndex]);
+
+  useEffect(() => {
+    const video = mobilePreviewVideoRef.current;
+    if (!video) return;
+
+    if (isMobilePreviewOpen && isMobileNotchPreviewProject) {
+      const playPromise = video.play();
+      if (playPromise) {
+        playPromise.catch(() => {
+          /* autoplay can fail silently on some devices */
+        });
+      }
+      return;
+    }
+
+    video.pause();
+    video.currentTime = 0;
+  }, [isMobilePreviewOpen, isMobileNotchPreviewProject]);
 
   const animateCursor = useCallback(() => {
     const target = cursorTarget.current;
@@ -347,10 +373,24 @@ function Work() {
   };
 
   const handleProjectClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
-    if (!swipeConsumedRef.current) return;
-    swipeConsumedRef.current = false;
+    if (swipeConsumedRef.current) {
+      swipeConsumedRef.current = false;
+      event.preventDefault();
+      event.stopPropagation();
+      return;
+    }
+
+    if (!opensExternalLink) {
+      event.preventDefault();
+    }
+
+    if (!isMobileNotchPreviewProject || typeof window === 'undefined') return;
+    const isPhoneViewport = window.matchMedia('(max-width: 767px)').matches;
+    if (!isPhoneViewport) return;
+
     event.preventDefault();
     event.stopPropagation();
+    setIsMobilePreviewOpen(true);
   };
 
   return (
@@ -407,6 +447,54 @@ function Work() {
         </div>
       )}
 
+      {isMobileNotchPreviewProject && (
+        <div
+          className={`fixed inset-0 z-50 md:hidden transition-opacity duration-500 ease-[cubic-bezier(.22,1,.36,1)] ${
+            isMobilePreviewOpen ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0'
+          }`}
+          aria-hidden={!isMobilePreviewOpen}
+        >
+          <button
+            type="button"
+            onClick={() => setIsMobilePreviewOpen(false)}
+            aria-label={mobilePreviewCloseLabel}
+            className={`absolute inset-0 bg-[#0f0f0f]/28 backdrop-blur-[1px] transition-opacity duration-500 ease-[cubic-bezier(.22,1,.36,1)] ${
+              isMobilePreviewOpen ? 'opacity-100' : 'opacity-0'
+            }`}
+          />
+          <div
+            className={`absolute inset-x-2 bottom-2 rounded-[28px] border border-white/70 bg-white/20 p-3 pb-4 shadow-[0_28px_90px_rgba(15,15,15,0.42)] backdrop-blur-xl transition-[transform,opacity] duration-650 ease-[cubic-bezier(.16,1,.3,1)] ${
+              isMobilePreviewOpen ? 'translate-y-0 opacity-100' : 'translate-y-[110%] opacity-0'
+            }`}
+          >
+            <div className="mb-3 flex items-center justify-between px-1">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-white/90">
+                {mobilePreviewTitle}
+              </p>
+              <button
+                type="button"
+                onClick={() => setIsMobilePreviewOpen(false)}
+                className="rounded-full border border-white/70 bg-white/20 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-white transition-colors duration-200 hover:bg-white/30"
+              >
+                {mobilePreviewCloseLabel}
+              </button>
+            </div>
+            <div className="relative h-[52vh] overflow-hidden rounded-[22px] border border-white/75 bg-[#080808]">
+              <video
+                ref={mobilePreviewVideoRef}
+                src={activeProject.previewVideo}
+                autoPlay
+                muted
+                loop
+                playsInline
+                preload="metadata"
+                className="h-full w-full object-contain"
+              />
+            </div>
+          </div>
+        </div>
+      )}
+
       <header className="relative max-w-6xl mx-auto flex items-center justify-between mb-10 md:mb-14 px-1 md:px-2 md:hidden">
         <div className="flex items-center gap-6 md:gap-8">
           <Link to="/" className="nav-underline font-amazing text-[#3a3a3a] hover:text-[#0f0f0f]">Home</Link>
@@ -453,8 +541,8 @@ function Work() {
 
               <a
                 href={activeProject.link}
-                target="_blank"
-                rel="noreferrer"
+                target={opensExternalLink ? "_blank" : undefined}
+                rel={opensExternalLink ? "noreferrer" : undefined}
                 className="group project-swipe-area relative isolate rounded-[30px] overflow-hidden border border-[#e6d9c6] bg-white shadow-[0_18px_60px_rgba(52,34,18,0.14)] reveal-up delay-2 fade-in transition-all duration-500 ease-[cubic-bezier(.16,1,.3,1)] hover:-translate-y-2 hover:shadow-[0_24px_70px_rgba(52,34,18,0.16)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#d9cbb4]"
                 onPointerDown={handleSwipePointerDown}
                 onPointerMove={handleSwipePointerMove}

@@ -109,7 +109,7 @@
     border: none;
     padding: 0;
     color: #0f0f0f;
-    font-family: "Sharpie", "Amazing Maret", "Inter", system-ui, -apple-system, sans-serif;
+    font-family: "Boxing", "Sharpie", "Amazing Maret", "Inter", system-ui, -apple-system, sans-serif;
     font-weight: 700;
     width: clamp(220px, 24vw, 420px);
     text-align: center;
@@ -1396,80 +1396,80 @@
 @keyframes enterWordTypefaceCycle {
   0%,
   9.08% {
-    font-family: "Sharpie", "Amazing Maret", "Inter", system-ui, -apple-system, sans-serif;
-    font-style: normal;
-    font-weight: 700;
-    letter-spacing: 0.18em;
-  }
-  9.09%,
-  18.17% {
-    font-family: "Nippo", "Trebuchet MS", "Arial", sans-serif;
-    font-style: normal;
-    font-weight: 700;
-    letter-spacing: 0.16em;
-  }
-  18.18%,
-  27.26% {
-    font-family: "Pramukh Rounded", "Helvetica Neue", "Arial", sans-serif;
-    font-style: normal;
-    font-weight: 700;
-    letter-spacing: 0.14em;
-  }
-  27.27%,
-  36.35% {
-    font-family: "Technor", "Avenir Next", "Helvetica Neue", sans-serif;
-    font-style: normal;
-    font-weight: 700;
-    letter-spacing: 0.16em;
-  }
-  36.36%,
-  45.44% {
-    font-family: "Array", "Arial", sans-serif;
-    font-style: normal;
-    font-weight: 700;
-    letter-spacing: 0.16em;
-  }
-  45.45%,
-  54.53% {
-    font-family: "Styro", "Arial", sans-serif;
-    font-style: normal;
-    font-weight: 700;
-    letter-spacing: 0.15em;
-  }
-  54.54%,
-  63.62% {
     font-family: "Boxing", "Arial", sans-serif;
     font-style: normal;
     font-weight: 400;
     letter-spacing: 0.18em;
   }
+  9.09%,
+  18.17% {
+    font-family: "Panchang", "Arial", sans-serif;
+    font-style: normal;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+  }
+  18.18%,
+  27.26% {
+    font-family: "Stardom", "Arial", sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    letter-spacing: 0.12em;
+  }
+  27.27%,
+  36.35% {
+    font-family: "Pally", "Arial", sans-serif;
+    font-style: normal;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+  }
+  36.36%,
+  45.44% {
+    font-family: "Pencerio", "Arial", sans-serif;
+    font-style: normal;
+    font-weight: 50;
+    letter-spacing: 0.1em;
+  }
+  45.45%,
+  54.53% {
+    font-family: "Sharpie", "Amazing Maret", "Inter", system-ui, -apple-system, sans-serif;
+    font-style: normal;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+  }
+  54.54%,
+  63.62% {
+    font-family: "Nippo", "Trebuchet MS", "Arial", sans-serif;
+    font-style: normal;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+  }
   63.63%,
   72.71% {
-    font-family: "Panchang", "Arial", sans-serif;
+    font-family: "Pramukh Rounded", "Helvetica Neue", "Arial", sans-serif;
     font-style: normal;
     font-weight: 700;
     letter-spacing: 0.14em;
   }
   72.72%,
   81.8% {
-    font-family: "Stardom", "Arial", sans-serif;
+    font-family: "Technor", "Avenir Next", "Helvetica Neue", sans-serif;
     font-style: normal;
-    font-weight: 400;
-    letter-spacing: 0.12em;
+    font-weight: 700;
+    letter-spacing: 0.16em;
   }
   81.81%,
   90.89% {
-    font-family: "Pally", "Arial", sans-serif;
+    font-family: "Array", "Arial", sans-serif;
     font-style: normal;
     font-weight: 700;
-    letter-spacing: 0.14em;
+    letter-spacing: 0.16em;
   }
   90.9%,
   100% {
-    font-family: "Pencerio", "Arial", sans-serif;
+    font-family: "Styro", "Arial", sans-serif;
     font-style: normal;
-    font-weight: 50;
-    letter-spacing: 0.1em;
+    font-weight: 700;
+    letter-spacing: 0.15em;
   }
 }
 
@@ -1488,7 +1488,7 @@
 
 @keyframes enterTypeSwap {
   0% {
-    font-family: "Amazing Maret", "Inter", system-ui, -apple-system, sans-serif;
+    font-family: "Boxing", "Inter", system-ui, -apple-system, sans-serif;
   }
   20% {
     font-family: "Times New Roman", "Times", serif;
@@ -1503,15 +1503,15 @@
     font-family: "Impact", "Arial Black", sans-serif;
   }
   100% {
-    font-family: "Amazing Maret", "Inter", system-ui, -apple-system, sans-serif;
+    font-family: "Boxing", "Inter", system-ui, -apple-system, sans-serif;
   }
 }
 
 @keyframes enterTypeSwapRich {
   0% {
-    font-family: "Amazing Maret", "Inter", system-ui, -apple-system, sans-serif;
-    font-weight: 300;
-    letter-spacing: 0.4em;
+    font-family: "Boxing", "Inter", system-ui, -apple-system, sans-serif;
+    font-weight: 400;
+    letter-spacing: 0.18em;
     font-style: normal;
   }
   6% {
@@ -1611,16 +1611,16 @@
     font-style: normal;
   }
   100% {
-    font-family: "Amazing Maret", "Inter", system-ui, -apple-system, sans-serif;
-    font-weight: 300;
-    letter-spacing: 0.4em;
+    font-family: "Boxing", "Inter", system-ui, -apple-system, sans-serif;
+    font-weight: 400;
+    letter-spacing: 0.18em;
     font-style: normal;
   }
 }
 
 @keyframes navTypeSwap {
   0% {
-    font-family: "Amazing Maret", "Inter", system-ui, -apple-system, sans-serif;
+    font-family: "Boxing", "Inter", system-ui, -apple-system, sans-serif;
   }
   20% {
     font-family: "Times New Roman", "Times", serif;
@@ -1635,7 +1635,7 @@
     font-family: "Impact", "Arial Black", sans-serif;
   }
   100% {
-    font-family: "Amazing Maret", "Inter", system-ui, -apple-system, sans-serif;
+    font-family: "Boxing", "Inter", system-ui, -apple-system, sans-serif;
   }
 }
 
