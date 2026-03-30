@@ -138,6 +138,24 @@ function Work() {
   const goPrev = () => setActiveIndex((index) => (index - 1 + projects.length) % projects.length);
   const goNext = () => setActiveIndex((index) => (index + 1) % projects.length);
 
+  const attemptMobilePreviewPlayback = useCallback(() => {
+    const video = mobilePreviewVideoRef.current;
+    if (!video) return;
+
+    video.muted = true;
+    video.defaultMuted = true;
+    video.setAttribute('muted', '');
+    video.setAttribute('playsinline', '');
+    video.setAttribute('webkit-playsinline', 'true');
+
+    const playPromise = video.play();
+    if (playPromise) {
+      playPromise.catch(() => {
+        /* autoplay can fail silently on some devices */
+      });
+    }
+  }, []);
+
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'ArrowLeft') {
@@ -222,18 +240,13 @@ function Work() {
     if (!video) return;
 
     if (isMobilePreviewOpen && isMobileNotchPreviewProject) {
-      const playPromise = video.play();
-      if (playPromise) {
-        playPromise.catch(() => {
-          /* autoplay can fail silently on some devices */
-        });
-      }
+      attemptMobilePreviewPlayback();
       return;
     }
 
     video.pause();
     video.currentTime = 0;
-  }, [isMobilePreviewOpen, isMobileNotchPreviewProject]);
+  }, [attemptMobilePreviewPlayback, isMobilePreviewOpen, isMobileNotchPreviewProject]);
 
   const animateCursor = useCallback(() => {
     const target = cursorTarget.current;
@@ -391,6 +404,7 @@ function Work() {
     event.preventDefault();
     event.stopPropagation();
     setIsMobilePreviewOpen(true);
+    attemptMobilePreviewPlayback();
   };
 
   return (
@@ -488,6 +502,10 @@ function Work() {
                 loop
                 playsInline
                 preload="metadata"
+                onLoadedData={() => {
+                  if (!isMobilePreviewOpen) return;
+                  attemptMobilePreviewPlayback();
+                }}
                 className="h-full w-full object-contain"
               />
             </div>
