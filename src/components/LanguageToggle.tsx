@@ -11,7 +11,7 @@ function LanguageToggle() {
       aria-checked={isEnglish}
       aria-label="Basculer la langue"
       onClick={toggleLanguage}
-      className="group inline-flex items-center gap-2 rounded-full border border-[#dccfb9] bg-white/90 px-2 py-1 shadow-[0_8px_24px_rgba(52,34,18,0.12)] transition-transform duration-300 hover:-translate-y-0.5"
+      className="group inline-flex items-center gap-2 rounded-full border border-[#dccfb9] bg-white/90 px-2 py-1 font-amazing shadow-[0_8px_24px_rgba(52,34,18,0.12)] transition-transform duration-300 hover:-translate-y-0.5"
     >
       <span
         className={`text-[9px] font-semibold uppercase tracking-[0.2em] ${

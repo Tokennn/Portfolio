@@ -61,14 +61,6 @@ const outsideCardImages: Record<string, string> = {
 const outsideImageOnlyTones = new Set(["music", "travel", "fashion"]);
 const getOutsideCardImage = (tone: string) => outsideCardImages[tone] ?? null;
 const isOutsideCardImageOnly = (tone: string) => outsideImageOnlyTones.has(tone);
-const aboutPanelTitleStyle: CSSProperties = {
-  textTransform: "uppercase",
-  fontFamily: '"Boxing", "Inter", system-ui, -apple-system, sans-serif',
-  fontSize: "clamp(2.2rem, 7.8vw, 3.8rem)",
-  lineHeight: 0.86,
-  letterSpacing: "0.01em",
-  color: "#0a0a0a"
-};
 const islandCoverSrc = albumMiskine;
 const islandAudioSrc = audioMiskine;
 const aboutCopy = {
@@ -198,7 +190,7 @@ function About() {
   useTextReveal({ observeMutations: false, watch: language });
 
   const copy = aboutCopy[language];
-  const localeDisplayFontClass = "font-boxing";
+  const localeDisplayFontClass = "font-amazing";
   const outsideItems = copy.outsideItems ?? [];
   const outsideHeadingLines = language === "fr" ? ["En dehors", "du travail"] : ["Outside", "work"];
   const outsideStackMinHeight = Math.max(540, outsideItems.length * 220);
@@ -357,6 +349,8 @@ function About() {
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const lineTargets = title ? Array.from(title.querySelectorAll<HTMLElement>(".outside-stage-title-line")) : [];
     const titleTargets: HTMLElement[] = title ? (lineTargets.length ? lineTargets : [title]) : [];
+    const orbitTarget = triggerTarget.querySelector<HTMLElement>(".about-corner-orbit--single");
+    const chromeTargets: HTMLElement[] = orbitTarget ? [...titleTargets, orbitTarget] : titleTargets;
     let hasPlayedTitleReveal = false;
 
     const baseScrollDistance = outsideScrollDistance;
@@ -376,31 +370,44 @@ function About() {
       const pinStart = "center center";
       const stackStartY = -baseScrollDistance;
       const stackEndY = 0;
-      const setTitleRevealState = (revealed: boolean) => {
-        if (!titleTargets.length || prefersReducedMotion) return;
-        gsap.killTweensOf(titleTargets);
+      const setTitleRevealState = (revealed: boolean, immediate = false) => {
+        if (!chromeTargets.length || prefersReducedMotion) return;
+        gsap.killTweensOf(chromeTargets);
         if (!revealed) {
-          gsap.set(titleTargets, {
+          const hiddenState = {
             autoAlpha: 0,
-            y: 22,
-            filter: "blur(1.5px)",
+            y: 18,
+            filter: "blur(1.4px)",
+            pointerEvents: "none" as const,
             transformOrigin: "50% 100%"
-          });
+          };
+          if (immediate) {
+            gsap.set(chromeTargets, hiddenState);
+          } else {
+            gsap.to(chromeTargets, {
+              ...hiddenState,
+              duration: 0.42,
+              ease: "power2.inOut",
+              stagger: 0.04,
+              overwrite: "auto"
+            });
+          }
           return;
         }
-        gsap.to(titleTargets, {
+        gsap.to(chromeTargets, {
           y: 0,
           autoAlpha: 1,
           filter: "blur(0px)",
+          pointerEvents: "auto",
           duration: 0.78,
           ease: "power3.out",
           stagger: 0.06,
           overwrite: "auto",
-          clearProps: "transform,opacity,visibility,filter"
+          clearProps: "transform,opacity,visibility,filter,pointer-events"
         });
       };
       const playTitleReveal = () => {
-        if (hasPlayedTitleReveal || prefersReducedMotion || !titleTargets.length) return;
+        if (hasPlayedTitleReveal || prefersReducedMotion || !chromeTargets.length) return;
         hasPlayedTitleReveal = true;
         setTitleRevealState(true);
       };
@@ -531,8 +538,8 @@ function About() {
 
       gsap.set(stack, { y: stackStartY });
       gsap.set(wrappers, { zIndex: 1 });
-      if (!prefersReducedMotion && titleTargets.length) {
-        setTitleRevealState(false);
+      if (!prefersReducedMotion && chromeTargets.length) {
+        setTitleRevealState(false, true);
       }
       if (cards.length) {
         cards.forEach((card) => {
@@ -979,20 +986,20 @@ function About() {
             <div className="relative z-10 grid gap-10 md:grid-cols-[1.2fr_0.8fr]">
               <div className="space-y-7">
                 <div className="flex flex-col gap-4">
-                  <span className="w-fit rounded-full border border-[#d5c5ad] bg-white/90 px-4 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-[#0f0f0f]">
+                  <span className="w-fit rounded-full border border-[#d5c5ad] bg-white/90 px-4 py-2 text-xs font-amazing font-semibold uppercase tracking-[0.3em] text-[#0f0f0f]">
                   {copy.badge}
                   </span>
-                  <h1 className="text-4xl md:text-5xl font-black text-[#0a0a0a] leading-tight">
+                  <h1 className="font-amazing text-4xl md:text-5xl font-black text-[#0a0a0a] leading-tight">
                     {copy.title}
                   </h1>
                 </div>
 
                 <div className="space-y-5 text-base md:text-lg text-[#1f1f1f] leading-relaxed max-w-2xl">
-                  <p data-reveal="text">{copy.intro}</p>
-                  <h2 className="text-4xl md:text-5xl font-black text-[#0a0a0a] leading-tight">
+                  <p data-reveal="text" className="font-amazing">{copy.intro}</p>
+                  <h2 className="font-amazing text-4xl md:text-5xl font-black text-[#0a0a0a] leading-tight">
                     {copy.schoolTitle}
                   </h2>
-                  <p data-reveal="text">{copy.schoolBody}</p>
+                  <p data-reveal="text" className="font-amazing">{copy.schoolBody}</p>
                 </div>
 
                 <div className="grid gap-4 sm:grid-cols-2">
@@ -1232,11 +1239,11 @@ function About() {
           <div className="relative w-full overflow-visible self-start rounded-[28px] border border-[#dccfb9] bg-white/80 p-7 pr-24 md:p-8 md:pr-28">
             {renderCornerOrbit()}
             <div className="mb-3">
-              <h2 style={aboutPanelTitleStyle}>
+              <h2 className="about-panel-title">
                 {copy.processTitle}
               </h2>
             </div>
-            <p data-reveal="text" className="text-sm md:text-base text-[#3a3a3a] leading-relaxed text-justify">{copy.processBody}</p>
+            <p data-reveal="text" className="font-amazing text-sm md:text-base text-[#3a3a3a] leading-relaxed text-justify">{copy.processBody}</p>
           </div>
           <div
             ref={toolsCardRef}
@@ -1244,7 +1251,7 @@ function About() {
           >
             {renderCornerOrbit()}
             <div className="mb-3">
-              <h2 style={aboutPanelTitleStyle}>
+              <h2 className="about-panel-title">
                 {copy.toolsTitle}
               </h2>
             </div>
@@ -1630,16 +1637,16 @@ function About() {
         </section>
 
         <div className="flex justify-center py-0">
-          <p className={`text-center text-[10px] md:text-xs ${localeDisplayFontClass} tracking-[0.14em] md:tracking-[0.12em] text-[#6b6b6b] leading-relaxed px-3 max-w-[320px] md:max-w-none md:whitespace-nowrap`}>
+          <p className="text-center text-[10px] md:text-xs font-amazing tracking-[0.14em] md:tracking-[0.12em] text-[#6b6b6b] leading-relaxed px-3 max-w-[320px] md:max-w-none md:whitespace-nowrap">
            {copy.contactTagline}
           </p>
         </div>
 
         <div className="mt-4 border-t border-[#e6d9c6] pt-4 text-[11px] md:text-xs text-[#6b6b6b]">
           <div className="flex flex-col items-center text-center gap-3 md:flex-row md:items-center md:justify-between md:text-left">
-            <p className="font-boxing tracking-[0.08em]">{copy.footerRights}</p>
+            <p className="font-amazing tracking-[0.08em]">{copy.footerRights}</p>
             <div className="flex flex-wrap items-center justify-center gap-3 md:gap-5">
-              <span className="inline-flex items-center justify-center gap-2 font-boxing tracking-[0.08em]">
+              <span className="inline-flex items-center justify-center gap-2 font-amazing tracking-[0.08em]">
                 {copy.footerBuiltWith}
                 <svg className="h-5 w-5" viewBox="0 0 32 32" aria-hidden="true">
                   <circle cx="16" cy="16" r="2.4" fill="#61dafb" />
