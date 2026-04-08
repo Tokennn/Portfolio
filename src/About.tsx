@@ -597,7 +597,7 @@ function About() {
           trigger: triggerTarget,
           start: isDesktop ? pinStart : "top center",
           end: () => `+=${totalScrollDistance}`,
-          scrub: isDesktop ? true : 0.2,
+          scrub: true,
           invalidateOnRefresh: true,
           onEnter: () => {
             playTitleReveal();

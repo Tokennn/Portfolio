@@ -802,6 +802,11 @@
     .outside-stack-viewport {
       clip-path: none;
     }
+
+    .about-liquid-scope .tools-grid {
+      font-family: "Amazing Maret", "Inter", system-ui, -apple-system, sans-serif;
+      letter-spacing: 0.08em;
+    }
   }
 
   .project-cursor__bubble {
