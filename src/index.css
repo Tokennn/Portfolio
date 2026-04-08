@@ -1690,6 +1690,174 @@
   opacity: 1;
 }
 
+.intro-plane {
+  touch-action: manipulation;
+  padding: 14px;
+}
+
+.intro-plane__inner {
+  will-change: transform;
+}
+
+.plane-exploding {
+  animation: planeCartoonPop 0.56s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.plane-burst {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+.plane-burst--screen {
+  z-index: 20;
+}
+
+.plane-burst__toon {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 220px;
+  height: 220px;
+  transform: translate(-50%, -50%) scale(0.72);
+  opacity: 0;
+  overflow: visible;
+}
+
+.plane-burst__toon-star,
+.plane-burst__toon-core,
+.plane-burst__toon-core-detail {
+  fill: #ffffff;
+  stroke: #0f0f0f;
+  stroke-linejoin: round;
+}
+
+.plane-burst__toon-star {
+  stroke-width: 4;
+  transform-box: fill-box;
+  transform-origin: center;
+  opacity: 0;
+}
+
+.plane-burst__toon-core {
+  stroke-width: 3.2;
+  transform-box: fill-box;
+  transform-origin: center;
+  opacity: 0;
+}
+
+.plane-burst__toon-core-detail {
+  stroke-width: 2.3;
+  transform-box: fill-box;
+  transform-origin: center;
+  opacity: 0;
+}
+
+.plane-burst__toon-ray {
+  fill: none;
+  stroke: #0f0f0f;
+  stroke-width: 3;
+  stroke-linecap: round;
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.plane-burst__puffs {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 0;
+  height: 0;
+}
+
+.plane-burst__puff {
+  --angle: 0deg;
+  --size: 1;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 16px;
+  height: 12px;
+  border: 2.4px solid #0f0f0f;
+  border-radius: 999px;
+  background: #fff;
+  opacity: 0;
+  transform: translate(-50%, -50%) rotate(var(--angle)) translateX(26px) scale(calc(var(--size) * 0.2));
+}
+
+.plane-burst__puff::before,
+.plane-burst__puff::after {
+  content: '';
+  position: absolute;
+  border: 2.2px solid #0f0f0f;
+  border-radius: 999px;
+  background: #fff;
+}
+
+.plane-burst__puff::before {
+  width: 9px;
+  height: 9px;
+  left: 1px;
+  top: -5px;
+}
+
+.plane-burst__puff::after {
+  width: 8px;
+  height: 8px;
+  right: 1px;
+  top: -4px;
+}
+
+.plane-burst__puff:nth-child(1) { --angle: 0deg; --size: 1.16; }
+.plane-burst__puff:nth-child(2) { --angle: 15deg; --size: 0.74; }
+.plane-burst__puff:nth-child(3) { --angle: 30deg; --size: 0.88; }
+.plane-burst__puff:nth-child(4) { --angle: 45deg; --size: 1.1; }
+.plane-burst__puff:nth-child(5) { --angle: 60deg; --size: 0.82; }
+.plane-burst__puff:nth-child(6) { --angle: 75deg; --size: 0.72; }
+.plane-burst__puff:nth-child(7) { --angle: 90deg; --size: 1.06; }
+.plane-burst__puff:nth-child(8) { --angle: 105deg; --size: 0.8; }
+.plane-burst__puff:nth-child(9) { --angle: 120deg; --size: 0.96; }
+.plane-burst__puff:nth-child(10) { --angle: 135deg; --size: 0.78; }
+.plane-burst__puff:nth-child(11) { --angle: 150deg; --size: 1.12; }
+.plane-burst__puff:nth-child(12) { --angle: 165deg; --size: 0.74; }
+.plane-burst__puff:nth-child(13) { --angle: 180deg; --size: 0.9; }
+.plane-burst__puff:nth-child(14) { --angle: 195deg; --size: 0.7; }
+.plane-burst__puff:nth-child(15) { --angle: 210deg; --size: 1.08; }
+.plane-burst__puff:nth-child(16) { --angle: 225deg; --size: 0.76; }
+.plane-burst__puff:nth-child(17) { --angle: 240deg; --size: 0.94; }
+.plane-burst__puff:nth-child(18) { --angle: 255deg; --size: 0.72; }
+.plane-burst__puff:nth-child(19) { --angle: 270deg; --size: 1.04; }
+.plane-burst__puff:nth-child(20) { --angle: 285deg; --size: 0.8; }
+.plane-burst__puff:nth-child(21) { --angle: 300deg; --size: 0.92; }
+.plane-burst__puff:nth-child(22) { --angle: 315deg; --size: 0.74; }
+.plane-burst__puff:nth-child(23) { --angle: 330deg; --size: 1.14; }
+.plane-burst__puff:nth-child(24) { --angle: 345deg; --size: 0.78; }
+
+.plane-burst--active .plane-burst__toon {
+  animation: planeBurstToonRoot 0.68s linear forwards;
+}
+
+.plane-burst--active .plane-burst__toon-star {
+  animation: planeBurstToonStar 0.68s linear forwards;
+}
+
+.plane-burst--active .plane-burst__toon-core,
+.plane-burst--active .plane-burst__toon-core-detail {
+  animation: planeBurstToonCore 0.68s linear forwards;
+}
+
+.plane-burst--active .plane-burst__toon-ray {
+  animation: planeBurstToonRays 0.68s linear forwards;
+}
+
+.plane-burst--active .plane-burst__puff {
+  animation: planeBurstToonPuffs 0.68s linear forwards;
+}
+
 .hero-menu {
   background: radial-gradient(circle at 15% 20%, rgba(73, 149, 255, 0.16), transparent 25%),
               radial-gradient(circle at 80% 30%, rgba(128, 17, 255, 0.22), transparent 30%),
@@ -1748,10 +1916,138 @@
   to { transform: translate3d(-30px, 50px, 0); }
 }
 
+@keyframes planeCartoonPop {
+  0% { transform: translate3d(0, 0, 0) scale(1) rotate(0deg); }
+  14% { transform: translate3d(-4px, 1px, 0) scale(0.9) rotate(-9deg); }
+  30% { transform: translate3d(5px, -2px, 0) scale(1.07) rotate(10deg); }
+  46% { transform: translate3d(-3px, 2px, 0) scale(0.97) rotate(-6deg); }
+  64% { transform: translate3d(2px, -1px, 0) scale(1.02) rotate(4deg); }
+  100% { transform: translate3d(0, 0, 0) scale(1) rotate(0deg); }
+}
+
+@keyframes planeBurstToonRoot {
+  0% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(0.78);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+@keyframes planeBurstToonStar {
+  0% {
+    opacity: 1;
+    transform: scale(0.74);
+  }
+  14% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  24% {
+    opacity: 0;
+    transform: scale(1.08);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.08);
+  }
+}
+
+@keyframes planeBurstToonCore {
+  0% {
+    opacity: 0;
+    transform: scale(0.55);
+  }
+  14% {
+    opacity: 0;
+    transform: scale(0.65);
+  }
+  20% {
+    opacity: 1;
+    transform: scale(0.9);
+  }
+  34% {
+    opacity: 1;
+    transform: scale(1.06);
+  }
+  48% {
+    opacity: 0;
+    transform: scale(1.2);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.2);
+  }
+}
+
+@keyframes planeBurstToonRays {
+  0% {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  18% {
+    opacity: 0.95;
+    transform: scale(1);
+  }
+  34% {
+    opacity: 0.75;
+    transform: scale(1.12);
+  }
+  44% {
+    opacity: 0;
+    transform: scale(1.22);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.22);
+  }
+}
+
+@keyframes planeBurstToonPuffs {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) rotate(var(--angle)) translateX(22px) scale(calc(var(--size) * 0.2));
+  }
+  20% {
+    opacity: 0;
+    transform: translate(-50%, -50%) rotate(var(--angle)) translateX(38px) scale(calc(var(--size) * 1.05));
+  }
+  34% {
+    opacity: 1;
+    transform: translate(-50%, -50%) rotate(var(--angle)) translateX(52px) scale(calc(var(--size) * 1.15));
+  }
+  54% {
+    opacity: 1;
+    transform: translate(-50%, -50%) rotate(var(--angle)) translateX(74px) scale(calc(var(--size) * 0.86));
+  }
+  76% {
+    opacity: 0.95;
+    transform: translate(-50%, -50%) rotate(var(--angle)) translateX(92px) scale(calc(var(--size) * 0.62));
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) rotate(var(--angle)) translateX(104px) scale(calc(var(--size) * 0.36));
+  }
+}
+
 @keyframes glowShift {
   0% { filter: hue-rotate(0deg) saturate(1); }
   50% { filter: hue-rotate(25deg) saturate(1.1); }
   100% { filter: hue-rotate(-20deg) saturate(1.05); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .plane-exploding,
+  .plane-burst--active .plane-burst__toon,
+  .plane-burst--active .plane-burst__toon-star,
+  .plane-burst--active .plane-burst__toon-core,
+  .plane-burst--active .plane-burst__toon-core-detail,
+  .plane-burst--active .plane-burst__toon-ray,
+  .plane-burst--active .plane-burst__puff {
+    animation: none !important;
+  }
 }
 
 .reveal-up {

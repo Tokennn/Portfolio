@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, type PointerEvent as ReactPointerEvent } from 'react';
 import { Github, Linkedin, Mail } from 'lucide-react';
 import gsap from 'gsap';
 import blurBackground from './blur.mp4';
@@ -10,11 +10,24 @@ function App() {
     if (typeof window === 'undefined') return false;
     return sessionStorage.getItem('introEntered') === 'true';
   });
+  const [isPlaneExploding, setIsPlaneExploding] = useState(false);
+  const [planeExplosionPoint, setPlaneExplosionPoint] = useState({ x: 0, y: 0 });
+  const [planeExplosionKey, setPlaneExplosionKey] = useState(0);
+  const planeBurstPuffs = Array.from({ length: 24 });
   const loadingRef = useRef(null);
   const introPlaneRef = useRef<HTMLDivElement | null>(null);
   const introPlaneInnerRef = useRef<HTMLDivElement | null>(null);
   const introSpeedLinesRef = useRef<Array<HTMLSpanElement | null>>([]);
+  const planeExplosionTimeoutRef = useRef<number | null>(null);
   const [loadingPercent, setLoadingPercent] = useState(100);
+
+  useEffect(() => {
+    return () => {
+      if (planeExplosionTimeoutRef.current !== null) {
+        window.clearTimeout(planeExplosionTimeoutRef.current);
+      }
+    };
+  }, []);
 
   useEffect(() => {
     if (!entered) {
@@ -61,6 +74,28 @@ function App() {
       */
     }
   }, [entered]);
+
+  const triggerPlaneExplosion = (event?: ReactPointerEvent<HTMLDivElement>) => {
+    if (entered) return;
+    const planeInner = introPlaneInnerRef.current;
+    if (event) {
+      setPlaneExplosionPoint({ x: event.clientX, y: event.clientY });
+    } else if (planeInner) {
+      const rect = planeInner.getBoundingClientRect();
+      setPlaneExplosionPoint({
+        x: rect.left + rect.width * 0.5,
+        y: rect.top + rect.height * 0.5
+      });
+    }
+    if (planeExplosionTimeoutRef.current !== null) {
+      window.clearTimeout(planeExplosionTimeoutRef.current);
+    }
+    setPlaneExplosionKey((previous) => previous + 1);
+    setIsPlaneExploding(true);
+    planeExplosionTimeoutRef.current = window.setTimeout(() => {
+      setIsPlaneExploding(false);
+    }, 620);
+  };
 
   useEffect(() => {
     if (entered || typeof window === 'undefined') return;
@@ -340,6 +375,12 @@ function App() {
       isActive = false;
       window.cancelAnimationFrame(rafId);
       speedLineTweens.forEach((tween) => tween.kill());
+      gsap.set(plane, {
+        clearProps: 'x,y,xPercent,yPercent,rotation,transform'
+      });
+      gsap.set(planeInner, {
+        clearProps: 'rotation,transform'
+      });
     };
   }, [entered]);
 
@@ -347,7 +388,10 @@ function App() {
     const canEnter = true;
 
     return (
-      <div className="fixed inset-0 flex flex-col items-center justify-center overflow-hidden bg-gradient-to-br from-[#f8f3ea] via-[#f2e6d7] to-[#fdf8ef] text-[#0f0f0f]">
+      <div
+        key="intro-screen"
+        className="fixed inset-0 flex flex-col items-center justify-center overflow-hidden bg-gradient-to-br from-[#f8f3ea] via-[#f2e6d7] to-[#fdf8ef] text-[#0f0f0f]"
+      >
         {/* Spline Background (commented per request) */}
         {/*
         <spline-viewer
@@ -358,8 +402,18 @@ function App() {
         <div className="absolute inset-0 bg-black/30 pointer-events-none" />
         */}
         <div className="pointer-events-none absolute inset-0 opacity-70 bg-[radial-gradient(circle_at_18%_16%,rgba(255,255,255,0.85),transparent_38%),radial-gradient(circle_at_82%_6%,rgba(253,230,205,0.45),transparent_46%),radial-gradient(circle_at_24%_80%,rgba(210,175,140,0.28),transparent_50%)]" />
-        <div ref={introPlaneRef} className="pointer-events-none absolute left-0 top-0 z-10 opacity-95">
-          <div ref={introPlaneInnerRef} className="relative drop-shadow-[0_10px_18px_rgba(52,34,18,0.2)]">
+        <div
+          ref={introPlaneRef}
+          onPointerDown={triggerPlaneExplosion}
+          className="intro-plane absolute left-0 top-0 z-10 cursor-pointer touch-manipulation opacity-95"
+          aria-label="Plane animation trigger"
+        >
+          <div
+            ref={introPlaneInnerRef}
+            className={`intro-plane__inner relative drop-shadow-[0_10px_18px_rgba(52,34,18,0.2)] ${
+              isPlaneExploding ? 'plane-exploding' : ''
+            }`}
+          >
             <span
               ref={(el) => {
                 introSpeedLinesRef.current[0] = el;
@@ -405,6 +459,54 @@ function App() {
               />
               <circle cx="50" cy="21" r="1.4" fill="#0f0f0f" />
             </svg>
+          </div>
+        </div>
+        <div
+          key={planeExplosionKey}
+          className={`plane-burst plane-burst--screen ${isPlaneExploding ? 'plane-burst--active' : ''}`}
+          style={{ left: `${planeExplosionPoint.x}px`, top: `${planeExplosionPoint.y}px` }}
+          aria-hidden="true"
+        >
+          <svg className="plane-burst__toon" viewBox="0 0 220 220" aria-hidden="true">
+            <defs>
+              <mask id="plane-burst-core-cutout">
+                <rect x="0" y="0" width="220" height="220" fill="#fff" />
+                <path
+                  d="M109 93 C118 86,130 88,135 98 C144 99,149 107,146 116 C149 125,143 133,133 134 C127 140,117 141,111 136 C100 139,90 134,88 126 C79 124,74 114,79 106 C77 97,85 89,94 90 C99 84,106 85,109 93 Z"
+                  fill="#000"
+                />
+              </mask>
+            </defs>
+            <path
+              className="plane-burst__toon-star"
+              d="M110 52 L121 84 L153 74 L136 99 L162 118 L129 122 L132 158 L111 132 L89 158 L92 122 L58 118 L84 99 L67 74 L99 84 Z"
+            />
+            <path
+              className="plane-burst__toon-core"
+              d="M109 68 C124 56,146 60,155 78 C173 79,184 95,177 112 C184 129,171 146,151 147 C139 162,117 167,104 154 C82 160,63 149,59 130 C40 126,31 107,39 90 C35 70,52 54,72 55 C83 42,100 43,109 68 Z"
+              mask="url(#plane-burst-core-cutout)"
+            />
+            <path
+              className="plane-burst__toon-core-detail"
+              d="M109 93 C118 86,130 88,135 98 C144 99,149 107,146 116 C149 125,143 133,133 134 C127 140,117 141,111 136 C100 139,90 134,88 126 C79 124,74 114,79 106 C77 97,85 89,94 90 C99 84,106 85,109 93 Z"
+            />
+            <path className="plane-burst__toon-ray" d="M110 38 L110 24" />
+            <path className="plane-burst__toon-ray" d="M143 46 L150 33" />
+            <path className="plane-burst__toon-ray" d="M166 67 L179 60" />
+            <path className="plane-burst__toon-ray" d="M174 100 L189 100" />
+            <path className="plane-burst__toon-ray" d="M167 133 L180 140" />
+            <path className="plane-burst__toon-ray" d="M143 155 L151 169" />
+            <path className="plane-burst__toon-ray" d="M110 163 L110 178" />
+            <path className="plane-burst__toon-ray" d="M77 155 L70 169" />
+            <path className="plane-burst__toon-ray" d="M54 133 L41 140" />
+            <path className="plane-burst__toon-ray" d="M46 100 L31 100" />
+            <path className="plane-burst__toon-ray" d="M54 67 L41 60" />
+            <path className="plane-burst__toon-ray" d="M77 46 L70 33" />
+          </svg>
+          <div className="plane-burst__puffs">
+            {planeBurstPuffs.map((_, index) => (
+              <span key={index} className="plane-burst__puff" />
+            ))}
           </div>
         </div>
 
@@ -496,7 +598,7 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen relative text-[#0f0f0f]">
+    <div key="main-screen" className="min-h-screen relative text-[#0f0f0f]">
       <BackgroundOrbs />
       {/* Contenu principal */}
       <div className="relative z-10">
