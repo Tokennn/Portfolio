@@ -11,6 +11,9 @@ function App() {
     return sessionStorage.getItem('introEntered') === 'true';
   });
   const loadingRef = useRef(null);
+  const introPlaneRef = useRef<HTMLDivElement | null>(null);
+  const introPlaneInnerRef = useRef<HTMLDivElement | null>(null);
+  const introSpeedLinesRef = useRef<Array<HTMLSpanElement | null>>([]);
   const [loadingPercent, setLoadingPercent] = useState(100);
 
   useEffect(() => {
@@ -59,6 +62,286 @@ function App() {
     }
   }, [entered]);
 
+  useEffect(() => {
+    if (entered || typeof window === 'undefined') return;
+
+    const plane = introPlaneRef.current;
+    const planeInner = introPlaneInnerRef.current;
+    if (!plane || !planeInner) return;
+
+    type Vec2 = { x: number; y: number };
+    type BezierSegment = {
+      kind: 'bezier';
+      p0: Vec2;
+      p1: Vec2;
+      p2: Vec2;
+      p3: Vec2;
+      duration: number;
+      elapsed: number;
+    };
+    type LoopSegment = {
+      kind: 'loop';
+      cx: number;
+      cy: number;
+      radius: number;
+      direction: 1 | -1;
+      turns: number;
+      startAngle: number;
+      duration: number;
+      elapsed: number;
+    };
+    type FlightSegment = BezierSegment | LoopSegment;
+
+    const vecLength = (v: Vec2) => Math.hypot(v.x, v.y);
+    const normalize = (v: Vec2): Vec2 => {
+      const len = vecLength(v) || 1;
+      return { x: v.x / len, y: v.y / len };
+    };
+    const lerpVec = (a: Vec2, b: Vec2, t: number): Vec2 => ({
+      x: a.x + (b.x - a.x) * t,
+      y: a.y + (b.y - a.y) * t
+    });
+    const clamp01 = (value: number) => Math.max(0, Math.min(1, value));
+    const angleDelta = (next: number, prev: number) => {
+      let delta = next - prev;
+      while (delta > Math.PI) delta -= Math.PI * 2;
+      while (delta < -Math.PI) delta += Math.PI * 2;
+      return delta;
+    };
+    const bezierPoint = (t: number, p0: Vec2, p1: Vec2, p2: Vec2, p3: Vec2): Vec2 => {
+      const inv = 1 - t;
+      return {
+        x: inv * inv * inv * p0.x + 3 * inv * inv * t * p1.x + 3 * inv * t * t * p2.x + t * t * t * p3.x,
+        y: inv * inv * inv * p0.y + 3 * inv * inv * t * p1.y + 3 * inv * t * t * p2.y + t * t * t * p3.y
+      };
+    };
+    const bezierTangent = (t: number, p0: Vec2, p1: Vec2, p2: Vec2, p3: Vec2): Vec2 => {
+      const inv = 1 - t;
+      return {
+        x: 3 * inv * inv * (p1.x - p0.x) + 6 * inv * t * (p2.x - p1.x) + 3 * t * t * (p3.x - p2.x),
+        y: 3 * inv * inv * (p1.y - p0.y) + 6 * inv * t * (p2.y - p1.y) + 3 * t * t * (p3.y - p2.y)
+      };
+    };
+
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const padding = 56;
+    const randomX = () => gsap.utils.random(padding, Math.max(padding, window.innerWidth - padding));
+    const randomY = () => gsap.utils.random(padding, Math.max(padding, window.innerHeight - padding));
+    const randomPoint = (): Vec2 => ({ x: randomX(), y: randomY() });
+
+    gsap.set(plane, {
+      xPercent: -50,
+      yPercent: -50,
+      x: window.innerWidth * 0.24,
+      y: window.innerHeight * 0.32,
+      rotation: -12
+    });
+
+    let isActive = true;
+    let rafId = 0;
+    let previousTime = performance.now();
+
+    const setX = gsap.quickSetter(plane, 'x', 'px');
+    const setY = gsap.quickSetter(plane, 'y', 'px');
+    const setRotation = gsap.quickSetter(plane, 'rotation', 'deg');
+    const setInnerRotation = gsap.quickSetter(planeInner, 'rotation', 'deg');
+
+    const current: Vec2 = {
+      x: Number(gsap.getProperty(plane, 'x')) || window.innerWidth * 0.24,
+      y: Number(gsap.getProperty(plane, 'y')) || window.innerHeight * 0.32
+    };
+    let forward: Vec2 = normalize({ x: 1, y: 0.24 });
+    let heading = Math.atan2(forward.y, forward.x);
+    let previousHeading = heading;
+    let rollDeg = 0;
+    let segment: FlightSegment | null = null;
+    let loopCooldownSec = gsap.utils.random(3.5, 5.8);
+    const speedPxPerSecond = prefersReducedMotion ? 110 : 170;
+    const noseAlignmentOffsetDeg = -5;
+    const reversePlaneDirection = true;
+    const reversePlaneRotationDeg = reversePlaneDirection ? 180 : 0;
+    const speedLineTweens: gsap.core.Tween[] = [];
+
+    const speedLines = introSpeedLinesRef.current.filter((el): el is HTMLSpanElement => Boolean(el));
+    speedLines.forEach((line, index) => {
+      const isLeft = line.dataset.side === 'left';
+      const travel = isLeft ? -8 : 8;
+      gsap.set(line, { opacity: 0.5, x: 0, scaleX: 1 });
+      if (!prefersReducedMotion) {
+        const tween = gsap.to(line, {
+          x: travel,
+          opacity: 0.15,
+          scaleX: 0.62,
+          duration: 0.28 + index * 0.035,
+          ease: 'none',
+          repeat: -1,
+          yoyo: true,
+          delay: index * 0.06
+        });
+        speedLineTweens.push(tween);
+      }
+    });
+
+    const createBezierSegment = (start: Vec2, startDir: Vec2): BezierSegment => {
+      let target = randomPoint();
+      let tries = 0;
+      while (tries < 8 && Math.hypot(target.x - start.x, target.y - start.y) < 140) {
+        target = randomPoint();
+        tries += 1;
+      }
+
+      const centerBias = normalize({
+        x: window.innerWidth * 0.5 - target.x,
+        y: window.innerHeight * 0.5 - target.y
+      });
+      const randomTurn = gsap.utils.random(-1.0, 1.0);
+      const cosine = Math.cos(randomTurn);
+      const sine = Math.sin(randomTurn);
+      const rotatedStartDir = normalize({
+        x: startDir.x * cosine - startDir.y * sine,
+        y: startDir.x * sine + startDir.y * cosine
+      });
+      const targetDir = normalize(lerpVec(rotatedStartDir, centerBias, 0.34));
+
+      const distance = Math.hypot(target.x - start.x, target.y - start.y);
+      const handleA = Math.max(54, Math.min(220, distance * 0.42));
+      const handleB = Math.max(48, Math.min(200, distance * 0.36));
+      const p0 = { ...start };
+      const p1 = { x: start.x + startDir.x * handleA, y: start.y + startDir.y * handleA };
+      const p2 = { x: target.x - targetDir.x * handleB, y: target.y - targetDir.y * handleB };
+      const p3 = { ...target };
+
+      let length = 0;
+      let prev = p0;
+      const samples = 28;
+      for (let i = 1; i <= samples; i += 1) {
+        const t = i / samples;
+        const pt = bezierPoint(t, p0, p1, p2, p3);
+        length += Math.hypot(pt.x - prev.x, pt.y - prev.y);
+        prev = pt;
+      }
+
+      return {
+        kind: 'bezier',
+        p0,
+        p1,
+        p2,
+        p3,
+        duration: Math.max(1.1, length / speedPxPerSecond),
+        elapsed: 0
+      };
+    };
+
+    const createLoopSegment = (start: Vec2, startDir: Vec2): LoopSegment | null => {
+      const direction: 1 | -1 = Math.random() > 0.5 ? 1 : -1;
+      const radius = gsap.utils.random(64, 120);
+      const perpendicular = { x: -startDir.y * direction, y: startDir.x * direction };
+      const center = {
+        x: start.x + perpendicular.x * radius,
+        y: start.y + perpendicular.y * radius
+      };
+
+      if (
+        center.x < padding + radius ||
+        center.x > window.innerWidth - padding - radius ||
+        center.y < padding + radius ||
+        center.y > window.innerHeight - padding - radius
+      ) {
+        return null;
+      }
+
+      const turns = gsap.utils.random(1.0, 1.35);
+      const length = Math.PI * 2 * radius * turns;
+      return {
+        kind: 'loop',
+        cx: center.x,
+        cy: center.y,
+        radius,
+        direction,
+        turns,
+        startAngle: Math.atan2(start.y - center.y, start.x - center.x),
+        duration: Math.max(1.4, length / speedPxPerSecond),
+        elapsed: 0
+      };
+    };
+
+    const spawnSegment = () => {
+      const inSafeZone =
+        Math.abs(current.x - window.innerWidth * 0.5) < window.innerWidth * 0.32 &&
+        Math.abs(current.y - window.innerHeight * 0.5) < window.innerHeight * 0.32;
+
+      if (!prefersReducedMotion && inSafeZone && loopCooldownSec <= 0 && Math.random() > 0.58) {
+        const loop = createLoopSegment(current, forward);
+        if (loop) {
+          segment = loop;
+          loopCooldownSec = gsap.utils.random(4.2, 7.1);
+          return;
+        }
+      }
+
+      segment = createBezierSegment(current, forward);
+    };
+
+    const animate = (now: number) => {
+      if (!isActive) return;
+      rafId = window.requestAnimationFrame(animate);
+      const dt = Math.min(0.032, (now - previousTime) / 1000);
+      previousTime = now;
+      loopCooldownSec -= dt;
+
+      if (!segment) spawnSegment();
+      if (!segment) return;
+
+      let targetPos: Vec2 = current;
+      let targetTangent: Vec2 = forward;
+
+      if (segment.kind === 'bezier') {
+        segment.elapsed += dt;
+        const t = Math.min(1, segment.elapsed / segment.duration);
+        targetPos = bezierPoint(t, segment.p0, segment.p1, segment.p2, segment.p3);
+        targetTangent = bezierTangent(t, segment.p0, segment.p1, segment.p2, segment.p3);
+        if (t >= 1) segment = null;
+      } else {
+        segment.elapsed += dt;
+        const t = Math.min(1, segment.elapsed / segment.duration);
+        const angle = segment.startAngle + segment.direction * t * segment.turns * Math.PI * 2;
+        targetPos = {
+          x: segment.cx + Math.cos(angle) * segment.radius,
+          y: segment.cy + Math.sin(angle) * segment.radius
+        };
+        targetTangent = {
+          x: -Math.sin(angle) * segment.direction,
+          y: Math.cos(angle) * segment.direction
+        };
+        if (t >= 1) segment = null;
+      }
+
+      const tangent = normalize(targetTangent);
+      forward = normalize(lerpVec(forward, tangent, clamp01(dt * 7.2)));
+      current.x = targetPos.x;
+      current.y = targetPos.y;
+      heading = Math.atan2(forward.y, forward.x);
+
+      const delta = angleDelta(heading, previousHeading);
+      previousHeading = heading;
+      const targetRoll = Math.max(-16, Math.min(16, delta * 240));
+      rollDeg += (targetRoll - rollDeg) * clamp01(dt * 8);
+
+      setX(current.x);
+      setY(current.y);
+      const displayRotationDeg = (heading * 180) / Math.PI + noseAlignmentOffsetDeg + reversePlaneRotationDeg;
+      setRotation(displayRotationDeg);
+      setInnerRotation(0);
+    };
+
+    rafId = window.requestAnimationFrame(animate);
+
+    return () => {
+      isActive = false;
+      window.cancelAnimationFrame(rafId);
+      speedLineTweens.forEach((tween) => tween.kill());
+    };
+  }, [entered]);
 
   if (!entered) {
     const canEnter = true;
@@ -75,6 +358,55 @@ function App() {
         <div className="absolute inset-0 bg-black/30 pointer-events-none" />
         */}
         <div className="pointer-events-none absolute inset-0 opacity-70 bg-[radial-gradient(circle_at_18%_16%,rgba(255,255,255,0.85),transparent_38%),radial-gradient(circle_at_82%_6%,rgba(253,230,205,0.45),transparent_46%),radial-gradient(circle_at_24%_80%,rgba(210,175,140,0.28),transparent_50%)]" />
+        <div ref={introPlaneRef} className="pointer-events-none absolute left-0 top-0 z-10 opacity-95">
+          <div ref={introPlaneInnerRef} className="relative drop-shadow-[0_10px_18px_rgba(52,34,18,0.2)]">
+            <span
+              ref={(el) => {
+                introSpeedLinesRef.current[0] = el;
+              }}
+              data-side="left"
+              className="absolute block h-[2px] w-[12px] rounded-full bg-[#4a4a50]"
+              style={{ left: 34, top: 8 }}
+              aria-hidden="true"
+            />
+            <span
+              ref={(el) => {
+                introSpeedLinesRef.current[1] = el;
+              }}
+              data-side="right"
+              className="absolute block h-[2px] w-[12px] rounded-full bg-[#4a4a50]"
+              style={{ left: 34, top: 32 }}
+              aria-hidden="true"
+            />
+            <svg width="86" height="44" viewBox="0 0 86 44" aria-hidden="true">
+              <path
+                d="M3 24 C 14 19, 24 19, 35 24"
+                fill="none"
+                stroke="#8f8a80"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeDasharray="3 5"
+                opacity="0.8"
+              />
+              <path
+                d="M10 24 L59 12 L45 21 L59 30 Z"
+                fill="#fffdf7"
+                stroke="#0f0f0f"
+                strokeWidth="1.7"
+                strokeLinejoin="round"
+              />
+              <path
+                d="M17 24 L38 24 M27 20 L33 24 L27 28"
+                fill="none"
+                stroke="#0f0f0f"
+                strokeWidth="1.4"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <circle cx="50" cy="21" r="1.4" fill="#0f0f0f" />
+            </svg>
+          </div>
+        </div>
 
         <div className="absolute top-6 left-8">
           <span className="type-swap-hover text-xs font-medium text-[#0f0f0f] block hover:shadow-glow transition-all duration-300">
