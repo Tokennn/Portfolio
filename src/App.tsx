@@ -1,25 +1,37 @@
-import { useState, useEffect, useRef, type PointerEvent as ReactPointerEvent } from 'react';
-import { Github, Linkedin, Mail } from 'lucide-react';
+import { useState, useEffect, useRef, useCallback, type PointerEvent as ReactPointerEvent } from 'react';
 import gsap from 'gsap';
-import blurBackground from './blur.mp4';
 import { Link } from 'react-router-dom';
 // import { HeroScrollDemo } from './components/ui/demo';
+
+type LenisController = {
+  stop: () => void;
+  start: () => void;
+};
+
+const getLenisController = (): LenisController | null => {
+  if (typeof window === 'undefined') return null;
+  return (window as Window & { __portfolioLenis?: LenisController }).__portfolioLenis ?? null;
+};
 
 function App() {
   const [entered, setEntered] = useState(() => {
     if (typeof window === 'undefined') return false;
     return sessionStorage.getItem('introEntered') === 'true';
   });
+  const [isTransitioningToMain, setIsTransitioningToMain] = useState(false);
+  const [shouldPlayMainReveal, setShouldPlayMainReveal] = useState(false);
   const [isPlaneExploding, setIsPlaneExploding] = useState(false);
   const [planeExplosionPoint, setPlaneExplosionPoint] = useState({ x: 0, y: 0 });
   const [planeExplosionKey, setPlaneExplosionKey] = useState(0);
   const planeBurstPuffs = Array.from({ length: 24 });
-  const loadingRef = useRef(null);
+  const introScreenRef = useRef<HTMLDivElement | null>(null);
+  const enterButtonRef = useRef<HTMLButtonElement | null>(null);
+  const mainContentRef = useRef<HTMLDivElement | null>(null);
+  const navGroupRef = useRef<HTMLDivElement | null>(null);
   const introPlaneRef = useRef<HTMLDivElement | null>(null);
   const introPlaneInnerRef = useRef<HTMLDivElement | null>(null);
   const introSpeedLinesRef = useRef<Array<HTMLSpanElement | null>>([]);
   const planeExplosionTimeoutRef = useRef<number | null>(null);
-  const [loadingPercent, setLoadingPercent] = useState(100);
 
   useEffect(() => {
     return () => {
@@ -30,52 +42,12 @@ function App() {
   }, []);
 
   useEffect(() => {
-    if (!entered) {
-      // Temps d'attente sur "ENTER" (commenté pour accès direct)
-      /*
-      gsap.to(loadingRef.current, {
-        opacity: 0.2,
-        duration: 1,
-        repeat: -1,
-        yoyo: true,
-        ease: "power1.inOut"
-      });
-
-      const obj = { val: 0 };
-      gsap.to(obj, {
-        val: 100,
-        duration: 5,
-        ease: "power1.inOut",
-        onUpdate: () => {
-          setLoadingPercent(Math.floor(obj.val));
-        }
-      });
-      */
-    }
-  }, [entered]);
-
-  useEffect(() => {
     if (entered) {
       sessionStorage.setItem('introEntered', 'true');
     }
   }, [entered]);
 
-  useEffect(() => {
-    if (!entered && loadingRef.current) {
-      // Animation de chargement désactivée
-      /*
-      gsap.to(loadingRef.current, {
-        opacity: 0.2,
-        duration: 1,
-        repeat: -1,
-        yoyo: true,
-        ease: "power1.inOut"
-      });
-      */
-    }
-  }, [entered]);
-
-  const triggerPlaneExplosion = (event?: ReactPointerEvent<HTMLDivElement>) => {
+  const triggerPlaneExplosion = useCallback((event?: ReactPointerEvent<HTMLDivElement>) => {
     if (entered) return;
     const planeInner = introPlaneInnerRef.current;
     if (event) {
@@ -95,7 +67,7 @@ function App() {
     planeExplosionTimeoutRef.current = window.setTimeout(() => {
       setIsPlaneExploding(false);
     }, 620);
-  };
+  }, [entered]);
 
   useEffect(() => {
     if (entered || typeof window === 'undefined') return;
@@ -384,13 +356,137 @@ function App() {
     };
   }, [entered]);
 
-  if (!entered) {
-    const canEnter = true;
+  const canEnter = true;
 
+  const handleEnter = useCallback(() => {
+    if (!canEnter || entered || isTransitioningToMain) return;
+
+    const prefersReducedMotion =
+      typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const lenis = getLenisController();
+
+    if (prefersReducedMotion) {
+      setEntered(true);
+      return;
+    }
+
+    const introScreen = introScreenRef.current;
+    if (!introScreen) {
+      setEntered(true);
+      return;
+    }
+
+    const enterButton = enterButtonRef.current;
+    const introPlane = introPlaneRef.current;
+
+    setIsTransitioningToMain(true);
+    lenis?.stop();
+    triggerPlaneExplosion();
+
+    const timeline = gsap.timeline({
+      defaults: { ease: 'power3.inOut' },
+      onComplete: () => {
+        setEntered(true);
+        setShouldPlayMainReveal(true);
+        setIsTransitioningToMain(false);
+      }
+    });
+
+    if (enterButton) {
+      timeline.to(
+        enterButton,
+        {
+          scale: 0.9,
+          opacity: 0,
+          y: -26,
+          duration: 0.38,
+          ease: 'power2.out'
+        },
+        0
+      );
+    }
+
+    if (introPlane) {
+      timeline.to(
+        introPlane,
+        {
+          opacity: 0.24,
+          duration: 0.5,
+          ease: 'power2.out'
+        },
+        0
+      );
+    }
+
+    timeline.to(
+      introScreen,
+      {
+        yPercent: -104,
+        duration: 1.08,
+        ease: 'power4.inOut'
+      },
+      0.08
+    );
+  }, [canEnter, entered, isTransitioningToMain, triggerPlaneExplosion]);
+
+  useEffect(() => {
+    if (!entered || !shouldPlayMainReveal || typeof window === 'undefined') return;
+
+    const mainContent = mainContentRef.current;
+    const navGroup = navGroupRef.current;
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const lenis = getLenisController();
+
+    if (!mainContent || !navGroup || prefersReducedMotion) {
+      lenis?.start();
+      setShouldPlayMainReveal(false);
+      return;
+    }
+
+    const navLinks = navGroup.querySelectorAll('.nav-link');
+
+    gsap.set(mainContent, { y: 110, opacity: 0 });
+    gsap.set(navLinks, { y: 36, opacity: 0 });
+
+    const timeline = gsap.timeline({
+      onComplete: () => {
+        lenis?.start();
+        setShouldPlayMainReveal(false);
+      }
+    });
+
+    timeline.to(mainContent, {
+      y: 0,
+      opacity: 1,
+      duration: 0.95,
+      ease: 'power4.out'
+    });
+
+    timeline.to(
+      navLinks,
+      {
+        y: 0,
+        opacity: 1,
+        duration: 0.72,
+        stagger: 0.09,
+        ease: 'power3.out'
+      },
+      '-=0.5'
+    );
+
+    return () => {
+      timeline.kill();
+    };
+  }, [entered, shouldPlayMainReveal]);
+
+  if (!entered) {
     return (
       <div
+        ref={introScreenRef}
         key="intro-screen"
-        className="fixed inset-0 flex flex-col items-center justify-center overflow-hidden bg-gradient-to-br from-[#f8f3ea] via-[#f2e6d7] to-[#fdf8ef] text-[#0f0f0f]"
+        className={`fixed inset-0 flex flex-col items-center justify-center overflow-hidden bg-gradient-to-br from-[#f8f3ea] via-[#f2e6d7] to-[#fdf8ef] text-[#0f0f0f] ${
+          isTransitioningToMain ? 'pointer-events-none' : ''
+        }`}
       >
         {/* Spline Background (commented per request) */}
         {/*
@@ -553,26 +649,12 @@ function App() {
         */}
 
         <button
-          disabled={!canEnter}
-          onClick={() => {
-            if (!canEnter) return;
-            gsap.to(".enter-word", {
-              scale: 0.8,
-              opacity: 0,
-              duration: 1,
-              ease: "power2.out",
-              onComplete: () => {
-                setEntered(true); 
-                gsap.from(".main-content", {
-                  opacity: 0,
-                  y: 100,
-                  duration: 1,
-                  ease: "power2.out"
-                });
-              }
-            });
-          }}
-          className={`enter-word absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 ${canEnter ? "cursor-pointer opacity-100" : "cursor-not-allowed opacity-40"}`}
+          ref={enterButtonRef}
+          disabled={!canEnter || isTransitioningToMain}
+          onClick={handleEnter}
+          className={`enter-word absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 ${
+            canEnter && !isTransitioningToMain ? 'cursor-pointer opacity-100' : 'cursor-not-allowed opacity-40'
+          }`}
           aria-label="Enter site"
         >
           ENTRER
@@ -598,13 +680,16 @@ function App() {
   }
 
   return (
-    <div key="main-screen" className="min-h-screen relative text-[#0f0f0f]">
+    <div ref={mainContentRef} key="main-screen" className="main-content min-h-screen relative text-[#0f0f0f]">
       <BackgroundOrbs />
       {/* Contenu principal */}
       <div className="relative z-10">
         {/* Nav centrée minimaliste */}
         <nav id="home-nav" className="fixed inset-0 z-40 flex items-center justify-center pointer-events-none px-6">
-          <div className="nav-group flex flex-col items-center text-center space-y-4 text-sm font-black uppercase tracking-[0.2em] pointer-events-auto md:flex-row md:space-y-0 md:space-x-10 md:text-lg md:tracking-[0.26em]">
+          <div
+            ref={navGroupRef}
+            className="nav-group flex flex-col items-center text-center space-y-4 text-sm font-black uppercase tracking-[0.2em] pointer-events-auto md:flex-row md:space-y-0 md:space-x-10 md:text-lg md:tracking-[0.26em]"
+          >
             <Link to="/work" className="nav-link nav-link-swap text-[#0f0f0f]/80">Work</Link>
             <Link to="/about" className="nav-link nav-link-swap text-[#0f0f0f]/80">About</Link>
             <Link to="/contact" className="nav-link nav-link-swap text-[#0f0f0f]/80">Contact</Link>

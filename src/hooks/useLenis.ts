@@ -39,6 +39,8 @@ export function useLenis(options: UseLenisOptions = {}) {
     });
 
     lenisRef.current = lenis;
+    const globalWindow = window as Window & { __portfolioLenis?: Lenis };
+    globalWindow.__portfolioLenis = lenis;
 
     lenis.on("scroll", ScrollTrigger.update);
     const tick = (time: number) => {
@@ -52,6 +54,9 @@ export function useLenis(options: UseLenisOptions = {}) {
       gsap.ticker.remove(tick);
       lenis.off("scroll", ScrollTrigger.update);
       lenis.destroy();
+      if (globalWindow.__portfolioLenis === lenis) {
+        delete globalWindow.__portfolioLenis;
+      }
       lenisRef.current = null;
     };
   }, [
