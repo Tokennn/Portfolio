@@ -4,7 +4,7 @@ import LanguageToggle from './components/LanguageToggle';
 import { useLanguage } from './context/LanguageContext';
 import ico from './ico.png';
 import expli from './expli.mov';
-import mapImage from './assets/Map.png';
+import mapImage from './assets/map.png';
 
 const workCopy = {
   fr: {
