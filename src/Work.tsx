@@ -42,7 +42,7 @@ const workCopy = {
       {
         title: "AirMap",
         description:
-          "Fusion entre les mesures de pollution et les conditions météorologiques",
+          "Calculs entre les mesures de pollution et les conditions météorologiques",
         image: mapImage,
         link: "https://airmap.dyskolos.fr/",
         tag: "Product ops",
