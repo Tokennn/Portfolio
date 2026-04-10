@@ -4,6 +4,7 @@ import LanguageToggle from './components/LanguageToggle';
 import { useLanguage } from './context/LanguageContext';
 import ico from './ico.png';
 import expli from './expli.mov';
+import mapImage from './assets/Map.png';
 
 const workCopy = {
   fr: {
@@ -11,7 +12,7 @@ const workCopy = {
       {
         title: "Langage-Sensei",
         description:
-          "Parcours progressifs et micro-interactions.",
+          "Parcours progressifs et micro-interactions",
         image: "https://cdn.midjourney.com/bf612167-d186-46f9-8141-ad6e799fa243/0_1.png",
         link: "https://langage-sensei.netlify.app/",
         tag: "Product design",
@@ -21,7 +22,7 @@ const workCopy = {
       {
         title: "MoveSmart",
         description:
-          "Calcul d'itinéraires, inventaire et suivi des étapes clés.",
+          "Calcul d'itinéraires, inventaire et suivi des étapes clés",
         image: "https://cdn.midjourney.com/c5b6d334-83c3-4d27-ace8-00ca180a65ce/0_2.png",
         link: "https://movesmart.netlify.app/",
         tag: "Creative dev",
@@ -34,6 +35,16 @@ const workCopy = {
           "Suivi Personnel",
         image: "https://cdn.midjourney.com/a518c278-f137-4339-b5df-27c8643dbb49/0_0.jpeg",
         link: "https://blogv1qc.netlify.app/",
+        tag: "Product ops",
+        accent: "from-amber-200/80 via-orange-50/85 to-white/90",
+        glow: "radial-gradient(circle at 55% 82%, rgba(251, 191, 36, 0.28), transparent 56%), radial-gradient(circle at 24% 32%, rgba(251, 146, 60, 0.22), transparent 52%)"
+      },
+      {
+        title: "AirMap",
+        description:
+          "Fusion entre les mesures de pollution et les conditions météorologiques",
+        image: mapImage,
+        link: "https://airmap.dyskolos.fr/",
         tag: "Product ops",
         accent: "from-amber-200/80 via-orange-50/85 to-white/90",
         glow: "radial-gradient(circle at 55% 82%, rgba(251, 191, 36, 0.28), transparent 56%), radial-gradient(circle at 24% 32%, rgba(251, 146, 60, 0.22), transparent 52%)"
@@ -80,6 +91,16 @@ const workCopy = {
           "Personal Monitoring",
         image: "https://cdn.midjourney.com/a518c278-f137-4339-b5df-27c8643dbb49/0_0.jpeg",
         link: "https://blogv1qc.netlify.app/",
+        tag: "Product ops",
+        accent: "from-amber-200/80 via-orange-50/85 to-white/90",
+        glow: "radial-gradient(circle at 55% 82%, rgba(251, 191, 36, 0.28), transparent 56%), radial-gradient(circle at 24% 32%, rgba(251, 146, 60, 0.22), transparent 52%)"
+      },
+      {
+        title: "AirMap",
+        description:
+          "Personal Monitoring",
+        image: mapImage,
+        link: "https://airmap.dyskolos.fr/",
         tag: "Product ops",
         accent: "from-amber-200/80 via-orange-50/85 to-white/90",
         glow: "radial-gradient(circle at 55% 82%, rgba(251, 191, 36, 0.28), transparent 56%), radial-gradient(circle at 24% 32%, rgba(251, 146, 60, 0.22), transparent 52%)"
@@ -513,36 +534,19 @@ function Work() {
         </div>
       )}
 
-      <header className="relative max-w-6xl mx-auto flex items-center justify-between mb-10 md:mb-14 px-1 md:px-2 md:hidden">
-        <div className="flex items-center gap-6 md:gap-8">
-          <Link to="/" className="nav-underline font-amazing text-[#3a3a3a] hover:text-[#0f0f0f]">Home</Link>
-          <Link to="/work" className="nav-underline font-amazing text-[#0f0f0f] hover:text-[#0f0f0f]">Work</Link>
-        </div>
-        <div className="flex items-center gap-6 md:gap-8">
-          <Link to="/about" className="nav-underline font-amazing text-[#3a3a3a] hover:text-[#0f0f0f]">About</Link>
-          <Link to="/contact" className="nav-underline font-amazing text-[#3a3a3a] hover:text-[#0f0f0f]">Contact</Link>
-        </div>
+      <header className="relative z-20 max-w-6xl mx-auto mt-2 mb-10 md:mt-4 md:mb-14">
+        <nav className="work-menu-glass mx-auto w-full max-w-[760px] px-4 py-3 md:px-6 md:py-4">
+          <div className="flex items-center justify-center gap-2 md:gap-4">
+            <Link to="/" className="work-menu-link">Home</Link>
+            <Link to="/work" className="work-menu-link is-active">Work</Link>
+            <Link to="/about" className="work-menu-link">About</Link>
+            <Link to="/contact" className="work-menu-link">Contact</Link>
+          </div>
+        </nav>
       </header>
 
       <main className="relative max-w-6xl mx-auto space-y-10 md:space-y-14">
         <div className="relative">
-          <div className="pointer-events-auto hidden md:flex flex-col gap-10 text-[#0f0f0f] absolute left-[-80px] lg:left-[-90px] top-[42%] -translate-y-1/2 z-20">
-            <Link to="/" className="nav-dot nav-dot-liquid font-amazing" data-label="Home" aria-label="Home">
-              <span className="nav-dot-liquid__text">Home</span>
-            </Link>
-            {/* <a href="/work" className="nav-dot font-amazing" data-label="Work" aria-label="Work">
-              <span className="sr-only">Work</span>
-            </a> */}
-          </div>
-          <div className="pointer-events-auto hidden md:flex flex-col gap-10 text-[#0f0f0f] absolute right-[-116px] lg:right-[-128px] top-[42%] -translate-y-1/2 z-20 text-right">
-            <Link to="/about" className="nav-dot nav-dot-liquid font-amazing" data-label="About" aria-label="About">
-              <span className="nav-dot-liquid__text">About</span>
-            </Link>
-            <Link to="/contact" className="nav-dot nav-dot-liquid font-amazing" data-label="Contact" aria-label="Contact">
-              <span className="nav-dot-liquid__text">Contact</span>
-            </Link>
-          </div>
-
           <section className="relative isolate overflow-hidden rounded-[32px] border border-[#dccfb9] bg-white/90 shadow-[0_24px_70px_rgba(52,34,18,0.14)] px-4 py-8 md:px-10 md:py-12 reveal-up">
             <div className="relative z-10 grid md:grid-cols-[0.8fr_1.6fr_0.8fr] items-center gap-6 md:gap-10">
               <div className="hidden md:flex flex-col items-end gap-3 text-sm uppercase tracking-[0.24em] text-[#0f0f0f] pr-2 reveal-up delay-1">

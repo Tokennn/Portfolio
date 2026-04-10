@@ -1690,6 +1690,70 @@
   opacity: 1;
 }
 
+.work-menu-glass {
+  position: relative;
+  overflow: hidden;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.72);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.54), rgba(255, 255, 255, 0.2));
+  backdrop-filter: blur(16px) saturate(155%);
+  -webkit-backdrop-filter: blur(16px) saturate(155%);
+  box-shadow:
+    0 20px 40px rgba(52, 34, 18, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.82);
+}
+
+.work-menu-glass::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(70% 140% at 8% 4%, rgba(255, 255, 255, 0.68), rgba(255, 255, 255, 0) 62%),
+    radial-gradient(60% 100% at 92% 96%, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0) 66%);
+  pointer-events: none;
+}
+
+.work-menu-link {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: clamp(66px, 10vw, 96px);
+  padding: 0.56rem 1rem;
+  border-radius: 999px;
+  font-family: "Amazing Maret", "Inter", system-ui, -apple-system, sans-serif;
+  text-transform: none;
+  letter-spacing: 0.08em;
+  font-size: clamp(0.78rem, 0.95vw, 0.96rem);
+  line-height: 1;
+  font-weight: 500;
+  color: rgba(15, 15, 15, 0.62);
+  transition: color 0.25s ease, background-color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.work-menu-link:hover,
+.work-menu-link:focus-visible {
+  color: #0f0f0f;
+  background-color: rgba(255, 255, 255, 0.42);
+  transform: translateY(-1px);
+}
+
+.work-menu-link.is-active {
+  color: #0f0f0f;
+  background-color: rgba(255, 255, 255, 0.72);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.76), 0 10px 18px rgba(52, 34, 18, 0.1);
+}
+
+@media (max-width: 640px) {
+  .work-menu-link {
+    min-width: 0;
+    padding: 0.5rem 0.68rem;
+    letter-spacing: 0.05em;
+    font-size: 0.76rem;
+  }
+}
+
 .intro-plane {
   touch-action: manipulation;
   padding: 14px;

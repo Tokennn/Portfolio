@@ -190,7 +190,6 @@ function About() {
   useTextReveal({ observeMutations: false, watch: language });
 
   const copy = aboutCopy[language];
-  const localeDisplayFontClass = "font-amazing";
   const outsideItems = copy.outsideItems ?? [];
   const outsideHeadingLines = language === "fr" ? ["En dehors", "du travail"] : ["Outside", "work"];
   const outsideStackMinHeight = Math.max(540, outsideItems.length * 220);
@@ -930,58 +929,21 @@ function About() {
         <LanguageToggle />
       </div>
 
-      <header className="relative max-w-6xl mx-auto flex flex-col items-center gap-4 mb-8 px-2 md:hidden">
-        <div className="flex flex-wrap items-center justify-center gap-4">
-          <Link to="/" className="nav-underline font-amazing text-[#3a3a3a] hover:text-[#0f0f0f]">
-            {copy.nav.home}
-          </Link>
-          <Link to="/work" className="nav-underline font-amazing text-[#3a3a3a] hover:text-[#0f0f0f]">
-            {copy.nav.work}
-          </Link>
-        </div>
-        <div className="flex flex-wrap items-center justify-center gap-4">
-          <Link to="/about" className={`nav-underline ${localeDisplayFontClass} text-[#0f0f0f] hover:text-[#0f0f0f]`}>
-            {copy.nav.about}
-          </Link>
-          <Link to="/contact" className="nav-underline font-amazing text-[#3a3a3a] hover:text-[#0f0f0f]">
-            {copy.nav.contact}
-          </Link>
-        </div>
+      <header className="relative z-20 max-w-6xl mx-auto mt-2 mb-10 md:mt-4 md:mb-14">
+        <nav className="work-menu-glass mx-auto w-full max-w-[760px] px-4 py-3 md:px-6 md:py-4">
+          <div className="flex items-center justify-center gap-2 md:gap-4">
+            <Link to="/" className="work-menu-link">{copy.nav.home}</Link>
+            <Link to="/work" className="work-menu-link">{copy.nav.work}</Link>
+            <Link to="/about" className="work-menu-link is-active">{copy.nav.about}</Link>
+            <Link to="/contact" className="work-menu-link">{copy.nav.contact}</Link>
+          </div>
+        </nav>
       </header>
 
       {/* <WaterCursor /> */}
 
       <main className="relative max-w-6xl mx-auto space-y-10 md:space-y-14">
         <div className="relative">
-          <div className="pointer-events-auto hidden md:flex flex-col gap-10 text-[#0f0f0f] absolute left-[-108px] lg:left-[-120px] top-[42%] -translate-y-1/2 z-20">
-            <Link
-              to="/"
-              className="nav-dot nav-dot-liquid font-amazing"
-              data-label={copy.nav.home}
-              aria-label={copy.nav.home}
-            >
-              <span className="nav-dot-liquid__text">{copy.nav.home}</span>
-            </Link>
-            <Link
-              to="/work"
-              className="nav-dot nav-dot-liquid font-amazing"
-              data-label={copy.nav.work}
-              aria-label={copy.nav.work}
-            >
-              <span className="nav-dot-liquid__text">{copy.nav.work}</span>
-            </Link>
-          </div>
-          <div className="pointer-events-auto hidden md:flex flex-col gap-10 text-[#0f0f0f] absolute right-[-108px] lg:right-[-120px] top-[42%] -translate-y-1/2 z-20 text-right">
-            <Link
-              to="/contact"
-              className="nav-dot nav-dot-liquid font-amazing"
-              data-label={copy.nav.contact}
-              aria-label={copy.nav.contact}
-            >
-              <span className="nav-dot-liquid__text">{copy.nav.contact}</span>
-            </Link>
-          </div>
-
           <section className="relative isolate overflow-hidden rounded-[32px] border border-[#dccfb9] bg-white/90 shadow-[0_24px_70px_rgba(52,34,18,0.14)] px-4 py-8 md:px-10 md:py-12 reveal-up">
             <div className="relative z-10 grid gap-10 md:grid-cols-[1.2fr_0.8fr]">
               <div className="space-y-7">
