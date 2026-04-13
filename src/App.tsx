@@ -1,6 +1,9 @@
 import { useState, useEffect, useRef, useCallback, type PointerEvent as ReactPointerEvent } from 'react';
 import gsap from 'gsap';
 import { Link } from 'react-router-dom';
+import textrToolVideo from './assets/textr-tool-presets-overview.mp4';
+import noirBauhausImage from './assets/noir-bauhaus.gif';
+import chicImage from './assets/chic.png';
 // import { HeroScrollDemo } from './components/ui/demo';
 
 type LenisController = {
@@ -32,6 +35,9 @@ function App() {
   const introPlaneInnerRef = useRef<HTMLDivElement | null>(null);
   const introSpeedLinesRef = useRef<Array<HTMLSpanElement | null>>([]);
   const planeExplosionTimeoutRef = useRef<number | null>(null);
+  const mediaVideoCardRef = useRef<HTMLDivElement | null>(null);
+  const mediaRightCardRef = useRef<HTMLDivElement | null>(null);
+  const mediaTopCardRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     return () => {
@@ -429,6 +435,23 @@ function App() {
     );
   }, [canEnter, entered, isTransitioningToMain, triggerPlaneExplosion]);
 
+  const triggerMediaCardBounce = useCallback((card: HTMLDivElement | null) => {
+    if (!card || typeof window === 'undefined') return;
+
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    gsap.killTweensOf(card);
+
+    if (prefersReducedMotion) {
+      gsap.fromTo(card, { scale: 0.985 }, { scale: 1, duration: 0.28, ease: 'power2.out' });
+      return;
+    }
+
+    gsap
+      .timeline()
+      .to(card, { scale: 0.965, duration: 0.16, ease: 'power2.out', overwrite: 'auto' })
+      .to(card, { scale: 1, duration: 1.05, ease: 'elastic.out(1, 0.48)', overwrite: 'auto' });
+  }, []);
+
   useEffect(() => {
     if (!entered || !shouldPlayMainReveal || typeof window === 'undefined') return;
 
@@ -684,6 +707,53 @@ function App() {
       <BackgroundOrbs />
       {/* Contenu principal */}
       <div className="relative z-10">
+        <div className="pointer-events-none fixed left-4 top-8 z-30 w-[66vw] max-w-[420px] sm:left-8 sm:top-12 sm:w-[44vw] md:w-[36vw] lg:w-[30vw] xl:w-[26vw]">
+          <div
+            ref={mediaVideoCardRef}
+            onClick={() => triggerMediaCardBounce(mediaVideoCardRef.current)}
+            className="pointer-events-auto cursor-pointer touch-manipulation overflow-hidden border border-[#0f0f0f]/10 bg-white/20 backdrop-blur-[2px] aspect-[3/4] will-change-transform"
+          >
+            <video
+              className="h-full w-full object-cover"
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="metadata"
+            >
+              <source src={textrToolVideo} type="video/mp4" />
+            </video>
+          </div>
+        </div>
+        <div className="pointer-events-none fixed right-4 top-1/2 z-30 hidden w-[56vw] max-w-[320px] -translate-y-[6%] sm:right-8 sm:w-[36vw] md:block md:w-[26vw] lg:w-[22vw] xl:w-[20vw]">
+          <div
+            ref={mediaRightCardRef}
+            onClick={() => triggerMediaCardBounce(mediaRightCardRef.current)}
+            className="pointer-events-auto cursor-pointer touch-manipulation overflow-hidden border border-[#0f0f0f]/10 bg-white/20 backdrop-blur-[2px] aspect-[3/4] will-change-transform"
+          >
+            <img
+              src={noirBauhausImage}
+              alt="Composition geometrique"
+              className="h-full w-full object-cover"
+              loading="eager"
+            />
+          </div>
+        </div>
+        <div className="pointer-events-none fixed right-4 top-8 z-30 hidden w-[46vw] max-w-[760px] sm:right-8 sm:top-10 md:block md:w-[40vw] lg:w-[38vw] xl:w-[36vw]">
+          <div
+            ref={mediaTopCardRef}
+            onClick={() => triggerMediaCardBounce(mediaTopCardRef.current)}
+            className="pointer-events-auto cursor-pointer touch-manipulation overflow-hidden border border-[#0f0f0f]/10 bg-white/20 backdrop-blur-[2px] aspect-[3/1] will-change-transform"
+          >
+            <img
+              src={chicImage}
+              alt="Discover typographic artwork"
+              className="h-full w-full object-cover"
+              loading="eager"
+            />
+          </div>
+        </div>
+
         {/* Nav centrée minimaliste */}
         <nav id="home-nav" className="fixed inset-0 z-40 flex items-center justify-center pointer-events-none px-6">
           <div
