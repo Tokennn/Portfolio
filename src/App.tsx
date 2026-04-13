@@ -2,8 +2,10 @@ import { useState, useEffect, useRef, useCallback, type PointerEvent as ReactPoi
 import gsap from 'gsap';
 import { Link } from 'react-router-dom';
 import textrToolVideo from './assets/textr-tool-presets-overview.mp4';
-import noirBauhausImage from './assets/noir-bauhaus.gif';
-import chicImage from './assets/chic.png';
+import noirBauhausAvif from './assets/noir-bauhaus.avif';
+import noirBauhausWebp from './assets/noir-bauhaus.webp';
+import chicAvif from './assets/chic.avif';
+import chicWebp from './assets/chic.webp';
 // import { HeroScrollDemo } from './components/ui/demo';
 
 type LenisController = {
@@ -52,6 +54,34 @@ function App() {
       sessionStorage.setItem('introEntered', 'true');
     }
   }, [entered]);
+
+  useEffect(() => {
+    if (typeof document === 'undefined') return;
+
+    const assetsToPreload = [
+      { as: 'image', href: noirBauhausAvif, type: 'image/avif' },
+      { as: 'image', href: chicAvif, type: 'image/avif' },
+      { as: 'video', href: textrToolVideo, type: 'video/mp4' }
+    ] as const;
+
+    const createdLinks: HTMLLinkElement[] = [];
+    assetsToPreload.forEach(({ as, href, type }) => {
+      const existing = document.head.querySelector(`link[rel="preload"][href="${href}"]`);
+      if (existing) return;
+
+      const link = document.createElement('link');
+      link.rel = 'preload';
+      link.as = as;
+      link.href = href;
+      link.type = type;
+      document.head.appendChild(link);
+      createdLinks.push(link);
+    });
+
+    return () => {
+      createdLinks.forEach((link) => link.remove());
+    };
+  }, []);
 
   const triggerPlaneExplosion = useCallback((event?: ReactPointerEvent<HTMLDivElement>) => {
     if (entered) return;
@@ -719,7 +749,7 @@ function App() {
               muted
               loop
               playsInline
-              preload="metadata"
+              preload="auto"
             >
               <source src={textrToolVideo} type="video/mp4" />
             </video>
@@ -731,12 +761,18 @@ function App() {
             onClick={() => triggerMediaCardBounce(mediaRightCardRef.current)}
             className="pointer-events-auto cursor-pointer touch-manipulation overflow-hidden border border-[#0f0f0f]/10 bg-white/20 backdrop-blur-[2px] aspect-[3/4] will-change-transform"
           >
-            <img
-              src={noirBauhausImage}
-              alt="Composition geometrique"
-              className="h-full w-full object-cover"
-              loading="eager"
-            />
+            <picture>
+              <source srcSet={noirBauhausAvif} type="image/avif" />
+              <source srcSet={noirBauhausWebp} type="image/webp" />
+              <img
+                src={noirBauhausWebp}
+                alt="Composition geometrique"
+                className="h-full w-full object-cover"
+                loading="eager"
+                decoding="async"
+                fetchPriority="high"
+              />
+            </picture>
           </div>
         </div>
         <div className="pointer-events-none fixed right-4 top-8 z-30 hidden w-[46vw] max-w-[760px] sm:right-8 sm:top-10 md:block md:w-[40vw] lg:w-[38vw] xl:w-[36vw]">
@@ -745,12 +781,18 @@ function App() {
             onClick={() => triggerMediaCardBounce(mediaTopCardRef.current)}
             className="pointer-events-auto cursor-pointer touch-manipulation overflow-hidden border border-[#0f0f0f]/10 bg-white/20 backdrop-blur-[2px] aspect-[3/1] will-change-transform"
           >
-            <img
-              src={chicImage}
-              alt="Discover typographic artwork"
-              className="h-full w-full object-cover"
-              loading="eager"
-            />
+            <picture>
+              <source srcSet={chicAvif} type="image/avif" />
+              <source srcSet={chicWebp} type="image/webp" />
+              <img
+                src={chicWebp}
+                alt="Discover typographic artwork"
+                className="h-full w-full object-cover"
+                loading="eager"
+                decoding="async"
+                fetchPriority="high"
+              />
+            </picture>
           </div>
         </div>
 

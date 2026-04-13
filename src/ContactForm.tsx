@@ -133,6 +133,18 @@ const ContactForm = () => {
     return () => ctx.revert();
   }, []);
 
+  useEffect(() => {
+    if (typeof document === 'undefined') return;
+    if (document.querySelector('script[data-dotlottie-player="true"]')) return;
+
+    const script = document.createElement('script');
+    script.type = 'module';
+    script.src = 'https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs';
+    script.dataset.dotlottiePlayer = 'true';
+    script.defer = true;
+    document.head.appendChild(script);
+  }, []);
+
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
