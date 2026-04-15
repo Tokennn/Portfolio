@@ -1675,6 +1675,74 @@
   animation: navTypeSwap 0.35s steps(1, end) infinite;
 }
 
+.media-tilt-card {
+  --pointer-x: 50%;
+  --pointer-y: 50%;
+  --tilt-rotate-x: 0deg;
+  --tilt-rotate-y: 0deg;
+  position: relative;
+  isolation: isolate;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  transition: transform 220ms ease-out, box-shadow 220ms ease-out;
+  transform: perspective(920px) rotateX(var(--tilt-rotate-x)) rotateY(var(--tilt-rotate-y));
+  box-shadow: 0 8px 20px rgba(15, 15, 15, 0.08);
+  will-change: transform, box-shadow;
+}
+
+.media-tilt-card::before,
+.media-tilt-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+  opacity: 0;
+  transition: opacity 180ms ease-out;
+}
+
+.media-tilt-card::before {
+  background: radial-gradient(
+    circle at var(--pointer-x) var(--pointer-y),
+    rgba(255, 255, 255, 0.45) 0%,
+    rgba(255, 255, 255, 0.12) 22%,
+    rgba(255, 255, 255, 0) 58%
+  );
+  mix-blend-mode: screen;
+}
+
+.media-tilt-card::after {
+  background:
+    linear-gradient(
+      120deg,
+      rgba(255, 255, 255, 0.18) 0%,
+      rgba(255, 255, 255, 0) 36%,
+      rgba(255, 255, 255, 0) 64%,
+      rgba(255, 255, 255, 0.1) 100%
+    );
+  mix-blend-mode: soft-light;
+}
+
+.media-tilt-card.is-active {
+  box-shadow: 0 20px 54px rgba(15, 15, 15, 0.2);
+}
+
+.media-tilt-card.is-active::before,
+.media-tilt-card.is-active::after {
+  opacity: 1;
+}
+
+.media-tilt-card > img {
+  position: relative;
+  z-index: 1;
+  transform-origin: center;
+  transition: transform 220ms ease-out;
+}
+
+.media-tilt-card.is-active > img {
+  transform: scale(1.02);
+}
+
 .type-swap-hover:hover {
   animation: enterTypeSwap 0.35s steps(1, end) infinite;
 }
@@ -1751,6 +1819,20 @@
     padding: 0.5rem 0.68rem;
     letter-spacing: 0.05em;
     font-size: 0.76rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .media-tilt-card,
+  .media-tilt-card > img,
+  .media-tilt-card::before,
+  .media-tilt-card::after {
+    transition: none !important;
+    animation: none !important;
+  }
+
+  .media-tilt-card {
+    transform: none !important;
   }
 }
 

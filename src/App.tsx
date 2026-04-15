@@ -1,11 +1,10 @@
 import { useState, useEffect, useRef, useCallback, type PointerEvent as ReactPointerEvent } from 'react';
 import gsap from 'gsap';
 import { Link } from 'react-router-dom';
-import textrToolVideo from './assets/textr-tool-presets-overview.mp4';
-import noirBauhausAvif from './assets/noir-bauhaus.avif';
-import noirBauhausWebp from './assets/noir-bauhaus.webp';
-import chicAvif from './assets/chic.avif';
-import chicWebp from './assets/chic.webp';
+import digitalGrowthExpertPhoto from './assets/digital-growth-expert.png';
+import airPhoto from './assets/air.png';
+import discoverPhoto from './assets/discover.png';
+import notchbarPhoto from './assets/notchbar.png';
 // import { HeroScrollDemo } from './components/ui/demo';
 
 type LenisController = {
@@ -25,6 +24,8 @@ function App() {
   });
   const [isTransitioningToMain, setIsTransitioningToMain] = useState(false);
   const [shouldPlayMainReveal, setShouldPlayMainReveal] = useState(false);
+  const [isDiscoverExpanded, setIsDiscoverExpanded] = useState(false);
+  const [isRightPhotoExpanded, setIsRightPhotoExpanded] = useState(false);
   const [isPlaneExploding, setIsPlaneExploding] = useState(false);
   const [planeExplosionPoint, setPlaneExplosionPoint] = useState({ x: 0, y: 0 });
   const [planeExplosionKey, setPlaneExplosionKey] = useState(0);
@@ -39,7 +40,8 @@ function App() {
   const planeExplosionTimeoutRef = useRef<number | null>(null);
   const mediaVideoCardRef = useRef<HTMLDivElement | null>(null);
   const mediaRightCardRef = useRef<HTMLDivElement | null>(null);
-  const mediaTopCardRef = useRef<HTMLDivElement | null>(null);
+  const mediaTopPhotoCardRef = useRef<HTMLDivElement | null>(null);
+  const mediaLeftBottomCardRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     return () => {
@@ -59,9 +61,10 @@ function App() {
     if (typeof document === 'undefined') return;
 
     const assetsToPreload = [
-      { as: 'image', href: noirBauhausAvif, type: 'image/avif' },
-      { as: 'image', href: chicAvif, type: 'image/avif' },
-      { as: 'video', href: textrToolVideo, type: 'video/mp4' }
+      { as: 'image', href: airPhoto, type: 'image/png' },
+      { as: 'image', href: discoverPhoto, type: 'image/png' },
+      { as: 'image', href: notchbarPhoto, type: 'image/png' },
+      { as: 'image', href: digitalGrowthExpertPhoto, type: 'image/png' }
     ] as const;
 
     const createdLinks: HTMLLinkElement[] = [];
@@ -82,6 +85,82 @@ function App() {
       createdLinks.forEach((link) => link.remove());
     };
   }, []);
+
+  useEffect(() => {
+    if (!entered || typeof window === 'undefined') return;
+
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const coarsePointer = window.matchMedia('(pointer: coarse)').matches;
+    if (prefersReducedMotion || coarsePointer) return;
+
+    const cards = [mediaVideoCardRef.current, mediaTopPhotoCardRef.current].filter(
+      (card): card is HTMLDivElement => Boolean(card)
+    );
+    if (!cards.length) return;
+
+    const resetCard = (card: HTMLDivElement) => {
+      card.style.setProperty('--pointer-x', '50%');
+      card.style.setProperty('--pointer-y', '50%');
+      card.style.setProperty('--tilt-rotate-x', '0deg');
+      card.style.setProperty('--tilt-rotate-y', '0deg');
+    };
+
+    const updateCardFromPointer = (card: HTMLDivElement, clientX: number, clientY: number) => {
+      const rect = card.getBoundingClientRect();
+      if (!rect.width || !rect.height) return;
+
+      const x = Math.min(Math.max(clientX - rect.left, 0), rect.width);
+      const y = Math.min(Math.max(clientY - rect.top, 0), rect.height);
+      const percentX = (x / rect.width) * 100;
+      const percentY = (y / rect.height) * 100;
+      const rotateX = (0.5 - y / rect.height) * 10;
+      const rotateY = (x / rect.width - 0.5) * 12;
+
+      card.style.setProperty('--pointer-x', `${percentX.toFixed(2)}%`);
+      card.style.setProperty('--pointer-y', `${percentY.toFixed(2)}%`);
+      card.style.setProperty('--tilt-rotate-x', `${rotateX.toFixed(2)}deg`);
+      card.style.setProperty('--tilt-rotate-y', `${rotateY.toFixed(2)}deg`);
+    };
+
+    const cleanup: Array<() => void> = [];
+
+    cards.forEach((card) => {
+      resetCard(card);
+
+      const handlePointerEnter = (event: PointerEvent) => {
+        card.classList.add('is-active');
+        updateCardFromPointer(card, event.clientX, event.clientY);
+      };
+
+      const handlePointerMove = (event: PointerEvent) => {
+        updateCardFromPointer(card, event.clientX, event.clientY);
+      };
+
+      const handlePointerLeave = () => {
+        resetCard(card);
+        card.classList.remove('is-active');
+      };
+
+      card.addEventListener('pointerenter', handlePointerEnter);
+      card.addEventListener('pointermove', handlePointerMove);
+      card.addEventListener('pointerleave', handlePointerLeave);
+
+      cleanup.push(() => {
+        card.removeEventListener('pointerenter', handlePointerEnter);
+        card.removeEventListener('pointermove', handlePointerMove);
+        card.removeEventListener('pointerleave', handlePointerLeave);
+        card.classList.remove('is-active');
+        card.style.removeProperty('--pointer-x');
+        card.style.removeProperty('--pointer-y');
+        card.style.removeProperty('--tilt-rotate-x');
+        card.style.removeProperty('--tilt-rotate-y');
+      });
+    });
+
+    return () => {
+      cleanup.forEach((dispose) => dispose());
+    };
+  }, [entered]);
 
   const triggerPlaneExplosion = useCallback((event?: ReactPointerEvent<HTMLDivElement>) => {
     if (entered) return;
@@ -465,22 +544,12 @@ function App() {
     );
   }, [canEnter, entered, isTransitioningToMain, triggerPlaneExplosion]);
 
-  const triggerMediaCardBounce = useCallback((card: HTMLDivElement | null) => {
-    if (!card || typeof window === 'undefined') return;
-
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    gsap.killTweensOf(card);
-
-    if (prefersReducedMotion) {
-      gsap.fromTo(card, { scale: 0.985 }, { scale: 1, duration: 0.28, ease: 'power2.out' });
-      return;
-    }
-
-    gsap
-      .timeline()
-      .to(card, { scale: 0.965, duration: 0.16, ease: 'power2.out', overwrite: 'auto' })
-      .to(card, { scale: 1, duration: 1.05, ease: 'elastic.out(1, 0.48)', overwrite: 'auto' });
+  const handleDiscoverCardClick = useCallback(() => {
+    setIsDiscoverExpanded((previous) => !previous);
   }, []);
+
+  const discoverPanelExpandedSize = 'clamp(250px, 20vw, 340px)';
+  const discoverPanelCollapsedHeight = 'clamp(72px, 10vh, 116px)';
 
   useEffect(() => {
     if (!entered || !shouldPlayMainReveal || typeof window === 'undefined') return;
@@ -659,14 +728,6 @@ function App() {
           </div>
         </div>
 
-        <div className="absolute top-6 left-8">
-          <span className="type-swap-hover text-xs font-medium text-[#0f0f0f] block hover:shadow-glow transition-all duration-300">
-            Quentin
-          </span>
-          <span className="type-swap-hover text-xs font-medium text-[#0f0f0f] block hover:shadow-glow transition-all duration-300">
-            Contreau
-          </span>
-        </div>
         {/* ENTER button (commented per request) */}
         {/*
         <button
@@ -740,62 +801,81 @@ function App() {
         <div className="pointer-events-none fixed left-4 top-8 z-30 w-[66vw] max-w-[420px] sm:left-8 sm:top-12 sm:w-[44vw] md:w-[36vw] lg:w-[30vw] xl:w-[26vw]">
           <div
             ref={mediaVideoCardRef}
-            onClick={() => triggerMediaCardBounce(mediaVideoCardRef.current)}
-            className="pointer-events-auto cursor-pointer touch-manipulation overflow-hidden border border-[#0f0f0f]/10 bg-white/20 backdrop-blur-[2px] aspect-[3/4] will-change-transform"
+            className="media-tilt-card pointer-events-auto touch-manipulation overflow-hidden border border-[#0f0f0f]/10 bg-transparent aspect-[3005/4250]"
           >
-            <video
-              className="h-full w-full object-cover"
-              autoPlay
-              muted
-              loop
-              playsInline
-              preload="auto"
-            >
-              <source src={textrToolVideo} type="video/mp4" />
-            </video>
+            <img
+              src={digitalGrowthExpertPhoto}
+              alt="Digital Growth Expert"
+              className="relative h-full w-full object-contain object-center"
+              loading="eager"
+              decoding="async"
+              fetchPriority="high"
+            />
           </div>
         </div>
-        <div className="pointer-events-none fixed right-4 top-1/2 z-30 hidden w-[56vw] max-w-[320px] -translate-y-[6%] sm:right-8 sm:w-[36vw] md:block md:w-[26vw] lg:w-[22vw] xl:w-[20vw]">
+        <div
+          className="pointer-events-none fixed bottom-0 left-[max(24rem,24vw)] z-30 hidden lg:block"
+          style={{ width: discoverPanelExpandedSize }}
+        >
+          <div
+            ref={mediaLeftBottomCardRef}
+            onClick={handleDiscoverCardClick}
+            className="pointer-events-auto relative w-full cursor-pointer touch-manipulation overflow-hidden border border-[#0f0f0f]/10 bg-transparent shadow-[0_10px_30px_rgba(15,15,15,0.08)] transition-[height] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] will-change-[height]"
+            style={{
+              height: isDiscoverExpanded ? discoverPanelExpandedSize : discoverPanelCollapsedHeight
+            }}
+            aria-label={isDiscoverExpanded ? 'Replier Discover' : 'Deplier Discover'}
+          >
+            <div
+              className="absolute inset-x-0 bottom-0"
+              style={{ height: discoverPanelExpandedSize }}
+            >
+              <img
+                src={discoverPhoto}
+                alt="Discover artwork"
+                className="h-full w-full object-contain object-center"
+                loading="eager"
+                decoding="async"
+                fetchPriority="high"
+              />
+            </div>
+          </div>
+        </div>
+        <div className="pointer-events-none fixed top-1/2 z-30 hidden w-[72vw] max-w-[640px] -translate-y-[6%] sm:w-[64vw] md:right-0 md:block md:w-[44vw] lg:w-[36vw] xl:w-[32vw]">
           <div
             ref={mediaRightCardRef}
-            onClick={() => triggerMediaCardBounce(mediaRightCardRef.current)}
-            className="pointer-events-auto cursor-pointer touch-manipulation overflow-hidden border border-[#0f0f0f]/10 bg-white/20 backdrop-blur-[2px] aspect-[3/4] will-change-transform"
+            onClick={() => setIsRightPhotoExpanded((previous) => !previous)}
+            className="pointer-events-auto cursor-pointer touch-manipulation overflow-hidden border-0 bg-transparent aspect-[1969/1125] will-change-[clip-path] transition-[clip-path] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]"
+            style={{
+              clipPath: isRightPhotoExpanded ? 'inset(0 0 0 0)' : 'inset(0 0 0 calc(100% - 88px))'
+            }}
+            aria-label={isRightPhotoExpanded ? 'Replier la photo' : 'Deplier la photo'}
           >
-            <picture>
-              <source srcSet={noirBauhausAvif} type="image/avif" />
-              <source srcSet={noirBauhausWebp} type="image/webp" />
-              <img
-                src={noirBauhausWebp}
-                alt="Composition geometrique"
-                className="h-full w-full object-cover"
-                loading="eager"
-                decoding="async"
-                fetchPriority="high"
-              />
-            </picture>
+            <img
+              src={airPhoto}
+              alt="Composition geometrique"
+              className="h-full w-full object-contain object-center"
+              loading="eager"
+              decoding="async"
+              fetchPriority="high"
+            />
           </div>
         </div>
-        <div className="pointer-events-none fixed right-4 top-8 z-30 hidden w-[46vw] max-w-[760px] sm:right-8 sm:top-10 md:block md:w-[40vw] lg:w-[38vw] xl:w-[36vw]">
+        <div className="pointer-events-none fixed right-4 top-8 z-30 hidden w-[46vw] max-w-[760px] sm:right-8 sm:top-10 md:block md:w-[43vw] lg:w-[39vw] xl:w-[36vw]">
           <div
-            ref={mediaTopCardRef}
-            onClick={() => triggerMediaCardBounce(mediaTopCardRef.current)}
-            className="pointer-events-auto cursor-pointer touch-manipulation overflow-hidden border border-[#0f0f0f]/10 bg-white/20 backdrop-blur-[2px] aspect-[3/1] will-change-transform"
+            ref={mediaTopPhotoCardRef}
+            className="media-tilt-card pointer-events-auto overflow-hidden border border-[#0f0f0f]/10 bg-white/10 backdrop-blur-[1px] aspect-[1838/1050]"
           >
-            <picture>
-              <source srcSet={chicAvif} type="image/avif" />
-              <source srcSet={chicWebp} type="image/webp" />
-              <img
-                src={chicWebp}
-                alt="Discover typographic artwork"
-                className="h-full w-full object-cover"
-                loading="eager"
-                decoding="async"
-                fetchPriority="high"
-              />
-            </picture>
+            <img
+              src={notchbarPhoto}
+              alt="Notchbar 2.0 artwork"
+              className="h-full w-full object-cover object-center"
+              loading="eager"
+              decoding="async"
+              fetchPriority="high"
+            />
           </div>
         </div>
-
         {/* Nav centrée minimaliste */}
         <nav id="home-nav" className="fixed inset-0 z-40 flex items-center justify-center pointer-events-none px-6">
           <div

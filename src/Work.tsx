@@ -286,7 +286,6 @@ function Work() {
 
   const handleCursorEnter = (event: ReactPointerEvent<HTMLAnchorElement>) => {
     if (activeProject.previewVideo) {
-      setIsPreviewVisible(true);
       setCursorVisible(false);
       if (cursorHideTimeout.current) {
         window.clearTimeout(cursorHideTimeout.current);
@@ -418,6 +417,16 @@ function Work() {
       event.preventDefault();
     }
 
+    if (activeProject.previewVideo && typeof window !== 'undefined') {
+      const isDesktopViewport = window.matchMedia('(min-width: 768px)').matches;
+      if (isDesktopViewport) {
+        event.preventDefault();
+        event.stopPropagation();
+        setIsPreviewVisible((previous) => !previous);
+        return;
+      }
+    }
+
     if (!isMobileNotchPreviewProject || typeof window === 'undefined') return;
     const isPhoneViewport = window.matchMedia('(max-width: 767px)').matches;
     if (!isPhoneViewport) return;
@@ -450,34 +459,36 @@ function Work() {
       {activeProject.previewVideo && (
         <div
           aria-hidden="true"
-          className={`pointer-events-none fixed inset-0 z-40 flex items-center justify-center px-2 md:px-6 transition-opacity duration-700 ease-[cubic-bezier(.22,1,.36,1)] ${
-            previewVisible ? 'opacity-100' : 'opacity-0'
-          }`}
+          className="pointer-events-none fixed inset-y-0 right-0 z-40 hidden items-center pr-0 md:flex"
         >
           <div
-            className={`absolute inset-0 transition-opacity duration-800 ease-[cubic-bezier(.22,1,.36,1)] ${
-              previewVisible ? 'bg-[#0f0f0f]/28 opacity-100' : 'bg-[#0f0f0f]/0 opacity-0'
-            }`}
-          />
-          <div
-            className={`absolute inset-0 bg-white/10 backdrop-blur-2xl transition-opacity duration-900 ease-[cubic-bezier(.22,1,.36,1)] ${
-              previewVisible ? 'opacity-100' : 'opacity-0'
-            }`}
-          />
-          <div
-            className={`relative w-[min(96vw,1600px)] h-[min(90vh,980px)] overflow-hidden rounded-[34px] border border-white/55 bg-white/30 shadow-[0_40px_120px_rgba(15,15,15,0.42)] transition-[opacity,transform,box-shadow] duration-700 ease-[cubic-bezier(.16,1,.3,1)] ${
-              previewVisible ? 'translate-y-0 scale-100 opacity-100 shadow-[0_50px_140px_rgba(15,15,15,0.5)]' : 'translate-y-10 scale-[0.94] opacity-0'
-            }`}
+            className="pointer-events-auto relative flex items-center"
           >
-            <video
-              src={activeProject.previewVideo}
-              autoPlay
-              muted
-              loop
-              playsInline
-              preload="metadata"
-              className="h-full w-full bg-[#080808] object-contain"
-            />
+            <button
+              type="button"
+              onClick={() => setIsPreviewVisible((previous) => !previous)}
+              aria-label={previewVisible ? 'Refermer Notch2.0' : 'Ouvrir Notch2.0'}
+              className="h-[86px] w-[52px] rounded-l-[18px] border border-white/70 border-r-0 bg-white/50 text-[#0f0f0f] shadow-[0_16px_40px_rgba(15,15,15,0.2)] backdrop-blur-md transition-colors duration-500 ease-linear"
+            >
+              <span className="text-xl font-black uppercase leading-none">N</span>
+            </button>
+            <div
+              className={`overflow-hidden transition-[max-width,opacity] duration-800 ease-linear ${
+                previewVisible ? 'max-w-[min(72vw,1200px)] opacity-100' : 'max-w-0 opacity-0'
+              }`}
+            >
+              <div className="h-[min(88vh,940px)] w-[min(72vw,1200px)] overflow-hidden rounded-l-[30px] border border-white/70 border-r-0 bg-white/30 shadow-[0_36px_120px_rgba(15,15,15,0.38)] backdrop-blur-xl">
+                <video
+                  src={activeProject.previewVideo}
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  preload="metadata"
+                  className="h-full w-full bg-[#080808] object-contain"
+                />
+              </div>
+            </div>
           </div>
         </div>
       )}
@@ -498,8 +509,8 @@ function Work() {
             }`}
           />
           <div
-            className={`absolute inset-x-2 bottom-2 rounded-[28px] border border-white/70 bg-white/20 p-3 pb-4 shadow-[0_28px_90px_rgba(15,15,15,0.42)] backdrop-blur-xl transition-[transform,opacity] duration-650 ease-[cubic-bezier(.16,1,.3,1)] ${
-              isMobilePreviewOpen ? 'translate-y-0 opacity-100' : 'translate-y-[110%] opacity-0'
+            className={`absolute right-2 top-2 bottom-2 w-[min(92vw,560px)] rounded-[28px] border border-white/70 bg-white/20 p-3 pb-4 shadow-[0_28px_90px_rgba(15,15,15,0.42)] backdrop-blur-xl transition-[transform,opacity] duration-650 ease-[cubic-bezier(.22,1,.36,1)] ${
+              isMobilePreviewOpen ? 'translate-x-0 opacity-100' : 'translate-x-[112%] opacity-0'
             }`}
           >
             <div className="mb-3 flex items-center justify-between px-1">
