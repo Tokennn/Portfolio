@@ -29,15 +29,23 @@ function App() {
   const [isPlaneExploding, setIsPlaneExploding] = useState(false);
   const [planeExplosionPoint, setPlaneExplosionPoint] = useState({ x: 0, y: 0 });
   const [planeExplosionKey, setPlaneExplosionKey] = useState(0);
+  const [isMainPlaneVisible, setIsMainPlaneVisible] = useState(false);
+  const [isMainPlaneExploding, setIsMainPlaneExploding] = useState(false);
+  const [mainPlaneExplosionPoint, setMainPlaneExplosionPoint] = useState({ x: 0, y: 0 });
+  const [mainPlaneExplosionKey, setMainPlaneExplosionKey] = useState(0);
   const planeBurstPuffs = Array.from({ length: 24 });
   const introScreenRef = useRef<HTMLDivElement | null>(null);
   const enterButtonRef = useRef<HTMLButtonElement | null>(null);
   const mainContentRef = useRef<HTMLDivElement | null>(null);
   const navGroupRef = useRef<HTMLDivElement | null>(null);
   const introPlaneRef = useRef<HTMLDivElement | null>(null);
+  const mainFlyPlaneRef = useRef<HTMLDivElement | null>(null);
+  const hasPlayedMainPlaneRef = useRef(false);
   const introPlaneInnerRef = useRef<HTMLDivElement | null>(null);
+  const mainFlyPlaneInnerRef = useRef<HTMLDivElement | null>(null);
   const introSpeedLinesRef = useRef<Array<HTMLSpanElement | null>>([]);
   const planeExplosionTimeoutRef = useRef<number | null>(null);
+  const mainPlaneExplosionTimeoutRef = useRef<number | null>(null);
   const mediaVideoCardRef = useRef<HTMLDivElement | null>(null);
   const mediaRightCardRef = useRef<HTMLDivElement | null>(null);
   const mediaTopPhotoCardRef = useRef<HTMLDivElement | null>(null);
@@ -47,6 +55,9 @@ function App() {
     return () => {
       if (planeExplosionTimeoutRef.current !== null) {
         window.clearTimeout(planeExplosionTimeoutRef.current);
+      }
+      if (mainPlaneExplosionTimeoutRef.current !== null) {
+        window.clearTimeout(mainPlaneExplosionTimeoutRef.current);
       }
     };
   }, []);
@@ -98,47 +109,70 @@ function App() {
     );
     if (!cards.length) return;
 
-    const resetCard = (card: HTMLDivElement) => {
-      card.style.setProperty('--pointer-x', '50%');
-      card.style.setProperty('--pointer-y', '50%');
-      card.style.setProperty('--tilt-rotate-x', '0deg');
-      card.style.setProperty('--tilt-rotate-y', '0deg');
-    };
-
-    const updateCardFromPointer = (card: HTMLDivElement, clientX: number, clientY: number) => {
-      const rect = card.getBoundingClientRect();
-      if (!rect.width || !rect.height) return;
-
-      const x = Math.min(Math.max(clientX - rect.left, 0), rect.width);
-      const y = Math.min(Math.max(clientY - rect.top, 0), rect.height);
-      const percentX = (x / rect.width) * 100;
-      const percentY = (y / rect.height) * 100;
-      const rotateX = (0.5 - y / rect.height) * 10;
-      const rotateY = (x / rect.width - 0.5) * 12;
-
-      card.style.setProperty('--pointer-x', `${percentX.toFixed(2)}%`);
-      card.style.setProperty('--pointer-y', `${percentY.toFixed(2)}%`);
-      card.style.setProperty('--tilt-rotate-x', `${rotateX.toFixed(2)}deg`);
-      card.style.setProperty('--tilt-rotate-y', `${rotateY.toFixed(2)}deg`);
-    };
-
     const cleanup: Array<() => void> = [];
 
     cards.forEach((card) => {
-      resetCard(card);
+      let rafId = 0;
+      let isActive = false;
+      let current = { x: 0.5, y: 0.5 };
+      let target = { x: 0.5, y: 0.5 };
+
+      const applyState = (xNorm: number, yNorm: number) => {
+        const percentX = xNorm * 100;
+        const percentY = yNorm * 100;
+        const rotateX = (0.5 - yNorm) * 10;
+        const rotateY = (xNorm - 0.5) * 12;
+
+        card.style.setProperty('--pointer-x', `${percentX.toFixed(2)}%`);
+        card.style.setProperty('--pointer-y', `${percentY.toFixed(2)}%`);
+        card.style.setProperty('--tilt-rotate-x', `${rotateX.toFixed(2)}deg`);
+        card.style.setProperty('--tilt-rotate-y', `${rotateY.toFixed(2)}deg`);
+      };
+
+      const startLoop = () => {
+        if (rafId) return;
+        const loop = () => {
+          const smooth = 0.14;
+          current.x += (target.x - current.x) * smooth;
+          current.y += (target.y - current.y) * smooth;
+          applyState(current.x, current.y);
+
+          const settled = Math.hypot(target.x - current.x, target.y - current.y) < 0.0015;
+          if (settled && !isActive) {
+            card.classList.remove('is-active');
+            rafId = 0;
+            return;
+          }
+          rafId = window.requestAnimationFrame(loop);
+        };
+        rafId = window.requestAnimationFrame(loop);
+      };
+
+      const updateTargetFromPointer = (event: PointerEvent) => {
+        const rect = card.getBoundingClientRect();
+        if (!rect.width || !rect.height) return;
+        const x = Math.min(Math.max((event.clientX - rect.left) / rect.width, 0), 1);
+        const y = Math.min(Math.max((event.clientY - rect.top) / rect.height, 0), 1);
+        target = { x, y };
+        startLoop();
+      };
+
+      applyState(0.5, 0.5);
 
       const handlePointerEnter = (event: PointerEvent) => {
+        isActive = true;
         card.classList.add('is-active');
-        updateCardFromPointer(card, event.clientX, event.clientY);
+        updateTargetFromPointer(event);
       };
 
       const handlePointerMove = (event: PointerEvent) => {
-        updateCardFromPointer(card, event.clientX, event.clientY);
+        updateTargetFromPointer(event);
       };
 
       const handlePointerLeave = () => {
-        resetCard(card);
-        card.classList.remove('is-active');
+        isActive = false;
+        target = { x: 0.5, y: 0.5 };
+        startLoop();
       };
 
       card.addEventListener('pointerenter', handlePointerEnter);
@@ -149,6 +183,9 @@ function App() {
         card.removeEventListener('pointerenter', handlePointerEnter);
         card.removeEventListener('pointermove', handlePointerMove);
         card.removeEventListener('pointerleave', handlePointerLeave);
+        if (rafId) {
+          window.cancelAnimationFrame(rafId);
+        }
         card.classList.remove('is-active');
         card.style.removeProperty('--pointer-x');
         card.style.removeProperty('--pointer-y');
@@ -183,6 +220,18 @@ function App() {
       setIsPlaneExploding(false);
     }, 620);
   }, [entered]);
+
+  const triggerMainPlaneExplosionAt = useCallback((x: number, y: number) => {
+    if (mainPlaneExplosionTimeoutRef.current !== null) {
+      window.clearTimeout(mainPlaneExplosionTimeoutRef.current);
+    }
+    setMainPlaneExplosionPoint({ x, y });
+    setMainPlaneExplosionKey((previous) => previous + 1);
+    setIsMainPlaneExploding(true);
+    mainPlaneExplosionTimeoutRef.current = window.setTimeout(() => {
+      setIsMainPlaneExploding(false);
+    }, 620);
+  }, []);
 
   useEffect(() => {
     if (entered || typeof window === 'undefined') return;
@@ -470,6 +519,145 @@ function App() {
       });
     };
   }, [entered]);
+
+  useEffect(() => {
+    if (!entered || typeof window === 'undefined' || hasPlayedMainPlaneRef.current) return;
+
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const isDesktopViewport = window.matchMedia('(min-width: 768px)').matches;
+    if (prefersReducedMotion || !isDesktopViewport) return;
+
+    let flightTimeline: gsap.core.Timeline | null = null;
+    let rafId = 0;
+    let isCancelled = false;
+
+    const launchFlight = () => {
+      if (isCancelled) return;
+
+      const targetCard = mediaRightCardRef.current;
+      if (!targetCard) {
+        rafId = window.requestAnimationFrame(launchFlight);
+        return;
+      }
+
+      const rect = targetCard.getBoundingClientRect();
+      if (rect.width < 30 || rect.height < 30) {
+        rafId = window.requestAnimationFrame(launchFlight);
+        return;
+      }
+
+      hasPlayedMainPlaneRef.current = true;
+      setIsMainPlaneVisible(true);
+      setIsMainPlaneExploding(false);
+
+      const startPoint = {
+        x: window.innerWidth * 0.58,
+        y: window.innerHeight * 0.93
+      };
+      const midPoint = {
+        x: window.innerWidth * 0.72,
+        y: window.innerHeight * 0.8
+      };
+      const latePoint = {
+        x: window.innerWidth * 0.86,
+        y: window.innerHeight * 0.68
+      };
+      const targetPoint = {
+        x: rect.right - Math.min(28, rect.width * 0.2),
+        y: rect.top + rect.height * 0.55
+      };
+
+      const runFlightWhenMounted = () => {
+        if (isCancelled) return;
+        const plane = mainFlyPlaneRef.current;
+        const planeInner = mainFlyPlaneInnerRef.current;
+        if (!plane || !planeInner) {
+          rafId = window.requestAnimationFrame(runFlightWhenMounted);
+          return;
+        }
+
+        gsap.set(plane, {
+          xPercent: -50,
+          yPercent: -50,
+          x: startPoint.x,
+          y: startPoint.y,
+          rotation: -44,
+          opacity: 1
+        });
+        gsap.set(planeInner, { rotation: 180 });
+
+        const bezierPoint = (t: number) => {
+          const inv = 1 - t;
+          const x =
+            inv * inv * inv * startPoint.x +
+            3 * inv * inv * t * midPoint.x +
+            3 * inv * t * t * latePoint.x +
+            t * t * t * targetPoint.x;
+          const y =
+            inv * inv * inv * startPoint.y +
+            3 * inv * inv * t * midPoint.y +
+            3 * inv * t * t * latePoint.y +
+            t * t * t * targetPoint.y;
+          return { x, y };
+        };
+
+        const bezierTangent = (t: number) => {
+          const inv = 1 - t;
+          const x =
+            3 * inv * inv * (midPoint.x - startPoint.x) +
+            6 * inv * t * (latePoint.x - midPoint.x) +
+            3 * t * t * (targetPoint.x - latePoint.x);
+          const y =
+            3 * inv * inv * (midPoint.y - startPoint.y) +
+            6 * inv * t * (latePoint.y - midPoint.y) +
+            3 * t * t * (targetPoint.y - latePoint.y);
+          return { x, y };
+        };
+
+        const progress = { value: 0 };
+        flightTimeline = gsap.timeline({
+          onComplete: () => {
+            setIsMainPlaneVisible(false);
+          }
+        });
+
+        flightTimeline
+          .to(progress, {
+            value: 1,
+            duration: 1.85,
+            ease: 'none',
+            onUpdate: () => {
+              const point = bezierPoint(progress.value);
+              const tangent = bezierTangent(progress.value);
+              const angle = (Math.atan2(tangent.y, tangent.x) * 180) / Math.PI;
+              gsap.set(plane, {
+                x: point.x,
+                y: point.y,
+                rotation: angle
+              });
+            }
+          })
+          .add(() => {
+            triggerMainPlaneExplosionAt(targetPoint.x, targetPoint.y);
+          })
+          .to(plane, { opacity: 0, duration: 0.14, ease: 'none' }, '>-0.01');
+      };
+
+      rafId = window.requestAnimationFrame(runFlightWhenMounted);
+    };
+
+    rafId = window.requestAnimationFrame(launchFlight);
+
+    return () => {
+      isCancelled = true;
+      if (rafId) {
+        window.cancelAnimationFrame(rafId);
+      }
+      if (flightTimeline) {
+        flightTimeline.kill();
+      }
+    };
+  }, [entered, triggerMainPlaneExplosionAt]);
 
   const canEnter = true;
 
@@ -796,9 +984,105 @@ function App() {
   return (
     <div ref={mainContentRef} key="main-screen" className="main-content min-h-screen relative text-[#0f0f0f]">
       <BackgroundOrbs />
+      {isMainPlaneVisible && (
+        <div ref={mainFlyPlaneRef} className="intro-plane fixed left-0 top-0 z-[52] pointer-events-none opacity-95" aria-hidden="true">
+          <div
+            ref={mainFlyPlaneInnerRef}
+            className={`intro-plane__inner relative drop-shadow-[0_10px_18px_rgba(52,34,18,0.2)] ${
+              isMainPlaneExploding ? 'plane-exploding' : ''
+            }`}
+          >
+            <span
+              className="absolute block h-[2px] w-[12px] rounded-full bg-[#4a4a50]"
+              style={{ left: 34, top: 8 }}
+              aria-hidden="true"
+            />
+            <span
+              className="absolute block h-[2px] w-[12px] rounded-full bg-[#4a4a50]"
+              style={{ left: 34, top: 32 }}
+              aria-hidden="true"
+            />
+            <svg width="86" height="44" viewBox="0 0 86 44" aria-hidden="true">
+              <path
+                d="M3 24 C 14 19, 24 19, 35 24"
+                fill="none"
+                stroke="#8f8a80"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeDasharray="3 5"
+                opacity="0.8"
+              />
+              <path
+                d="M10 24 L59 12 L45 21 L59 30 Z"
+                fill="#fffdf7"
+                stroke="#0f0f0f"
+                strokeWidth="1.7"
+                strokeLinejoin="round"
+              />
+              <path
+                d="M17 24 L38 24 M27 20 L33 24 L27 28"
+                fill="none"
+                stroke="#0f0f0f"
+                strokeWidth="1.4"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <circle cx="50" cy="21" r="1.4" fill="#0f0f0f" />
+            </svg>
+          </div>
+        </div>
+      )}
+      <div
+        key={`main-plane-burst-${mainPlaneExplosionKey}`}
+        className={`plane-burst plane-burst--screen fixed z-[53] ${isMainPlaneExploding ? 'plane-burst--active' : ''}`}
+        style={{ left: `${mainPlaneExplosionPoint.x}px`, top: `${mainPlaneExplosionPoint.y}px` }}
+        aria-hidden="true"
+      >
+        <svg className="plane-burst__toon" viewBox="0 0 220 220" aria-hidden="true">
+          <defs>
+            <mask id="main-plane-burst-core-cutout">
+              <rect x="0" y="0" width="220" height="220" fill="#fff" />
+              <path
+                d="M109 93 C118 86,130 88,135 98 C144 99,149 107,146 116 C149 125,143 133,133 134 C127 140,117 141,111 136 C100 139,90 134,88 126 C79 124,74 114,79 106 C77 97,85 89,94 90 C99 84,106 85,109 93 Z"
+                fill="#000"
+              />
+            </mask>
+          </defs>
+          <path
+            className="plane-burst__toon-star"
+            d="M110 52 L121 84 L153 74 L136 99 L162 118 L129 122 L132 158 L111 132 L89 158 L92 122 L58 118 L84 99 L67 74 L99 84 Z"
+          />
+          <path
+            className="plane-burst__toon-core"
+            d="M109 68 C124 56,146 60,155 78 C173 79,184 95,177 112 C184 129,171 146,151 147 C139 162,117 167,104 154 C82 160,63 149,59 130 C40 126,31 107,39 90 C35 70,52 54,72 55 C83 42,100 43,109 68 Z"
+            mask="url(#main-plane-burst-core-cutout)"
+          />
+          <path
+            className="plane-burst__toon-core-detail"
+            d="M109 93 C118 86,130 88,135 98 C144 99,149 107,146 116 C149 125,143 133,133 134 C127 140,117 141,111 136 C100 139,90 134,88 126 C79 124,74 114,79 106 C77 97,85 89,94 90 C99 84,106 85,109 93 Z"
+          />
+          <path className="plane-burst__toon-ray" d="M110 38 L110 24" />
+          <path className="plane-burst__toon-ray" d="M143 46 L150 33" />
+          <path className="plane-burst__toon-ray" d="M166 67 L179 60" />
+          <path className="plane-burst__toon-ray" d="M174 100 L189 100" />
+          <path className="plane-burst__toon-ray" d="M167 133 L180 140" />
+          <path className="plane-burst__toon-ray" d="M143 155 L151 169" />
+          <path className="plane-burst__toon-ray" d="M110 163 L110 178" />
+          <path className="plane-burst__toon-ray" d="M77 155 L70 169" />
+          <path className="plane-burst__toon-ray" d="M54 133 L41 140" />
+          <path className="plane-burst__toon-ray" d="M46 100 L31 100" />
+          <path className="plane-burst__toon-ray" d="M54 67 L41 60" />
+          <path className="plane-burst__toon-ray" d="M77 46 L70 33" />
+        </svg>
+        <div className="plane-burst__puffs">
+          {planeBurstPuffs.map((_, index) => (
+            <span key={index} className="plane-burst__puff" />
+          ))}
+        </div>
+      </div>
       {/* Contenu principal */}
       <div className="relative z-10">
-        <div className="pointer-events-none fixed left-4 top-8 z-30 w-[66vw] max-w-[420px] sm:left-8 sm:top-12 sm:w-[44vw] md:w-[36vw] lg:w-[30vw] xl:w-[26vw]">
+        <div className="pointer-events-none fixed left-4 top-8 z-30 hidden w-[66vw] max-w-[420px] sm:left-8 sm:top-12 sm:w-[44vw] md:block md:w-[36vw] lg:w-[30vw] xl:w-[26vw]">
           <div
             ref={mediaVideoCardRef}
             className="media-tilt-card pointer-events-auto touch-manipulation overflow-hidden border border-[#0f0f0f]/10 bg-transparent aspect-[3005/4250]"
@@ -876,8 +1160,50 @@ function App() {
             />
           </div>
         </div>
+        <div className="relative z-20 mx-auto flex w-full max-w-[430px] flex-col gap-4 px-4 pt-5 md:hidden">
+          <div className="overflow-hidden border border-[#0f0f0f]/10 bg-transparent shadow-[0_10px_30px_rgba(15,15,15,0.08)] aspect-[3005/4250]">
+            <img
+              src={digitalGrowthExpertPhoto}
+              alt="Digital Growth Expert"
+              className="h-full w-full object-contain object-center"
+              loading="eager"
+              decoding="async"
+              fetchPriority="high"
+            />
+          </div>
+          <div className="overflow-hidden border border-[#0f0f0f]/10 bg-white/10 shadow-[0_10px_30px_rgba(15,15,15,0.08)] aspect-[1838/1050]">
+            <img
+              src={notchbarPhoto}
+              alt="Notchbar 2.0 artwork"
+              className="h-full w-full object-cover object-center"
+              loading="eager"
+              decoding="async"
+              fetchPriority="high"
+            />
+          </div>
+          <div className="overflow-hidden border border-[#0f0f0f]/10 bg-transparent shadow-[0_10px_30px_rgba(15,15,15,0.08)] aspect-[1969/1125]">
+            <img
+              src={airPhoto}
+              alt="Composition geometrique"
+              className="h-full w-full object-contain object-center"
+              loading="eager"
+              decoding="async"
+              fetchPriority="high"
+            />
+          </div>
+          <div className="overflow-hidden border border-[#0f0f0f]/10 bg-transparent shadow-[0_10px_30px_rgba(15,15,15,0.08)] aspect-square">
+            <img
+              src={discoverPhoto}
+              alt="Discover artwork"
+              className="h-full w-full object-contain object-center"
+              loading="eager"
+              decoding="async"
+              fetchPriority="high"
+            />
+          </div>
+        </div>
         {/* Nav centrée minimaliste */}
-        <nav id="home-nav" className="fixed inset-0 z-40 flex items-center justify-center pointer-events-none px-6">
+        <nav id="home-nav" className="relative z-40 mt-6 flex items-center justify-center pointer-events-none px-6 pb-6 md:mt-0 md:pb-0 md:fixed md:inset-0">
           <div
             ref={navGroupRef}
             className="nav-group flex flex-col items-center text-center space-y-4 text-sm font-black uppercase tracking-[0.2em] pointer-events-auto md:flex-row md:space-y-0 md:space-x-10 md:text-lg md:tracking-[0.26em]"
