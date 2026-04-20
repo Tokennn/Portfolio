@@ -5,6 +5,7 @@ import digitalGrowthExpertPhoto from './assets/digital-growth-expert.png';
 import airPhoto from './assets/air.png';
 import discoverPhoto from './assets/discover.png';
 import notchbarPhoto from './assets/notchbar.png';
+import Lanyard from './components/Lanyard';
 // import { HeroScrollDemo } from './components/ui/demo';
 
 type LenisController = {
@@ -1157,6 +1158,11 @@ function App() {
               decoding="async"
               fetchPriority="high"
             />
+          </div>
+        </div>
+        <div className="pointer-events-none fixed left-[42%] top-[-6%] z-40 hidden h-[clamp(620px,95vh,1200px)] w-[clamp(420px,38vw,760px)] -translate-x-1/2 md:block lg:left-[41%] xl:left-[40%]">
+          <div className="pointer-events-auto h-full w-full overflow-visible bg-transparent">
+            <Lanyard position={[0, 0, 20]} gravity={[0, -40, 0]} fov={18} />
           </div>
         </div>
         <div className="pointer-events-none fixed right-4 top-8 z-30 hidden w-[46vw] max-w-[760px] sm:right-8 sm:top-10 md:block md:w-[43vw] lg:w-[39vw] xl:w-[36vw]">
