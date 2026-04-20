@@ -1,7 +1,7 @@
 /* eslint-disable react/no-unknown-property */
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Canvas, extend, useFrame } from '@react-three/fiber';
-import { useGLTF, useTexture, Environment, Lightformer } from '@react-three/drei';
+import { useGLTF, useTexture, Environment, Lightformer, Decal } from '@react-three/drei';
 import {
   BallCollider,
   CuboidCollider,
@@ -115,6 +115,9 @@ function Band({
   const ang = new THREE.Vector3();
   const rot = new THREE.Vector3();
   const dir = new THREE.Vector3();
+  const hookWorld = new THREE.Vector3();
+  const hookLocal = new THREE.Vector3(0, 1.5, 0);
+  const cardQuat = new THREE.Quaternion();
 
   const segmentProps = {
     type: 'dynamic' as const,
@@ -127,9 +130,40 @@ function Band({
 
   const { nodes, materials } = useGLTF(cardGLB) as any;
   const cardTexture = useTexture(azurTextureMap);
+  const decalConfig = useMemo(() => {
+    const geometry = nodes?.card?.geometry as THREE.BufferGeometry | undefined;
+    if (!geometry) {
+      return {
+        position: [0, 0, 0.03] as [number, number, number],
+        scale: [1.0, 1.0, 1] as [number, number, number],
+      };
+    }
+
+    geometry.computeBoundingBox();
+    const bounds = geometry.boundingBox;
+    if (!bounds) {
+      return {
+        position: [0, 0, 0.03] as [number, number, number],
+        scale: [1.0, 1.0, 1] as [number, number, number],
+      };
+    }
+
+    const size = new THREE.Vector3();
+    const center = new THREE.Vector3();
+    bounds.getSize(size);
+    bounds.getCenter(center);
+
+    // Keep decal square so the whole texture is visible inside the vertical card.
+    const squareSize = Math.min(size.x, size.y) * 0.82;
+    return {
+      position: [center.x, center.y, center.z + 0.03] as [number, number, number],
+      scale: [squareSize, squareSize, 1] as [number, number, number],
+    };
+  }, [nodes]);
   const [curve] = useState(
     () =>
       new THREE.CatmullRomCurve3([
+        new THREE.Vector3(),
         new THREE.Vector3(),
         new THREE.Vector3(),
         new THREE.Vector3(),
@@ -157,59 +191,11 @@ function Band({
     cardTexture.wrapS = THREE.ClampToEdgeWrapping;
     cardTexture.wrapT = THREE.ClampToEdgeWrapping;
     cardTexture.anisotropy = isMobile ? 4 : 16;
-    cardTexture.flipY = false;
-    const uvAttr = nodes?.card?.geometry?.attributes?.uv as THREE.BufferAttribute | undefined;
-    const normalAttr = nodes?.card?.geometry?.attributes?.normal as THREE.BufferAttribute | undefined;
-    if (uvAttr && normalAttr && uvAttr.count > 0 && normalAttr.count === uvAttr.count) {
-      let minU = Infinity;
-      let minV = Infinity;
-      let maxU = -Infinity;
-      let maxV = -Infinity;
-
-      const collectBounds = (normalZSign: 1 | -1) => {
-        minU = Infinity;
-        minV = Infinity;
-        maxU = -Infinity;
-        maxV = -Infinity;
-        let selected = 0;
-
-        for (let i = 0; i < uvAttr.count; i += 1) {
-          const nz = normalAttr.getZ(i);
-          if ((normalZSign === 1 && nz < 0.9) || (normalZSign === -1 && nz > -0.9)) continue;
-          const u = uvAttr.getX(i);
-          const v = uvAttr.getY(i);
-          if (u < minU) minU = u;
-          if (u > maxU) maxU = u;
-          if (v < minV) minV = v;
-          if (v > maxV) maxV = v;
-          selected += 1;
-        }
-        return selected;
-      };
-
-      // Prefer the card's front face (+Z); fallback to -Z if needed.
-      const selectedFront = collectBounds(1);
-      if (selectedFront === 0) {
-        collectBounds(-1);
-      }
-
-      if (Number.isFinite(minU) && Number.isFinite(maxU) && Number.isFinite(minV) && Number.isFinite(maxV)) {
-        const rangeU = Math.max(1e-6, maxU - minU);
-        const rangeV = Math.max(1e-6, maxV - minV);
-        cardTexture.repeat.set(1 / rangeU, 1 / rangeV);
-        cardTexture.offset.set(-minU / rangeU, -minV / rangeV);
-      } else {
-        cardTexture.repeat.set(1, 1);
-        cardTexture.offset.set(0, 0);
-      }
-    } else {
-      cardTexture.repeat.set(1, 1);
-      cardTexture.offset.set(0, 0);
-    }
-    cardTexture.center.set(0.5, 0.5);
-    cardTexture.rotation = 0;
+    cardTexture.flipY = true;
+    cardTexture.repeat.set(1, 1);
+    cardTexture.offset.set(0, 0);
     cardTexture.needsUpdate = true;
-  }, [cardTexture, isMobile, nodes]);
+  }, [cardTexture, isMobile]);
 
   useFrame((state, delta) => {
     if (dragged) {
@@ -239,10 +225,16 @@ function Band({
       );
     });
 
-    curve.points[0].copy(j3.current.translation());
-    curve.points[1].copy((j2.current as any).lerped);
-    curve.points[2].copy((j1.current as any).lerped);
-    curve.points[3].copy(fixed.current.translation());
+    const cardPos = card.current.translation();
+    const cardRot = card.current.rotation();
+    cardQuat.set(cardRot.x, cardRot.y, cardRot.z, cardRot.w);
+    hookWorld.copy(hookLocal).applyQuaternion(cardQuat).add(cardPos);
+
+    curve.points[0].copy(hookWorld);
+    curve.points[1].copy(j3.current.translation());
+    curve.points[2].copy((j2.current as any).lerped);
+    curve.points[3].copy((j1.current as any).lerped);
+    curve.points[4].copy(fixed.current.translation());
     (band.current.geometry as any).setPoints(curve.getPoints(isMobile ? 16 : 32));
 
     ang.copy(card.current.angvel());
@@ -290,11 +282,17 @@ function Band({
           >
             <mesh geometry={nodes.card.geometry}>
               <meshPhysicalMaterial
-                map={cardTexture}
+                color="#d9d9d9"
                 clearcoat={isMobile ? 0 : 1}
                 clearcoatRoughness={0.15}
                 roughness={0.9}
-                metalness={0.8}
+                metalness={0.15}
+              />
+              <Decal
+                position={decalConfig.position}
+                rotation={[0, 0, 0]}
+                scale={decalConfig.scale}
+                map={cardTexture}
               />
             </mesh>
             <mesh geometry={nodes.clip.geometry} material={materials.metal} />
@@ -309,7 +307,9 @@ function Band({
           color="#0b0b0b"
           depthTest={false}
           resolution={isMobile ? [1000, 2000] : [1000, 1000]}
-          lineWidth={1.25}
+          lineWidth={1.8}
+          opacity={0.98}
+          transparent
         />
       </mesh>
     </>

@@ -1160,9 +1160,9 @@ function App() {
             />
           </div>
         </div>
-        <div className="pointer-events-none fixed left-[42%] top-[-6%] z-40 hidden h-[clamp(620px,95vh,1200px)] w-[clamp(420px,38vw,760px)] -translate-x-1/2 md:block lg:left-[41%] xl:left-[40%]">
+        <div className="pointer-events-none fixed left-[43%] top-[-8%] z-40 hidden h-[clamp(760px,104vh,1400px)] w-[clamp(520px,52vw,1040px)] -translate-x-1/2 md:block">
           <div className="pointer-events-auto h-full w-full overflow-visible bg-transparent">
-            <Lanyard position={[0, 0, 20]} gravity={[0, -40, 0]} fov={18} />
+            <Lanyard position={[0, 0, 18]} gravity={[0, -40, 0]} fov={16} />
           </div>
         </div>
         <div className="pointer-events-none fixed right-4 top-8 z-30 hidden w-[46vw] max-w-[760px] sm:right-8 sm:top-10 md:block md:w-[43vw] lg:w-[39vw] xl:w-[36vw]">
