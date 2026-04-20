@@ -17,6 +17,19 @@ const getLenisController = (): LenisController | null => {
   return (window as Window & { __portfolioLenis?: LenisController }).__portfolioLenis ?? null;
 };
 
+function HomeBrandMark() {
+  return (
+    <div className="home-brand-mark fixed left-5 top-5 z-[60] text-left text-[#0f0f0f] sm:left-8 sm:top-7">
+      <p className="home-brand-mark__line home-brand-mark__line--main">
+        quentin
+      </p>
+      <p className="home-brand-mark__line home-brand-mark__line--sub">
+        contreau
+      </p>
+    </div>
+  );
+}
+
 function App() {
   const [entered, setEntered] = useState(() => {
     if (typeof window === 'undefined') return false;
@@ -798,6 +811,7 @@ function App() {
           isTransitioningToMain ? 'pointer-events-none' : ''
         }`}
       >
+        {!isTransitioningToMain && <HomeBrandMark />}
         {/* Spline Background (commented per request) */}
         {/*
         <spline-viewer

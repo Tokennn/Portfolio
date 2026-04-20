@@ -286,6 +286,7 @@ function Work() {
 
   const handleCursorEnter = (event: ReactPointerEvent<HTMLAnchorElement>) => {
     if (activeProject.previewVideo) {
+      setIsPreviewVisible(true);
       setCursorVisible(false);
       if (cursorHideTimeout.current) {
         window.clearTimeout(cursorHideTimeout.current);
@@ -417,16 +418,6 @@ function Work() {
       event.preventDefault();
     }
 
-    if (activeProject.previewVideo && typeof window !== 'undefined') {
-      const isDesktopViewport = window.matchMedia('(min-width: 768px)').matches;
-      if (isDesktopViewport) {
-        event.preventDefault();
-        event.stopPropagation();
-        setIsPreviewVisible((previous) => !previous);
-        return;
-      }
-    }
-
     if (!isMobileNotchPreviewProject || typeof window === 'undefined') return;
     const isPhoneViewport = window.matchMedia('(max-width: 767px)').matches;
     if (!isPhoneViewport) return;
@@ -459,36 +450,30 @@ function Work() {
       {activeProject.previewVideo && (
         <div
           aria-hidden="true"
-          className="pointer-events-none fixed inset-y-0 right-0 z-40 hidden items-center pr-0 md:flex"
+          className="pointer-events-none fixed inset-0 z-40 hidden items-center justify-center md:flex"
         >
           <div
-            className="pointer-events-auto relative flex items-center"
+            className={`absolute inset-0 bg-[#0f0f0f]/36 backdrop-blur-md transition-opacity duration-500 ease-linear ${
+              previewVisible ? 'opacity-100' : 'opacity-0'
+            }`}
+          />
+          <div
+            className={`relative h-[min(84vh,860px)] w-[min(84vw,1280px)] overflow-hidden rounded-[30px] border border-white/70 bg-[#080808]/92 shadow-[0_36px_120px_rgba(15,15,15,0.45)] transition-[opacity,transform] duration-600 ease-linear ${
+              previewVisible ? 'scale-100 opacity-100' : 'scale-[0.98] opacity-0'
+            }`}
           >
-            <button
-              type="button"
-              onClick={() => setIsPreviewVisible((previous) => !previous)}
-              aria-label={previewVisible ? 'Refermer Notch2.0' : 'Ouvrir Notch2.0'}
-              className="h-[86px] w-[52px] rounded-l-[18px] border border-white/70 border-r-0 bg-white/50 text-[#0f0f0f] shadow-[0_16px_40px_rgba(15,15,15,0.2)] backdrop-blur-md transition-colors duration-500 ease-linear"
-            >
-              <span className="text-xl font-black uppercase leading-none">N</span>
-            </button>
             <div
-              className={`overflow-hidden transition-[max-width,opacity] duration-800 ease-linear ${
-                previewVisible ? 'max-w-[min(72vw,1200px)] opacity-100' : 'max-w-0 opacity-0'
-              }`}
-            >
-              <div className="h-[min(88vh,940px)] w-[min(72vw,1200px)] overflow-hidden rounded-l-[30px] border border-white/70 border-r-0 bg-white/30 shadow-[0_36px_120px_rgba(15,15,15,0.38)] backdrop-blur-xl">
-                <video
-                  src={activeProject.previewVideo}
-                  autoPlay
-                  muted
-                  loop
-                  playsInline
-                  preload="metadata"
-                  className="h-full w-full bg-[#080808] object-contain"
-                />
-              </div>
-            </div>
+              className="absolute inset-0 bg-[radial-gradient(circle_at_24%_20%,rgba(255,255,255,0.12),transparent_45%),radial-gradient(circle_at_74%_80%,rgba(255,255,255,0.08),transparent_54%)]"
+            />
+            <video
+              src={activeProject.previewVideo}
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="metadata"
+              className="relative h-full w-full bg-[#080808] object-contain"
+            />
           </div>
         </div>
       )}

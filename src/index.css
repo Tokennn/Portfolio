@@ -133,6 +133,42 @@
     outline-offset: 6px;
   }
 
+  .home-brand-mark {
+    pointer-events: auto;
+    cursor: default;
+    user-select: none;
+  }
+
+  .home-brand-mark__line {
+    text-transform: uppercase;
+    color: #0f0f0f;
+    font-family: "Boxing", "Sharpie", "Amazing Maret", "Inter", system-ui, -apple-system, sans-serif;
+    white-space: nowrap;
+    clip-path: inset(0 0 0 0);
+    opacity: 1;
+    filter: blur(0);
+  }
+
+  .home-brand-mark__line--main {
+    font-size: clamp(10px, 1.05vw, 14px);
+    letter-spacing: 0.16em;
+    line-height: 1;
+  }
+
+  .home-brand-mark__line--sub {
+    margin-top: 0.2rem;
+    font-size: clamp(8px, 0.9vw, 10px);
+    letter-spacing: 0.18em;
+    line-height: 1;
+  }
+
+  .home-brand-mark:hover .home-brand-mark__line,
+  .home-brand-mark:focus-within .home-brand-mark__line {
+    animation: enterWordRewrite 1.05s cubic-bezier(0.22, 1, 0.36, 1) infinite,
+      enterWordTypefaceCycle 11.55s steps(1, end) infinite,
+      enterWordGlow 2.1s ease-in-out infinite;
+  }
+
   .nav-underline {
     position: relative;
     display: inline-flex;
@@ -1353,6 +1389,11 @@
     animation: none;
     clip-path: inset(0 0 0 0);
     opacity: 1;
+  }
+
+  .home-brand-mark:hover .home-brand-mark__line,
+  .home-brand-mark:focus-within .home-brand-mark__line {
+    animation: none;
   }
 }
 
