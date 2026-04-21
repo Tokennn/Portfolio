@@ -1,220 +1,225 @@
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
-function WaterCursor() {
-  const blobRef = useRef<HTMLDivElement>(null);
-  const glassRef = useRef<HTMLDivElement>(null);
-  const rippleRef = useRef<HTMLDivElement>(null);
-  const shimmerRef = useRef<HTMLDivElement>(null);
-  const splashRef = useRef<HTMLDivElement>(null);
-  const dropsRef = useRef<Array<HTMLDivElement | null>>([]);
-  const raf = useRef<number>();
+type WaterCursorProps = {
+  size?: "sm" | "md";
+};
+
+const cursorSize = {
+  md: 260,
+  sm: 205
+} as const;
+
+function WaterCursor({ size = "md" }: WaterCursorProps) {
+  const hostRef = useRef<HTMLDivElement>(null);
+  const distortionRef = useRef<HTMLDivElement>(null);
+  const edgeWarpRef = useRef<HTMLDivElement>(null);
+  const highlightRef = useRef<HTMLDivElement>(null);
+  const glowRef = useRef<HTMLDivElement>(null);
+  const rafRef = useRef<number | null>(null);
   const [isEnabled, setIsEnabled] = useState(() => {
     if (typeof window === "undefined") return true;
-    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const coarsePointer = window.matchMedia("(pointer: coarse)").matches;
-    return !(reduceMotion || coarsePointer);
+    return !window.matchMedia("(pointer: coarse)").matches;
   });
 
   useEffect(() => {
-    const reduceMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const coarsePointerQuery = window.matchMedia("(pointer: coarse)");
-    const update = () => {
-      setIsEnabled(!(reduceMotionQuery.matches || coarsePointerQuery.matches));
-    };
-
+    const mq = window.matchMedia("(pointer: coarse)");
+    const update = () => setIsEnabled(!mq.matches);
     update();
-    reduceMotionQuery.addEventListener("change", update);
-    coarsePointerQuery.addEventListener("change", update);
-
-    return () => {
-      reduceMotionQuery.removeEventListener("change", update);
-      coarsePointerQuery.removeEventListener("change", update);
-    };
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
   }, []);
 
   useEffect(() => {
-    if (!isEnabled) return;
+    if (!isEnabled || !hostRef.current) return;
 
-    let x = window.innerWidth / 2;
-    let y = window.innerHeight / 2;
+    const host = hostRef.current;
+    const pxSize = cursorSize[size];
+    host.style.width = `${pxSize}px`;
+    host.style.height = `${pxSize}px`;
+    document.body.classList.add("has-water-cursor");
+
+    let x = window.innerWidth * 0.5;
+    let y = window.innerHeight * 0.5;
     let tx = x;
     let ty = y;
-    let isAnimating = false;
     let lastMoveTime = 0;
-    let lastRippleTime = 0;
 
-    const triggerRipple = () => {
-      if (!rippleRef.current) return;
-      const now = performance.now();
-      if (now - lastRippleTime < 140) return;
-      lastRippleTime = now;
-      rippleRef.current.animate(
-        [
-          { transform: `translate3d(${x}px, ${y}px, 0) translate(-50%, -50%) scale(0.6)`, opacity: 0.35 },
-          { transform: `translate3d(${x}px, ${y}px, 0) translate(-50%, -50%) scale(1.35)`, opacity: 0 },
-        ],
-        { duration: 1200, easing: "ease-out" }
-      );
-    };
-
-    const triggerSplash = (sx: number, sy: number) => {
-      if (splashRef.current) {
-        splashRef.current.animate(
-          [
-            { transform: `translate3d(${sx}px, ${sy}px, 0) translate(-50%, -50%) scale(0.25)`, opacity: 0.6 },
-            { transform: `translate3d(${sx}px, ${sy}px, 0) translate(-50%, -50%) scale(1.4)`, opacity: 0 },
-          ],
-          { duration: 520, easing: "cubic-bezier(.16,1,.3,1)" }
-        );
-      }
-
-      const drops = dropsRef.current.filter(Boolean) as HTMLDivElement[];
-      drops.forEach((drop, idx) => {
-        const angle = (Math.PI * 2 * idx) / drops.length + Math.random() * 0.5;
-        const distance = 40 + Math.random() * 35;
-        const dx = Math.cos(angle) * distance;
-        const dy = Math.sin(angle) * distance;
-        drop.animate(
-          [
-            { transform: `translate3d(${sx}px, ${sy}px, 0) translate(-50%, -50%) scale(0.6)`, opacity: 0.9 },
-            { transform: `translate3d(${sx + dx}px, ${sy + dy}px, 0) translate(-50%, -50%) scale(0.1)`, opacity: 0 },
-          ],
-          { duration: 520, easing: "cubic-bezier(.2,.8,.2,1)" }
-        );
-      });
-    };
-
-    const handleMove = (event: PointerEvent) => {
-      tx = event.clientX;
-      ty = event.clientY;
-      lastMoveTime = performance.now();
-      triggerRipple();
-      if (!isAnimating) {
-        isAnimating = true;
-        raf.current = requestAnimationFrame(animate);
+    const stopLoop = () => {
+      if (rafRef.current) {
+        window.cancelAnimationFrame(rafRef.current);
+        rafRef.current = null;
       }
     };
 
-    const animate = (now: number) => {
-      x += (tx - x) * 0.12;
-      y += (ty - y) * 0.12;
+    const frame = (now: number) => {
+      x += (tx - x) * 0.2;
+      y += (ty - y) * 0.2;
+
       const dx = tx - x;
       const dy = ty - y;
-      const speed = Math.min(1, Math.hypot(dx, dy) / 45);
+      const speed = Math.min(1, Math.hypot(dx, dy) / 26);
       const angle = (Math.atan2(dy, dx) * 180) / Math.PI;
-      const stretch = 1 + speed * 0.2;
-      const squash = 1 - speed * 0.12;
-      const baseTransform = `translate3d(${x}px, ${y}px, 0) translate(-50%, -50%)`;
 
-      if (blobRef.current) {
-        blobRef.current.style.transform = `${baseTransform} scale(${1 + speed * 0.1})`;
-      }
-      if (glassRef.current) {
-        glassRef.current.style.transform = `${baseTransform} rotate(${angle}deg) scale(${stretch}, ${squash})`;
-      }
-      if (shimmerRef.current) {
-        shimmerRef.current.style.transform = baseTransform;
+      host.style.transform = `translate3d(${x - pxSize / 2}px, ${y - pxSize / 2}px, 0)`;
+      host.style.opacity = `${0.9 + speed * 0.1}`;
+
+      if (distortionRef.current) {
+        distortionRef.current.style.opacity = `${0.72 + speed * 0.22}`;
+        const blur = 6 + speed * 4.5;
+        const saturate = 2.25 + speed * 0.7;
+        const contrast = 1.46 + speed * 0.22;
+        const brightness = 1.08 + speed * 0.06;
+        const backdrop = `url(#liquid-glass-distortion) blur(${blur.toFixed(2)}px) saturate(${saturate.toFixed(2)}) contrast(${contrast.toFixed(2)}) brightness(${brightness.toFixed(2)})`;
+        distortionRef.current.style.backdropFilter = backdrop;
+        distortionRef.current.style.webkitBackdropFilter = backdrop;
       }
 
-      const isIdle = now - lastMoveTime > 160;
-      const isSettled = Math.abs(tx - x) < 0.1 && Math.abs(ty - y) < 0.1;
+      if (edgeWarpRef.current) {
+        edgeWarpRef.current.style.opacity = `${0.66 + speed * 0.26}`;
+        const blur = 8 + speed * 6.5;
+        const saturate = 2.5 + speed * 0.95;
+        const contrast = 1.56 + speed * 0.28;
+        const brightness = 1.1 + speed * 0.07;
+        const backdrop = `url(#liquid-glass-distortion) blur(${blur.toFixed(2)}px) saturate(${saturate.toFixed(2)}) contrast(${contrast.toFixed(2)}) brightness(${brightness.toFixed(2)})`;
+        edgeWarpRef.current.style.backdropFilter = backdrop;
+        edgeWarpRef.current.style.webkitBackdropFilter = backdrop;
+        edgeWarpRef.current.style.transform = `rotate(${angle + 16}deg) scale(${1 + speed * 0.09})`;
+      }
 
+      if (highlightRef.current) {
+        highlightRef.current.style.opacity = `${0.7 + speed * 0.25}`;
+        highlightRef.current.style.transform = `rotate(${angle + 22}deg) scale(${1 + speed * 0.08})`;
+      }
+
+      if (glowRef.current) {
+        glowRef.current.style.opacity = `${0.25 + speed * 0.2}`;
+      }
+
+      const isIdle = now - lastMoveTime > 170;
+      const isSettled = Math.abs(tx - x) < 0.08 && Math.abs(ty - y) < 0.08;
       if (isIdle && isSettled) {
-        isAnimating = false;
-        raf.current = undefined;
+        rafRef.current = null;
         return;
       }
 
-      raf.current = requestAnimationFrame(animate);
+      rafRef.current = window.requestAnimationFrame(frame);
     };
 
-    const handleDown = (event: PointerEvent) => {
-      triggerSplash(event.clientX, event.clientY);
-    };
-
-    window.addEventListener("pointermove", handleMove, { passive: true });
-    window.addEventListener("pointerdown", handleDown, { passive: true });
-    lastMoveTime = performance.now();
-    isAnimating = true;
-    raf.current = requestAnimationFrame(animate);
-
-    return () => {
-      window.removeEventListener("pointermove", handleMove);
-      window.removeEventListener("pointerdown", handleDown);
-      if (raf.current) {
-        cancelAnimationFrame(raf.current);
+    const startLoop = () => {
+      if (!rafRef.current) {
+        rafRef.current = window.requestAnimationFrame(frame);
       }
     };
-  }, [isEnabled]);
 
-  if (!isEnabled || typeof document === "undefined") return null;
+    const onPointerMove = (event: PointerEvent) => {
+      tx = event.clientX;
+      ty = event.clientY;
+      lastMoveTime = performance.now();
+      startLoop();
+    };
 
-  const cursorLayer = (
-    <div className="pointer-events-none fixed inset-0 z-20">
+    window.addEventListener("pointermove", onPointerMove, { passive: true });
+    lastMoveTime = performance.now();
+    startLoop();
+
+    return () => {
+      stopLoop();
+      window.removeEventListener("pointermove", onPointerMove);
+      document.body.classList.remove("has-water-cursor");
+    };
+  }, [isEnabled, size]);
+
+  if (!isEnabled) return null;
+
+  return createPortal(
+    <div
+      ref={hostRef}
+      className="pointer-events-none fixed left-0 top-0 z-[2147483647] will-change-transform"
+      aria-hidden="true"
+      style={{
+        borderRadius: "54% 46% 57% 43% / 44% 56% 46% 54%",
+        background: "rgba(255,255,255,0.03)",
+        border: "1.5px solid rgba(255,255,255,0.92)",
+        boxShadow:
+          "inset 0 1px 8px rgba(255,255,255,0.46), inset 0 -10px 14px rgba(18,32,46,0.12), 0 4px 12px rgba(10,14,20,0.1)"
+      }}
+    >
       <div
-        ref={blobRef}
-        className="absolute h-[240px] w-[240px] rounded-full blur-[90px] opacity-60 will-change-transform mix-blend-soft-light"
+        ref={distortionRef}
+        className="absolute inset-0"
         style={{
+          borderRadius: "54% 46% 57% 43% / 44% 56% 46% 54%",
+          opacity: 0.72,
+          background: "rgba(255,255,255,0.01)",
+          backdropFilter: "url(#liquid-glass-distortion) blur(6px) saturate(2.25) contrast(1.46) brightness(1.08)",
+          WebkitBackdropFilter: "url(#liquid-glass-distortion) blur(6px) saturate(2.25) contrast(1.46) brightness(1.08)",
+          WebkitMaskImage:
+            "radial-gradient(circle at 50% 50%, transparent 56%, rgba(0,0,0,1) 72%, rgba(0,0,0,1) 93%, transparent 100%)",
+          maskImage:
+            "radial-gradient(circle at 50% 50%, transparent 56%, rgba(0,0,0,1) 72%, rgba(0,0,0,1) 93%, transparent 100%)"
+        }}
+      />
+      <div
+        ref={edgeWarpRef}
+        className="absolute inset-[-2.8%] will-change-transform"
+        style={{
+          borderRadius: "54% 46% 57% 43% / 44% 56% 46% 54%",
+          opacity: 0.66,
+          background: "rgba(255,255,255,0.008)",
+          backdropFilter: "url(#liquid-glass-distortion) blur(8px) saturate(2.5) contrast(1.56) brightness(1.1)",
+          WebkitBackdropFilter: "url(#liquid-glass-distortion) blur(8px) saturate(2.5) contrast(1.56) brightness(1.1)",
+          WebkitMaskImage:
+            "radial-gradient(circle at 50% 50%, transparent 60%, rgba(0,0,0,1) 75%, rgba(0,0,0,1) 96%, transparent 100%)",
+          maskImage:
+            "radial-gradient(circle at 50% 50%, transparent 60%, rgba(0,0,0,1) 75%, rgba(0,0,0,1) 96%, transparent 100%)"
+        }}
+      />
+      <div
+        ref={glowRef}
+        className="absolute inset-[-12%]"
+        style={{
+          borderRadius: "54% 46% 57% 43% / 44% 56% 46% 54%",
+          opacity: 0.25,
           background:
-            "radial-gradient(circle at 30% 35%, rgba(143, 210, 255, 0.3), transparent 55%), radial-gradient(circle at 70% 70%, rgba(212, 238, 255, 0.4), transparent 60%)",
+            "radial-gradient(circle at 50% 50%, rgba(123,206,255,0.3), rgba(196,228,255,0.1) 46%, rgba(255,255,255,0) 72%)",
+          filter: "blur(9px)"
         }}
       />
       <div
-        ref={glassRef}
-        className="absolute h-[70px] w-[70px] will-change-transform"
-      >
-        <div
-          className="absolute inset-0 rounded-full border border-white/40"
-          style={{
-            background:
-              "radial-gradient(circle at 30% 25%, rgba(255,255,255,0.9), rgba(255,255,255,0.18) 40%, rgba(255,255,255,0.05) 65%)",
-            boxShadow:
-              "0 18px 36px rgba(52,34,18,0.18), inset 0 1px 2px rgba(255,255,255,0.75), inset 0 -10px 20px rgba(0,0,0,0.08)",
-            backdropFilter: "blur(8px) saturate(1.2)",
-            WebkitBackdropFilter: "blur(8px) saturate(1.2)",
-          }}
-        />
-        <div className="absolute left-[18%] top-[18%] h-3 w-7 rotate-[-18deg] rounded-full bg-white/70 blur-[0.5px]" />
-        <div className="absolute right-[22%] bottom-[22%] h-2 w-2 rounded-full bg-white/60 blur-[0.5px]" />
-      </div>
-      <div
-        ref={shimmerRef}
-        className="absolute h-[140px] w-[140px] rounded-full blur-[40px] opacity-45 will-change-transform mix-blend-screen"
+        className="absolute inset-[4.5%]"
         style={{
+          borderRadius: "54% 46% 57% 43% / 44% 56% 46% 54%",
+          border: "1.1px solid rgba(255,255,255,0.88)",
+          background: "transparent",
+          backdropFilter: "blur(1.6px) saturate(1.2) contrast(1.06)",
+          WebkitBackdropFilter: "blur(1.6px) saturate(1.2) contrast(1.06)",
+          WebkitMaskImage:
+            "radial-gradient(circle at 50% 50%, transparent 54%, rgba(0,0,0,1) 70%, rgba(0,0,0,1) 92%, transparent 100%)",
+          maskImage:
+            "radial-gradient(circle at 50% 50%, transparent 54%, rgba(0,0,0,1) 70%, rgba(0,0,0,1) 92%, transparent 100%)",
+          boxShadow: "inset 0 0 12px rgba(255,255,255,0.35)"
+        }}
+      />
+      <div
+        ref={highlightRef}
+        className="absolute inset-[-2%] will-change-transform"
+        style={{
+          borderRadius: "54% 46% 57% 43% / 44% 56% 46% 54%",
+          opacity: 0.7,
+          mixBlendMode: "screen",
           background:
-            "radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.5), transparent 65%), radial-gradient(circle at 30% 30%, rgba(200, 229, 255, 0.35), transparent 70%)",
+            "conic-gradient(from 112deg, rgba(60,206,255,0.34), rgba(255,171,113,0.28), rgba(154,122,255,0.24), rgba(60,206,255,0.34)), radial-gradient(circle at 24% 14%, rgba(255,255,255,0.9), rgba(255,255,255,0.08) 35%, rgba(255,255,255,0) 52%)",
+          WebkitMaskImage:
+            "radial-gradient(circle at 50% 50%, transparent 54%, rgba(0,0,0,1) 70%, rgba(0,0,0,1) 92%, transparent 100%)",
+          maskImage:
+            "radial-gradient(circle at 50% 50%, transparent 54%, rgba(0,0,0,1) 70%, rgba(0,0,0,1) 92%, transparent 100%)",
+          filter: "blur(0.55px)"
         }}
       />
-      <div
-        ref={rippleRef}
-        className="absolute h-[180px] w-[180px] rounded-full border border-[#a8dbff]/50 opacity-0 mix-blend-soft-light"
-      />
-      <div
-        ref={splashRef}
-        className="absolute h-[120px] w-[120px] rounded-full border border-white/60 opacity-0 mix-blend-screen"
-        style={{
-          boxShadow: "0 12px 24px rgba(52,34,18,0.18), inset 0 0 10px rgba(255,255,255,0.6)",
-        }}
-      />
-      {Array.from({ length: 6 }).map((_, idx) => (
-        <div
-          key={`drop-${idx}`}
-          ref={(el) => {
-            dropsRef.current[idx] = el;
-          }}
-          className="absolute h-3 w-3 rounded-full opacity-0 mix-blend-screen"
-          style={{
-            background:
-              "radial-gradient(circle at 30% 30%, rgba(255,255,255,0.9), rgba(255,255,255,0.2) 60%, rgba(255,255,255,0))",
-            boxShadow: "0 8px 14px rgba(52,34,18,0.16)",
-          }}
-        />
-      ))}
-    </div>
+    </div>,
+    document.body
   );
-
-  return createPortal(cursorLayer, document.body);
 }
 
 export default WaterCursor;

@@ -36,9 +36,7 @@ import audioMiskine from "./song/Miskine.mp3";
 import voyageCardImage from "./Voyage.png";
 import musicCardImage from "./Musique.png";
 import modeCardImage from "./Mode.png";
-// import WaterCursor from "./components/WaterCursor";
 import LanguageToggle from "./components/LanguageToggle";
-import CircularText from "./components/CircularText";
 import { useLanguage } from "./context/LanguageContext";
 import { useTextReveal } from "./hooks/useTextReveal";
 
@@ -192,7 +190,7 @@ function About() {
   const copy = aboutCopy[language];
   const outsideItems = copy.outsideItems ?? [];
   const outsideHeadingLines = language === "fr" ? ["En dehors", "du travail"] : ["Outside", "work"];
-  const outsideStackMinHeight = Math.max(540, outsideItems.length * 220);
+  const outsideStackMinHeight = Math.max(500, outsideItems.length * 200);
   const mapRef = useRef<LeafletMap | null>(null);
   const [isMapReady, setIsMapReady] = useState(false);
   const [isToolsExpanded, setIsToolsExpanded] = useState(false);
@@ -348,8 +346,6 @@ function About() {
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const lineTargets = title ? Array.from(title.querySelectorAll<HTMLElement>(".outside-stage-title-line")) : [];
     const titleTargets: HTMLElement[] = title ? (lineTargets.length ? lineTargets : [title]) : [];
-    const orbitTarget = triggerTarget.querySelector<HTMLElement>(".about-corner-orbit--single");
-    const chromeTargets: HTMLElement[] = orbitTarget ? [...titleTargets, orbitTarget] : titleTargets;
     let hasPlayedTitleReveal = false;
 
     const baseScrollDistance = outsideScrollDistance;
@@ -370,8 +366,8 @@ function About() {
       const stackStartY = -baseScrollDistance;
       const stackEndY = 0;
       const setTitleRevealState = (revealed: boolean, immediate = false) => {
-        if (!chromeTargets.length || prefersReducedMotion) return;
-        gsap.killTweensOf(chromeTargets);
+        if (!titleTargets.length || prefersReducedMotion) return;
+        gsap.killTweensOf(titleTargets);
         if (!revealed) {
           const hiddenState = {
             autoAlpha: 0,
@@ -381,9 +377,9 @@ function About() {
             transformOrigin: "50% 100%"
           };
           if (immediate) {
-            gsap.set(chromeTargets, hiddenState);
+            gsap.set(titleTargets, hiddenState);
           } else {
-            gsap.to(chromeTargets, {
+            gsap.to(titleTargets, {
               ...hiddenState,
               duration: 0.42,
               ease: "power2.inOut",
@@ -393,7 +389,7 @@ function About() {
           }
           return;
         }
-        gsap.to(chromeTargets, {
+        gsap.to(titleTargets, {
           y: 0,
           autoAlpha: 1,
           filter: "blur(0px)",
@@ -406,7 +402,7 @@ function About() {
         });
       };
       const playTitleReveal = () => {
-        if (hasPlayedTitleReveal || prefersReducedMotion || !chromeTargets.length) return;
+        if (hasPlayedTitleReveal || prefersReducedMotion || !titleTargets.length) return;
         hasPlayedTitleReveal = true;
         setTitleRevealState(true);
       };
@@ -537,7 +533,7 @@ function About() {
 
       gsap.set(stack, { y: stackStartY });
       gsap.set(wrappers, { zIndex: 1 });
-      if (!prefersReducedMotion && chromeTargets.length) {
+      if (!prefersReducedMotion && titleTargets.length) {
         setTitleRevealState(false, true);
       }
       if (cards.length) {
@@ -822,22 +818,6 @@ function About() {
     audio.pause();
   };
 
-  const renderCornerOrbit = () => {
-    const orbitText = "vibe coding • styles • minimalist •";
-    return (
-      <div className="about-corner-orbit about-corner-orbit--single" aria-hidden="true">
-        <CircularText
-          text={orbitText}
-          spinDuration={24}
-          onHover="slowDown"
-          size={82}
-          fontSize={8}
-          className="about-corner-circular"
-        />
-      </div>
-    );
-  };
-
   return (
     <div
       className="about-liquid-scope font-boxing relative min-h-screen overflow-hidden bg-gradient-to-br from-[#f8f3ea] via-[#f2e6d7] to-[#fdf8ef] text-[#0f0f0f] px-4 md:px-8 pt-28 pb-12 md:py-16"
@@ -939,8 +919,6 @@ function About() {
           </div>
         </nav>
       </header>
-
-      {/* <WaterCursor /> */}
 
       <main className="relative max-w-6xl mx-auto space-y-10 md:space-y-14">
         <div className="relative">
@@ -1209,11 +1187,10 @@ function About() {
 
         <section
           ref={outsideSectionRef}
-          className="outside-section mt-20 md:mt-28 mx-auto grid w-full max-w-[1100px] grid-cols-1 gap-5 md:gap-6"
+          className="outside-section mt-14 md:mt-20 mx-auto grid w-full max-w-[1100px] grid-cols-1 gap-4 md:gap-5"
           style={!isDesktop && outsideScrollDistance ? { paddingBottom: outsideScrollDistance } : undefined}
         >
-          <div className="relative w-full overflow-visible self-start rounded-[28px] border border-[#dccfb9] bg-white/80 p-7 pr-24 md:p-8 md:pr-28">
-            {renderCornerOrbit()}
+          <div className="relative w-full overflow-visible self-start rounded-[28px] border border-[#dccfb9] bg-white/80 p-6 md:p-7">
             <div className="mb-3">
               <h2 className="about-panel-title">
                 {copy.processTitle}
@@ -1223,9 +1200,8 @@ function About() {
           </div>
           <div
             ref={toolsCardRef}
-            className="w-full relative overflow-visible self-start rounded-[28px] border border-[#dccfb9] bg-white/80 p-7 pr-24 md:p-8 md:pr-28"
+            className="w-full relative overflow-visible self-start rounded-[28px] border border-[#dccfb9] bg-white/80 p-6 md:p-7"
           >
-            {renderCornerOrbit()}
             <div className="mb-3">
               <h2 className="about-panel-title">
                 {copy.toolsTitle}
@@ -1553,7 +1529,6 @@ function About() {
             ref={outsideCardRef}
             style={outsideCardHeight ? { height: outsideCardHeight } : undefined}
           >
-            {renderCornerOrbit()}
             <div className="outside-stage-heading">
               <h2 ref={outsideTitleRef} className="outside-stage-title" aria-label={copy.outsideTitle}>
                 {outsideHeadingLines.map((line, index) => (
