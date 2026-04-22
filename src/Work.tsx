@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from 'react';
 import { Link } from 'react-router-dom';
 import LanguageToggle from './components/LanguageToggle';
+import WaterCursor from './components/WaterCursor';
 import { useLanguage } from './context/LanguageContext';
 import ico from './ico.png';
 import expli from './expli.mov';
@@ -8,14 +9,24 @@ import mapImage from './assets/map.png';
 
 const workCopy = {
   fr: {
+    nav: {
+      home: "Accueil",
+      work: "Projets",
+      about: "À propos",
+      contact: "Contact"
+    },
+    cursorLabel: "Voir le projet",
+    mobilePreviewTitle: "Aperçu Notch2.0",
+    mobilePreviewCloseLabel: "Fermer",
+    projectDotsAriaLabel: "Projets",
+    nextProjectSoon: "Prochain projet bientôt",
     projects: [
       {
         title: "Langage-Sensei",
-        description:
-          "Parcours progressifs et micro-interactions",
+        description: "Parcours progressifs et micro-interactions.",
         image: "https://cdn.midjourney.com/bf612167-d186-46f9-8141-ad6e799fa243/0_1.png",
         link: "https://langage-sensei.netlify.app/",
-        tag: "Product design",
+        tag: "Design produit",
         accent: "from-emerald-200/80 via-teal-50/85 to-amber-50/85",
         glow: "radial-gradient(circle at 18% 24%, rgba(52, 211, 153, 0.24), transparent 46%), radial-gradient(circle at 72% 70%, rgba(251, 191, 36, 0.22), transparent 52%)"
       },
@@ -25,38 +36,34 @@ const workCopy = {
           "Calcul d'itinéraires, inventaire et suivi des étapes clés",
         image: "https://cdn.midjourney.com/c5b6d334-83c3-4d27-ace8-00ca180a65ce/0_2.png",
         link: "https://movesmart.netlify.app/",
-        tag: "Creative dev",
+        tag: "Dév créatif",
         accent: "from-indigo-200/80 via-sky-50/85 to-amber-50/80",
         glow: "radial-gradient(circle at 76% 16%, rgba(129, 140, 248, 0.26), transparent 48%), radial-gradient(circle at 22% 70%, rgba(56, 189, 248, 0.22), transparent 52%)"
       },
       {
         title: "Blog.V1",
-        description:
-          "Suivi Personnel",
+        description: "Suivi personnel.",
         image: "https://cdn.midjourney.com/a518c278-f137-4339-b5df-27c8643dbb49/0_0.jpeg",
         link: "https://blogv1qc.netlify.app/",
-        tag: "Product ops",
+        tag: "Ops produit",
         accent: "from-amber-200/80 via-orange-50/85 to-white/90",
         glow: "radial-gradient(circle at 55% 82%, rgba(251, 191, 36, 0.28), transparent 56%), radial-gradient(circle at 24% 32%, rgba(251, 146, 60, 0.22), transparent 52%)"
       },
       {
         title: "AirMap",
-        description:
-          "Calculs entre les mesures de pollution et les conditions météorologiques",
+        description: "Corrélations entre pollution de l'air et conditions météorologiques.",
         image: mapImage,
         link: "https://airmap.dyskolos.fr/",
-        tag: "Product ops",
+        tag: "Ops produit",
         accent: "from-amber-200/80 via-orange-50/85 to-white/90",
         glow: "radial-gradient(circle at 55% 82%, rgba(251, 191, 36, 0.28), transparent 56%), radial-gradient(circle at 24% 32%, rgba(251, 146, 60, 0.22), transparent 52%)"
       },
       {
         title: "Notch2.0",
-        description:
-          "Notch-bar designée pour MacOs. (Attendre la fin 😉)",
-        
+        description: "Notch bar conçue pour macOS (attends la fin 😉).",
         image: ico,
         link: "#",
-        tag: "New project",
+        tag: "Nouveau projet",
         accent: "from-rose-200/80 via-orange-50/85 to-amber-50/85",
         glow: "radial-gradient(circle at 24% 24%, rgba(251, 113, 133, 0.24), transparent 46%), radial-gradient(circle at 72% 72%, rgba(251, 146, 60, 0.2), transparent 52%)",
         previewVideo: expli
@@ -64,6 +71,17 @@ const workCopy = {
     ]
   },
   en: {
+    nav: {
+      home: "Home",
+      work: "Work",
+      about: "About",
+      contact: "Contact"
+    },
+    cursorLabel: "View project",
+    mobilePreviewTitle: "Notch2.0 preview",
+    mobilePreviewCloseLabel: "Close",
+    projectDotsAriaLabel: "Projects",
+    nextProjectSoon: "Next project soon",
     projects: [
       {
         title: "Langage-Sensei",
@@ -81,14 +99,13 @@ const workCopy = {
           "Route calculation, inventory and tracking of key stages.",
         image: "https://cdn.midjourney.com/c5b6d334-83c3-4d27-ace8-00ca180a65ce/0_2.png",
         link: "https://movesmart.netlify.app/",
-        tag: "Creative dev",
+        tag: "Creative development",
         accent: "from-indigo-200/80 via-sky-50/85 to-amber-50/80",
         glow: "radial-gradient(circle at 76% 16%, rgba(129, 140, 248, 0.26), transparent 48%), radial-gradient(circle at 22% 70%, rgba(56, 189, 248, 0.22), transparent 52%)"
       },
       {
         title: "Blog.V1",
-        description:
-          "Personal Monitoring",
+        description: "Personal tracking dashboard.",
         image: "https://cdn.midjourney.com/a518c278-f137-4339-b5df-27c8643dbb49/0_0.jpeg",
         link: "https://blogv1qc.netlify.app/",
         tag: "Product ops",
@@ -97,8 +114,7 @@ const workCopy = {
       },
       {
         title: "AirMap",
-        description:
-          "Personal Monitoring",
+        description: "Correlation between pollution metrics and weather conditions.",
         image: mapImage,
         link: "https://airmap.dyskolos.fr/",
         tag: "Product ops",
@@ -107,8 +123,7 @@ const workCopy = {
       },
       {
         title: "Notch2.0",
-        description:
-          "New project with custom visual.",
+        description: "Custom notch bar designed for macOS (watch until the end 😉).",
         image: ico,
         link: "#",
         tag: "New project",
@@ -118,40 +133,33 @@ const workCopy = {
       }
     ]
   }
-};
+} as const;
 
 function Work() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isSwitching, setIsSwitching] = useState(false);
-  const [cursorVisible, setCursorVisible] = useState(false);
   const [isPreviewVisible, setIsPreviewVisible] = useState(false);
   const [isMobilePreviewOpen, setIsMobilePreviewOpen] = useState(false);
   const [cursorEnabled, setCursorEnabled] = useState(() => {
     if (typeof window === 'undefined') return false;
-    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const coarsePointer = window.matchMedia('(pointer: coarse)').matches;
-    return !(reduceMotion || coarsePointer);
+    return !coarsePointer;
   });
   const didMountRef = useRef(false);
-  const cursorRef = useRef<HTMLDivElement>(null);
-  const cursorRaf = useRef<number | null>(null);
-  const cursorHideTimeout = useRef<number | null>(null);
-  const cursorTarget = useRef({ x: 0, y: 0 });
-  const cursorPosition = useRef({ x: 0, y: 0 });
   const mobilePreviewVideoRef = useRef<HTMLVideoElement>(null);
   const swipeStartRef = useRef<{ x: number; y: number; pointerId: number } | null>(null);
   const swipeActiveRef = useRef(false);
   const swipeConsumedRef = useRef(false);
   const { language } = useLanguage();
-  const projects = workCopy[language].projects;
+  const copy = workCopy[language];
+  const projects = copy.projects;
   const activeProject = projects[activeIndex];
   const previewVisible = Boolean(activeProject.previewVideo && isPreviewVisible);
   const isNotchProject = activeProject.title.toLowerCase() === 'notch2.0';
   const isMobileNotchPreviewProject = Boolean(activeProject.previewVideo && isNotchProject);
   const opensExternalLink = activeProject.link !== '#';
-  const cursorLabel = language === 'fr' ? 'Voir le projet' : 'View project';
-  const mobilePreviewTitle = language === 'fr' ? 'Apercu Notch2.0' : 'Notch2.0 Preview';
-  const mobilePreviewCloseLabel = language === 'fr' ? 'Fermer' : 'Close';
+  const mobilePreviewTitle = copy.mobilePreviewTitle;
+  const mobilePreviewCloseLabel = copy.mobilePreviewCloseLabel;
 
   const previousProjects = projects.slice(0, activeIndex);
   const nextProjects = projects.slice(activeIndex + 1);
@@ -198,51 +206,26 @@ function Work() {
   }, [projects]);
 
   useEffect(() => {
-    const reduceMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
     const coarsePointerQuery = window.matchMedia('(pointer: coarse)');
     const update = () => {
-      setCursorEnabled(!(reduceMotionQuery.matches || coarsePointerQuery.matches));
+      setCursorEnabled(!coarsePointerQuery.matches);
     };
 
     update();
-    reduceMotionQuery.addEventListener('change', update);
     coarsePointerQuery.addEventListener('change', update);
 
     return () => {
-      reduceMotionQuery.removeEventListener('change', update);
       coarsePointerQuery.removeEventListener('change', update);
     };
   }, []);
 
   useEffect(() => {
+    if (!cursorEnabled || typeof document === 'undefined') return;
+    document.body.classList.add('work-hide-cursor');
     return () => {
-      if (cursorRaf.current) {
-        cancelAnimationFrame(cursorRaf.current);
-        cursorRaf.current = null;
-      }
+      document.body.classList.remove('work-hide-cursor');
     };
-  }, []);
-
-  useEffect(() => {
-    if (cursorEnabled) return;
-    setCursorVisible(false);
-    if (cursorRaf.current) {
-      cancelAnimationFrame(cursorRaf.current);
-      cursorRaf.current = null;
-    }
   }, [cursorEnabled]);
-
-  useEffect(() => {
-    return () => {
-      if (cursorHideTimeout.current) {
-        window.clearTimeout(cursorHideTimeout.current);
-        cursorHideTimeout.current = null;
-      }
-      if (typeof document !== 'undefined') {
-        document.body.classList.remove('work-hide-cursor');
-      }
-    };
-  }, []);
 
   useEffect(() => {
     if (!didMountRef.current) {
@@ -269,84 +252,15 @@ function Work() {
     video.currentTime = 0;
   }, [attemptMobilePreviewPlayback, isMobilePreviewOpen, isMobileNotchPreviewProject]);
 
-  const animateCursor = useCallback(() => {
-    const target = cursorTarget.current;
-    const position = cursorPosition.current;
-    const nextX = position.x + (target.x - position.x) * 0.14;
-    const nextY = position.y + (target.y - position.y) * 0.14;
-    cursorPosition.current = { x: nextX, y: nextY };
-
-    if (cursorRef.current) {
-      cursorRef.current.style.setProperty('--cursor-x', `${nextX}px`);
-      cursorRef.current.style.setProperty('--cursor-y', `${nextY}px`);
-    }
-
-    cursorRaf.current = requestAnimationFrame(animateCursor);
-  }, []);
-
-  const handleCursorEnter = (event: ReactPointerEvent<HTMLAnchorElement>) => {
+  const handleProjectMediaEnter = () => {
     if (activeProject.previewVideo) {
       setIsPreviewVisible(true);
-      setCursorVisible(false);
-      if (cursorHideTimeout.current) {
-        window.clearTimeout(cursorHideTimeout.current);
-        cursorHideTimeout.current = null;
-      }
-      if (cursorRaf.current) {
-        cancelAnimationFrame(cursorRaf.current);
-        cursorRaf.current = null;
-      }
-      if (typeof document !== 'undefined') {
-        document.body.classList.remove('work-hide-cursor');
-      }
-      return;
-    }
-    if (!cursorEnabled) return;
-    if (cursorHideTimeout.current) {
-      window.clearTimeout(cursorHideTimeout.current);
-      cursorHideTimeout.current = null;
-    }
-    if (typeof document !== 'undefined') {
-      document.body.classList.add('work-hide-cursor');
-    }
-    const { clientX, clientY } = event;
-    cursorTarget.current = { x: clientX, y: clientY };
-    cursorPosition.current = { x: clientX, y: clientY };
-    if (cursorRef.current) {
-      cursorRef.current.style.setProperty('--cursor-x', `${clientX}px`);
-      cursorRef.current.style.setProperty('--cursor-y', `${clientY}px`);
-    }
-    setCursorVisible(true);
-    if (!cursorRaf.current) {
-      cursorRaf.current = requestAnimationFrame(animateCursor);
     }
   };
 
-  const handleCursorMove = (event: ReactPointerEvent<HTMLAnchorElement>) => {
-    if (activeProject.previewVideo) return;
-    if (!cursorEnabled) return;
-    cursorTarget.current = { x: event.clientX, y: event.clientY };
-  };
-
-  const handleCursorLeave = () => {
+  const handleProjectMediaLeave = () => {
     if (activeProject.previewVideo) {
       setIsPreviewVisible(false);
-      if (typeof document !== 'undefined') {
-        document.body.classList.remove('work-hide-cursor');
-      }
-      return;
-    }
-    if (!cursorEnabled) return;
-    setCursorVisible(false);
-    if (typeof document !== 'undefined') {
-      cursorHideTimeout.current = window.setTimeout(() => {
-        document.body.classList.remove('work-hide-cursor');
-        cursorHideTimeout.current = null;
-      }, 320);
-    }
-    if (cursorRaf.current) {
-      cancelAnimationFrame(cursorRaf.current);
-      cursorRaf.current = null;
     }
   };
 
@@ -429,23 +343,17 @@ function Work() {
   };
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-[#f8f3ea] via-[#f2e6d7] to-[#fdf8ef] text-[#0f0f0f] px-4 md:px-8 py-12 md:py-16">
+    <div
+      className="relative min-h-screen overflow-hidden bg-gradient-to-br from-[#f8f3ea] via-[#f2e6d7] to-[#fdf8ef] text-[#0f0f0f] px-4 md:px-8 py-12 md:py-16"
+      data-work-fluid-scope="true"
+      lang={language}
+    >
       <div className="pointer-events-none absolute inset-0 opacity-70 bg-[radial-gradient(circle_at_18%_16%,rgba(255,255,255,0.85),transparent_38%),radial-gradient(circle_at_82%_6%,rgba(253,230,205,0.45),transparent_46%),radial-gradient(circle_at_24%_80%,rgba(210,175,140,0.28),transparent_50%)]" />
       <div className="fixed right-5 top-5 z-50 md:right-8 md:top-8">
         <LanguageToggle />
       </div>
 
-      {cursorEnabled && !activeProject.previewVideo && (
-        <div
-          ref={cursorRef}
-          className={`project-cursor ${cursorVisible ? 'is-active' : ''}`}
-          aria-hidden="true"
-        >
-          <div className="project-cursor__bubble">
-            <span>{cursorLabel}</span>
-          </div>
-        </div>
-      )}
+      {cursorEnabled && <WaterCursor size="md" />}
 
       {activeProject.previewVideo && (
         <div
@@ -533,10 +441,10 @@ function Work() {
       <header className="relative z-20 max-w-6xl mx-auto mt-2 mb-10 md:mt-4 md:mb-14">
         <nav className="work-menu-glass mx-auto w-full max-w-[760px] px-4 py-3 md:px-6 md:py-4">
           <div className="flex items-center justify-center gap-2 md:gap-4">
-            <Link to="/" className="work-menu-link">Home</Link>
-            <Link to="/work" className="work-menu-link is-active">Work</Link>
-            <Link to="/about" className="work-menu-link">About</Link>
-            <Link to="/contact" className="work-menu-link">Contact</Link>
+            <Link to="/" className="work-menu-link">{copy.nav.home}</Link>
+            <Link to="/work" className="work-menu-link is-active">{copy.nav.work}</Link>
+            <Link to="/about" className="work-menu-link">{copy.nav.about}</Link>
+            <Link to="/contact" className="work-menu-link">{copy.nav.contact}</Link>
           </div>
         </nav>
       </header>
@@ -552,7 +460,7 @@ function Work() {
                     onClick={() => setActiveIndex(idx)}
                     className="transition-all duration-300 hover:text-[#0f0f0f] hover:translate-x-2"
                   >
-                    {project.title}
+                    <span className="work-refractable inline-block">{project.title}</span>
                   </button>
                 ))}
               </div>
@@ -574,13 +482,13 @@ function Work() {
                   }`}
                 >
                   <div className="flex flex-col items-center gap-3">
-                    <span className="rounded-full border border-[#d5c5ad] bg-white/90 px-4 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-[#0f0f0f]">
+                    <span className="work-refractable inline-block rounded-full border border-[#d5c5ad] bg-white/90 px-4 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-[#0f0f0f]">
                       {activeProject.tag}
                     </span>
-                    <h1 className="text-3xl md:text-4xl font-black text-[#0a0a0a] leading-tight">
+                    <h1 className="work-refractable text-3xl md:text-4xl font-black text-[#0a0a0a] leading-tight">
                       {activeProject.title}
                     </h1>
-                    <p className="text-base md:text-lg text-[#1f1f1f] max-w-2xl leading-relaxed">
+                    <p className="work-refractable text-base md:text-lg text-[#1f1f1f] max-w-2xl leading-relaxed">
                       {activeProject.description}
                     </p>
                   </div>
@@ -588,10 +496,9 @@ function Work() {
                   <div className="relative w-full">
                     <div className="absolute inset-4 rounded-[26px] border border-[#e2d6c3]/80 shadow-[0_14px_40px_rgba(52,34,18,0.12)] pointer-events-none" />
                     <div
-                      onPointerEnter={handleCursorEnter}
-                      onPointerMove={handleCursorMove}
-                      onPointerLeave={handleCursorLeave}
-                      className={`relative overflow-hidden rounded-[24px] border border-[#f1e4d2]/70 bg-white shadow-[0_20px_60px_rgba(52,34,18,0.12)] transition duration-700 ease-[cubic-bezier(.16,1,.3,1)] group-hover:-translate-y-1 group-hover:shadow-[0_20px_60px_rgba(52,34,18,0.18)] ${cursorEnabled && !activeProject.previewVideo ? 'project-cursor-target' : 'cursor-pointer'}`}
+                      onPointerEnter={handleProjectMediaEnter}
+                      onPointerLeave={handleProjectMediaLeave}
+                      className={`relative overflow-hidden rounded-[24px] border border-[#f1e4d2]/70 bg-white shadow-[0_20px_60px_rgba(52,34,18,0.12)] transition duration-700 ease-[cubic-bezier(.16,1,.3,1)] group-hover:-translate-y-1 group-hover:shadow-[0_20px_60px_rgba(52,34,18,0.18)] ${cursorEnabled ? 'project-cursor-target' : 'cursor-pointer'}`}
                     >
                       <img
                         src={activeProject.image}
@@ -601,15 +508,15 @@ function Work() {
                       />
                     </div>
                   </div>
+                </div>
 
                   {/* <div className="inline-flex items-center gap-3 text-sm font-semibold text-[#0f0f0f] uppercase tracking-[0.28em] transition-transform duration-300 group-hover:translate-y-[-2px]">
                     Voir le projet
                     <ArrowRight className="h-5 w-5 text-[#0f0f0f]" />
                   </div> */}
-                </div>
               </a>
 
-              <div className="project-dots md:hidden" role="tablist" aria-label="Projects">
+              <div className="project-dots md:hidden" role="tablist" aria-label={copy.projectDotsAriaLabel}>
                 {projects.map((project, idx) => {
                   const isActive = idx === activeIndex;
                   return (
@@ -634,7 +541,7 @@ function Work() {
                       onClick={() => setActiveIndex(absoluteIndex)}
                       className="transition-all duration-300 hover:text-[#0f0f0f] hover:-translate-x-2"
                     >
-                      {project.title}
+                      <span className="work-refractable inline-block">{project.title}</span>
                     </button>
                   );
                 })}
@@ -645,7 +552,7 @@ function Work() {
 
         <div className="flex justify-center py-0">
           <p className="text-[10px] md:text-xs font-amazing tracking-[0.16em] text-[#6b6b6b]">
-            Next project soon
+            {copy.nextProjectSoon}
           </p>
         </div>
       </main>

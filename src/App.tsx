@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback, type PointerEvent as ReactPointerEvent } from 'react';
 import gsap from 'gsap';
 import { Link } from 'react-router-dom';
+import { useLanguage } from './context/LanguageContext';
 import digitalGrowthExpertPhoto from './assets/digital-growth-expert.png';
 import airPhoto from './assets/air.png';
 import discoverPhoto from './assets/discover.png';
@@ -18,6 +19,47 @@ const getLenisController = (): LenisController | null => {
   return (window as Window & { __portfolioLenis?: LenisController }).__portfolioLenis ?? null;
 };
 
+const homeCopy = {
+  fr: {
+    enterLabel: 'ENTRER',
+    enterAriaLabel: 'Entrer sur le site',
+    planeTriggerLabel: "Déclencher l'animation de l'avion",
+    nav: {
+      work: 'Projets',
+      about: 'À propos',
+      contact: 'Contact'
+    },
+    discoverExpandLabel: 'Déplier le visuel Discover',
+    discoverCollapseLabel: 'Replier le visuel Discover',
+    photoExpandLabel: 'Déplier la photo',
+    photoCollapseLabel: 'Replier la photo',
+    clickHint: 'click me',
+    digitalGrowthAlt: 'Digital Growth Expert',
+    discoverAlt: 'Visuel Discover',
+    airAlt: 'Composition géométrique',
+    notchAlt: 'Visuel Notchbar 2.0'
+  },
+  en: {
+    enterLabel: 'ENTER',
+    enterAriaLabel: 'Enter site',
+    planeTriggerLabel: 'Trigger plane animation',
+    nav: {
+      work: 'Work',
+      about: 'About',
+      contact: 'Contact'
+    },
+    discoverExpandLabel: 'Expand Discover visual',
+    discoverCollapseLabel: 'Collapse Discover visual',
+    photoExpandLabel: 'Expand photo',
+    photoCollapseLabel: 'Collapse photo',
+    clickHint: 'click me',
+    digitalGrowthAlt: 'Digital Growth Expert',
+    discoverAlt: 'Discover artwork',
+    airAlt: 'Geometric composition',
+    notchAlt: 'Notchbar 2.0 artwork'
+  }
+} as const;
+
 function HomeBrandMark() {
   return (
     <div className="home-brand-mark fixed left-5 top-5 z-[60] text-left text-[#0f0f0f] sm:left-8 sm:top-7">
@@ -32,6 +74,8 @@ function HomeBrandMark() {
 }
 
 function App() {
+  const { language } = useLanguage();
+  const copy = homeCopy[language];
   const [entered, setEntered] = useState(() => {
     if (typeof window === 'undefined') return false;
     return sessionStorage.getItem('introEntered') === 'true';
@@ -811,6 +855,7 @@ function App() {
         className={`fixed inset-0 flex flex-col items-center justify-center overflow-hidden bg-gradient-to-br from-[#f8f3ea] via-[#f2e6d7] to-[#fdf8ef] text-[#0f0f0f] ${
           isTransitioningToMain ? 'pointer-events-none' : ''
         }`}
+        lang={language}
       >
         {!isTransitioningToMain && <HomeBrandMark />}
         {/* Spline Background (commented per request) */}
@@ -827,7 +872,7 @@ function App() {
           ref={introPlaneRef}
           onPointerDown={triggerPlaneExplosion}
           className="intro-plane absolute left-0 top-0 z-10 cursor-pointer touch-manipulation opacity-95"
-          aria-label="Plane animation trigger"
+          aria-label={copy.planeTriggerLabel}
         >
           <div
             ref={introPlaneInnerRef}
@@ -972,9 +1017,9 @@ function App() {
           className={`enter-word absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 ${
             canEnter && !isTransitioningToMain ? 'cursor-pointer opacity-100' : 'cursor-not-allowed opacity-40'
           }`}
-          aria-label="Enter site"
+          aria-label={copy.enterAriaLabel}
         >
-          ENTRER
+          {copy.enterLabel}
         </button>
 
         {/* Loading bar (commented per request) */}
@@ -997,7 +1042,7 @@ function App() {
   }
 
   return (
-    <div ref={mainContentRef} key="main-screen" className="main-content min-h-screen relative text-[#0f0f0f]">
+    <div ref={mainContentRef} key="main-screen" className="main-content min-h-screen relative text-[#0f0f0f]" lang={language}>
       <BackgroundOrbs />
       {isMainPlaneVisible && (
         <div ref={mainFlyPlaneRef} className="intro-plane fixed left-0 top-0 z-[52] pointer-events-none opacity-95" aria-hidden="true">
@@ -1104,7 +1149,7 @@ function App() {
           >
             <img
               src={digitalGrowthExpertPhoto}
-              alt="Digital Growth Expert"
+              alt={copy.digitalGrowthAlt}
               className="relative h-full w-full object-contain object-center"
               loading="eager"
               decoding="async"
@@ -1113,9 +1158,12 @@ function App() {
           </div>
         </div>
         <div
-          className="pointer-events-none fixed bottom-0 left-[max(24rem,24vw)] z-30 hidden lg:block"
+          className="pointer-events-none fixed bottom-0 left-[max(24rem,24vw)] z-50 hidden lg:block"
           style={{ width: discoverPanelExpandedSize }}
         >
+          <span className="click-me-hint pointer-events-none absolute -top-8 left-1/2 -translate-x-1/2 text-[#0f0f0f]">
+            {copy.clickHint}
+          </span>
           <div
             ref={mediaLeftBottomCardRef}
             onClick={handleDiscoverCardClick}
@@ -1123,7 +1171,7 @@ function App() {
             style={{
               height: isDiscoverExpanded ? discoverPanelExpandedSize : discoverPanelCollapsedHeight
             }}
-            aria-label={isDiscoverExpanded ? 'Replier Discover' : 'Deplier Discover'}
+            aria-label={isDiscoverExpanded ? copy.discoverCollapseLabel : copy.discoverExpandLabel}
           >
             <div
               className="absolute inset-x-0 bottom-0"
@@ -1131,7 +1179,7 @@ function App() {
             >
               <img
                 src={discoverPhoto}
-                alt="Discover artwork"
+                alt={copy.discoverAlt}
                 className="h-full w-full object-contain object-center"
                 loading="eager"
                 decoding="async"
@@ -1140,19 +1188,24 @@ function App() {
             </div>
           </div>
         </div>
-        <div className="pointer-events-none fixed top-1/2 z-30 hidden w-[72vw] max-w-[640px] -translate-y-[6%] sm:w-[64vw] md:right-0 md:block md:w-[44vw] lg:w-[36vw] xl:w-[32vw]">
+        <div className="pointer-events-none fixed top-1/2 z-50 hidden w-[72vw] max-w-[640px] -translate-y-[6%] sm:w-[64vw] md:right-0 md:block md:w-[44vw] lg:w-[36vw] xl:w-[32vw]">
+          <span
+            className={`click-me-hint click-me-hint--right pointer-events-none absolute text-[#0f0f0f] ${isRightPhotoExpanded ? 'is-expanded' : ''}`}
+          >
+            {copy.clickHint}
+          </span>
           <div
             ref={mediaRightCardRef}
             onClick={() => setIsRightPhotoExpanded((previous) => !previous)}
             className="pointer-events-auto cursor-pointer touch-manipulation overflow-hidden border-0 bg-transparent aspect-[1969/1125] will-change-[clip-path] transition-[clip-path] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]"
             style={{
-              clipPath: isRightPhotoExpanded ? 'inset(0 0 0 0)' : 'inset(0 0 0 calc(100% - 88px))'
+              clipPath: isRightPhotoExpanded ? 'inset(0 0 0 0)' : 'inset(0 0 0 calc(100% - 120px))'
             }}
-            aria-label={isRightPhotoExpanded ? 'Replier la photo' : 'Deplier la photo'}
+            aria-label={isRightPhotoExpanded ? copy.photoCollapseLabel : copy.photoExpandLabel}
           >
             <img
               src={airPhoto}
-              alt="Composition geometrique"
+              alt={copy.airAlt}
               className="h-full w-full object-contain object-center"
               loading="eager"
               decoding="async"
@@ -1161,7 +1214,7 @@ function App() {
           </div>
         </div>
         <div className="pointer-events-none fixed left-[43%] top-[-8%] z-40 hidden h-[clamp(760px,104vh,1400px)] w-[clamp(520px,52vw,1040px)] -translate-x-1/2 md:block">
-          <div className="pointer-events-auto h-full w-full overflow-visible bg-transparent">
+          <div className="pointer-events-none h-full w-full overflow-visible bg-transparent">
             <Lanyard position={[0, 0, 18]} gravity={[0, -40, 0]} fov={16} />
           </div>
         </div>
@@ -1172,7 +1225,7 @@ function App() {
           >
             <img
               src={notchbarPhoto}
-              alt="Notchbar 2.0 artwork"
+              alt={copy.notchAlt}
               className="h-full w-full object-cover object-center"
               loading="eager"
               decoding="async"
@@ -1184,7 +1237,7 @@ function App() {
           <div className="overflow-hidden border border-[#0f0f0f]/10 bg-transparent shadow-[0_10px_30px_rgba(15,15,15,0.08)] aspect-[3005/4250]">
             <img
               src={digitalGrowthExpertPhoto}
-              alt="Digital Growth Expert"
+              alt={copy.digitalGrowthAlt}
               className="h-full w-full object-contain object-center"
               loading="eager"
               decoding="async"
@@ -1194,7 +1247,7 @@ function App() {
           <div className="overflow-hidden border border-[#0f0f0f]/10 bg-white/10 shadow-[0_10px_30px_rgba(15,15,15,0.08)] aspect-[1838/1050]">
             <img
               src={notchbarPhoto}
-              alt="Notchbar 2.0 artwork"
+              alt={copy.notchAlt}
               className="h-full w-full object-cover object-center"
               loading="eager"
               decoding="async"
@@ -1204,7 +1257,7 @@ function App() {
           <div className="overflow-hidden border border-[#0f0f0f]/10 bg-transparent shadow-[0_10px_30px_rgba(15,15,15,0.08)] aspect-[1969/1125]">
             <img
               src={airPhoto}
-              alt="Composition geometrique"
+              alt={copy.airAlt}
               className="h-full w-full object-contain object-center"
               loading="eager"
               decoding="async"
@@ -1214,7 +1267,7 @@ function App() {
           <div className="overflow-hidden border border-[#0f0f0f]/10 bg-transparent shadow-[0_10px_30px_rgba(15,15,15,0.08)] aspect-square">
             <img
               src={discoverPhoto}
-              alt="Discover artwork"
+              alt={copy.discoverAlt}
               className="h-full w-full object-contain object-center"
               loading="eager"
               decoding="async"
@@ -1228,9 +1281,9 @@ function App() {
             ref={navGroupRef}
             className="nav-group flex flex-col items-center text-center space-y-4 text-sm font-black uppercase tracking-[0.2em] pointer-events-auto md:flex-row md:space-y-0 md:space-x-10 md:text-lg md:tracking-[0.26em]"
           >
-            <Link to="/work" className="nav-link nav-link-swap text-[#0f0f0f]/80">Work</Link>
-            <Link to="/about" className="nav-link nav-link-swap text-[#0f0f0f]/80">About</Link>
-            <Link to="/contact" className="nav-link nav-link-swap text-[#0f0f0f]/80">Contact</Link>
+            <Link to="/work" className="nav-link nav-link-swap text-[#0f0f0f]/80">{copy.nav.work}</Link>
+            <Link to="/about" className="nav-link nav-link-swap text-[#0f0f0f]/80">{copy.nav.about}</Link>
+            <Link to="/contact" className="nav-link nav-link-swap text-[#0f0f0f]/80">{copy.nav.contact}</Link>
           </div>
         </nav>
 

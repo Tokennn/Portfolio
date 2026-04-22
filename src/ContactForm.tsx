@@ -32,23 +32,23 @@ import logoNetlify from './assets/logos/netlify.png';
 const contactCopy = {
   fr: {
     title: 'Contactez-moi 📬',
-    nameLabel: 'Nom',
-    emailLabel: 'Email',
+    nameLabel: 'Nom complet',
+    emailLabel: 'E-mail',
     messageLabel: 'Message',
-    sendLabel: 'Envoyer',
+    sendLabel: 'Envoyer le message',
     successMessage: 'Message envoyé avec succès ✅',
     errorMessage: 'Une erreur est survenue ❌',
-    bubble: 'Écrivez-moi pour toute question ou collaboration !!'
+    bubble: 'Écris-moi pour toute question ou collaboration.'
   },
   en: {
     title: 'Contact me 📬',
-    nameLabel: 'Name',
+    nameLabel: 'Full name',
     emailLabel: 'Email',
     messageLabel: 'Message',
-    sendLabel: 'Send',
+    sendLabel: 'Send message',
     successMessage: 'Message sent successfully ✅',
     errorMessage: 'Something went wrong ❌',
-    bubble: 'DM me for any questions or collaborations !!'
+    bubble: 'Message me for any question or collaboration.'
   }
 };
 
@@ -170,7 +170,7 @@ const ContactForm = () => {
   };
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-[#f8f3ea] via-[#f2e6d7] to-[#fdf8ef] text-[#0f0f0f] px-4 md:px-8 py-12 md:py-16">
+    <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-[#f8f3ea] via-[#f2e6d7] to-[#fdf8ef] text-[#0f0f0f] px-4 md:px-8 py-12 md:py-16" lang={language}>
       <div className="pointer-events-none absolute inset-0 opacity-70 bg-[radial-gradient(circle_at_18%_16%,rgba(255,255,255,0.85),transparent_38%),radial-gradient(circle_at_82%_6%,rgba(253,230,205,0.45),transparent_46%),radial-gradient(circle_at_24%_80%,rgba(210,175,140,0.28),transparent_50%)]" />
       <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden" aria-hidden="true">
         {floatingTools.map((tool, index) => {

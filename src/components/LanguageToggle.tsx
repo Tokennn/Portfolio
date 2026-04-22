@@ -3,13 +3,14 @@ import { useLanguage } from "../context/LanguageContext";
 function LanguageToggle() {
   const { language, toggleLanguage } = useLanguage();
   const isEnglish = language === "en";
+  const ariaLabel = isEnglish ? "Switch language" : "Basculer la langue";
 
   return (
     <button
       type="button"
       role="switch"
       aria-checked={isEnglish}
-      aria-label="Basculer la langue"
+      aria-label={ariaLabel}
       onClick={toggleLanguage}
       className="group inline-flex items-center gap-2 rounded-full border border-[#dccfb9] bg-white/90 px-2 py-1 font-amazing shadow-[0_8px_24px_rgba(52,34,18,0.12)] transition-transform duration-300 hover:-translate-y-0.5"
     >

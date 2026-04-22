@@ -37,6 +37,7 @@ import voyageCardImage from "./Voyage.png";
 import musicCardImage from "./Musique.png";
 import modeCardImage from "./Mode.png";
 import LanguageToggle from "./components/LanguageToggle";
+import FluidGlass from "./components/FluidGlass";
 import { useLanguage } from "./context/LanguageContext";
 import { useTextReveal } from "./hooks/useTextReveal";
 
@@ -70,34 +71,35 @@ const aboutCopy = {
       contact: "Contact"
     },
     badge: "À propos",
-    title: "Développeur et VibeDev créatif indépendant",
+    title: "Développeur créatif freelance & VibeDev",
     intro:
-      "Développeur créatif basé en France, passionné par l'art numérique, le codage créatif et l'animation 3D. Toujours à la recherche d'opportunités intéressantes en freelance ou en équipe pour développer de belles expériences numériques.",
-    schoolTitle: "Mon école :",
+      "Développeur créatif basé en France, passionné par l'art numérique, le creative coding et l'animation 3D. Je recherche en continu des missions freelance ou en équipe pour concevoir des expériences digitales soignées.",
+    schoolTitle: "Formation",
     schoolBody:
-      "Actuellement en formation à Ynov Campus sur Lyon, je suis en 3ème année de Bachelor en développement où je me spécialise dans le développement web. Par la suite de cette formation, à la fin de mon Master, je voudrais plus me spécialiser dans le design web.",
+      "Actuellement en 3e année de Bachelor Développement à Ynov Campus Lyon, avec une spécialisation web. À terme, je souhaite renforcer mon expertise en design web pendant mon cycle Master.",
     valuesTitle: "Valeurs",
     values: ["Esprit d'équipe", "Créativité", "Innovation", "Adaptabilité"],
     zoomOut: "Dézoomer la carte",
     zoomIn: "Zoomer la carte",
-    mapTooltip: "je suis là !!",
-    snapshotLabel: "Snapshot",
+    mapTooltip: "Je suis ici",
+    snapshotLabel: "Profil",
     locationLabel: "Localisation",
     locationValue: "Lyon, France",
     roleLabel: "Rôle",
-    roleValue: "Dev créatif",
+    roleValue: "Développeur créatif",
     techLabel: "Technologies",
     statusLabel: "Statut",
     statusValue: "Disponible",
     keywordsLabel: "Mots-clés",
     keywords: ["Design", "UI", "UX", "Ergonomie", "Simplicité"],
-    processTitle: "Process'",
+    processTitle: "Processus",
     processBody:
-      "Je démarre par un brief clair, puis je propose une direction visuelle rapide. Ensuite, je développe le MPV, avant landing pour une prémière présentation au client. Puis, si validation est faite, alors début du développement avec tests et crash avant mise en ligne.",
+      "Je commence par un brief clair, puis je propose une direction visuelle rapide. Ensuite, je construis un MVP pour une première démonstration client. Après validation, je passe au développement complet, aux tests et aux optimisations avant mise en ligne.",
     toolsTitle: "Outils",
+    outsideHeadingLines: ["En dehors", "du travail"],
     outsideTitle: "En dehors du travail",
     outsideBody:
-      "Passion pour le sport, le dessin, la photo/vidéo, la mode, la musique et pouvoir voyager ✈️",
+      "Passionné par le sport, le dessin, la photo/vidéo, la mode, la musique et les voyages.",
     outsideItems: [
       { title: "Mode", text: "Silhouettes, matières.", tone: "fashion" },
       { title: "Musique", text: "Rythme, ambiance.", tone: "music" },
@@ -105,16 +107,18 @@ const aboutCopy = {
     ],
     contributeTitle: "Ce que j'apporte",
     contributeItems: [
-      "Développement Front End .",
-      "Développement Back End .",
-      "Optimisation de pages web ."
+      "Développement front-end.",
+      "Développement back-end.",
+      "Optimisation des performances web."
     ],
-    contactTagline: "- Contactez-moi pour toute collaboration ou simplement dire bonjour 🫵 -",
+    contactTagline: "- Contactez-moi pour collaborer ou simplement échanger -",
     footerRights: "© 2025 Quentin Contreau. Tous droits réservés.",
     footerBuiltWith: "Créé avec",
     footerHostedOn: "Hébergé sur",
     toolsExpandLabel: "Afficher plus d'outils",
-    toolsCollapseLabel: "Réduire la liste des outils"
+    toolsCollapseLabel: "Réduire la liste des outils",
+    playAudioLabel: "Lancer l'audio",
+    pauseAudioLabel: "Mettre l'audio en pause"
   },
   en: {
     nav: {
@@ -124,12 +128,12 @@ const aboutCopy = {
       contact: "Contact"
     },
     badge: "About",
-    title: "Creative freelance developer & VibeDev",
+    title: "Freelance creative developer & VibeDev",
     intro:
       "Creative developer based in France, passionate about digital art, creative coding, and 3D animation. Always looking for exciting freelance or team opportunities to build beautiful digital experiences.",
-    schoolTitle: "My school:",
+    schoolTitle: "Education",
     schoolBody:
-      "Currently studying at Ynov Campus in Lyon, I am in my 3rd year of a Bachelor in development with a focus on web development. After this program, at the end of my Master's degree, I want to specialize more in web design.",
+      "I am currently in my third year of a Bachelor's degree in Development at Ynov Campus Lyon, focused on web development. During my Master's cycle, I plan to deepen my specialization in web design.",
     valuesTitle: "Values",
     values: ["Team spirit", "Creativity", "Innovation", "Adaptability"],
     zoomOut: "Zoom out map",
@@ -139,7 +143,7 @@ const aboutCopy = {
     locationLabel: "Location",
     locationValue: "Lyon, France",
     roleLabel: "Role",
-    roleValue: "Creative dev",
+    roleValue: "Creative developer",
     techLabel: "Technologies",
     statusLabel: "Status",
     statusValue: "Available",
@@ -147,11 +151,12 @@ const aboutCopy = {
     keywords: ["Design", "UI", "UX", "Ergonomics", "Simplicity"],
     processTitle: "Process",
     processBody:
-      "I start with a clear brief, then propose a quick visual direction. Next, I build in short iterations with regular check-ins, followed by testing, optimization, and launch.",
+      "I start with a clear brief, then propose a quick visual direction. Next, I build an MVP for an initial client review. Once validated, I move to full development, testing, and optimization before launch.",
     toolsTitle: "Tools",
-    outsideTitle: "Outside work",
+    outsideHeadingLines: ["Outside", "of work"],
+    outsideTitle: "Outside of work",
     outsideBody:
-      "Passion for sports, drawing, photo/video, motorsports, fashion, music, and traveling.",
+      "Passionate about sports, drawing, photo/video, fashion, music, and travel.",
     outsideItems: [
       { title: "Fashion", text: "Silhouettes, materials.", tone: "fashion" },
       { title: "Music", text: "Rhythm, ambience.", tone: "music" },
@@ -163,12 +168,14 @@ const aboutCopy = {
       "Back-end development.",
       "Web page optimization."
     ],
-    contactTagline: "- Contact me for any collaboration or just to say hello -",
+    contactTagline: "- Contact me for collaboration or just to say hi -",
     footerRights: "© 2025 Quentin Contreau. All rights reserved.",
     footerBuiltWith: "Built with",
     footerHostedOn: "Hosted on",
     toolsExpandLabel: "Show more tools",
-    toolsCollapseLabel: "Show fewer tools"
+    toolsCollapseLabel: "Show fewer tools",
+    playAudioLabel: "Play audio",
+    pauseAudioLabel: "Pause audio"
   }
 };
 const mapMarker = divIcon({
@@ -188,8 +195,18 @@ function About() {
   useTextReveal({ observeMutations: false, watch: language });
 
   const copy = aboutCopy[language];
+  const fluidGlassMode: "lens" | "bar" | "cube" = "lens";
+  const fluidGlassLensProps: Record<string, unknown> = {
+    scale: 0.25,
+    ior: 1.15,
+    thickness: 5,
+    chromaticAberration: 0.1,
+    anisotropy: 0.01
+  };
+  const fluidGlassBarProps: Record<string, unknown> = {};
+  const fluidGlassCubeProps: Record<string, unknown> = {};
   const outsideItems = copy.outsideItems ?? [];
-  const outsideHeadingLines = language === "fr" ? ["En dehors", "du travail"] : ["Outside", "work"];
+  const outsideHeadingLines = copy.outsideHeadingLines;
   const outsideStackMinHeight = Math.max(500, outsideItems.length * 200);
   const mapRef = useRef<LeafletMap | null>(null);
   const [isMapReady, setIsMapReady] = useState(false);
@@ -831,7 +848,7 @@ function About() {
             type="button"
             onClick={handleTogglePlayback}
             className="dynamic-island dynamic-island--large"
-            aria-label={isPlaying ? "Pause audio" : "Play audio"}
+            aria-label={isPlaying ? copy.pauseAudioLabel : copy.playAudioLabel}
             aria-pressed={isPlaying}
             data-playing={isPlaying}
             data-reactive={isReactive}
@@ -873,7 +890,7 @@ function About() {
           type="button"
           onClick={handleTogglePlayback}
           className="dynamic-island dynamic-island--large"
-          aria-label={isPlaying ? "Pause audio" : "Play audio"}
+          aria-label={isPlaying ? copy.pauseAudioLabel : copy.playAudioLabel}
           aria-pressed={isPlaying}
           data-playing={isPlaying}
           data-reactive={isReactive}
@@ -1133,6 +1150,27 @@ function About() {
             </div>
           </section>
         </div>
+
+        <section className="relative isolate overflow-hidden rounded-[32px] border border-[#dccfb9] bg-white/90 p-4 md:p-6 shadow-[0_24px_70px_rgba(52,34,18,0.14)] reveal-up">
+          <div className="mb-4 md:mb-6">
+            <h2 className="font-amazing text-2xl md:text-3xl font-black text-[#0a0a0a] leading-tight">
+              {language === "fr" ? "Démo FluidGlass (React Bits)" : "FluidGlass Demo (React Bits)"}
+            </h2>
+            <p className="mt-2 font-amazing text-sm md:text-base text-[#3a3a3a]">
+              {language === "fr"
+                ? "Intégration TypeScript + Tailwind avec mode lens par défaut et props configurables."
+                : "TypeScript + Tailwind integration with default lens mode and configurable props."}
+            </p>
+          </div>
+          <div className="relative h-[600px]">
+            <FluidGlass
+              mode={fluidGlassMode}
+              lensProps={fluidGlassLensProps}
+              barProps={fluidGlassBarProps}
+              cubeProps={fluidGlassCubeProps}
+            />
+          </div>
+        </section>
 
         <div className="-mt-6 -mb-2 flex justify-center">
           <div className="flex items-center gap-4 rounded-full border border-[#e6d9c6] bg-white/85 px-5 py-2 shadow-[0_10px_30px_rgba(52,34,18,0.12)]">

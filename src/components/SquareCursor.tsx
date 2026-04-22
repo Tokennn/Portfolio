@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 
 function SquareCursor() {
+  const location = useLocation();
   const [enabled, setEnabled] = useState(() => {
     if (typeof window === 'undefined') return false;
     const coarsePointer = window.matchMedia('(pointer: coarse)').matches;
@@ -20,14 +22,18 @@ function SquareCursor() {
     return () => coarsePointerQuery.removeEventListener('change', update);
   }, []);
 
-  useEffect(() => {
-    if (!enabled || typeof document === 'undefined') return;
-    document.body.classList.add('has-square-cursor');
-    return () => document.body.classList.remove('has-square-cursor');
-  }, [enabled]);
+  const isWorkRoute = location.pathname === '/work' || location.pathname.startsWith('/work/');
+  const isAboutRoute = location.pathname === '/about' || location.pathname.startsWith('/about/');
+  const shouldRender = enabled && !isWorkRoute && !isAboutRoute;
 
   useEffect(() => {
-    if (!enabled) return;
+    if (!shouldRender || typeof document === 'undefined') return;
+    document.body.classList.add('has-square-cursor');
+    return () => document.body.classList.remove('has-square-cursor');
+  }, [shouldRender]);
+
+  useEffect(() => {
+    if (!shouldRender) return;
 
     let isAnimating = false;
     let lastMove = performance.now();
@@ -78,9 +84,9 @@ function SquareCursor() {
       if (raf.current) cancelAnimationFrame(raf.current);
       raf.current = null;
     };
-  }, [enabled]);
+  }, [shouldRender]);
 
-  if (!enabled) return null;
+  if (!shouldRender) return null;
 
   return <div ref={cursorRef} className="square-cursor" aria-hidden="true" />;
 }
