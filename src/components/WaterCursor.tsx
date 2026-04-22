@@ -5,6 +5,7 @@ import { useLocation } from "react-router-dom";
 type WaterCursorProps = {
   size?: "sm" | "md";
   disabledOnWork?: boolean;
+  interactionMode?: "full" | "text-only";
 };
 
 type CharMotionState = {
@@ -32,7 +33,7 @@ const FLUID_OPTICS = {
   anisotropy: 0.01
 } as const;
 
-function WaterCursor({ size = "md", disabledOnWork = false }: WaterCursorProps) {
+function WaterCursor({ size = "md", disabledOnWork = false, interactionMode = "full" }: WaterCursorProps) {
   const location = useLocation();
   const hostRef = useRef<HTMLDivElement>(null);
   const distortionRef = useRef<HTMLDivElement>(null);
@@ -79,6 +80,20 @@ function WaterCursor({ size = "md", disabledOnWork = false }: WaterCursorProps) 
       return t * t * (3 - 2 * t);
     };
 
+    const clearBlockOverlays = () => {
+      for (const block of refractedBlockElementsRef.current) {
+        const overlay = blockOverlayMap.get(block);
+        if (overlay?.isConnected) {
+          overlay.remove();
+        }
+
+        if (blockPositionRestoreMap.has(block)) {
+          block.style.position = blockPositionRestoreMap.get(block) ?? "";
+        }
+      }
+      refractedBlockElementsRef.current = [];
+    };
+
     const clearRefractedElements = () => {
       for (const [element, chars] of refractedCharMapRef.current.entries()) {
         chars.forEach((char) => {
@@ -95,17 +110,7 @@ function WaterCursor({ size = "md", disabledOnWork = false }: WaterCursorProps) 
         }
       }
       refractedCharMapRef.current.clear();
-
-      for (const block of refractedBlockElementsRef.current) {
-        const overlay = blockOverlayMap.get(block);
-        if (overlay?.isConnected) {
-          overlay.remove();
-        }
-
-        if (blockPositionRestoreMap.has(block)) {
-          block.style.position = blockPositionRestoreMap.get(block) ?? "";
-        }
-      }
+      clearBlockOverlays();
     };
 
     const prepareRefractedElement = (element: HTMLElement) => {
@@ -205,14 +210,19 @@ function WaterCursor({ size = "md", disabledOnWork = false }: WaterCursorProps) 
     };
 
     const collectRefractedElements = () => {
-      const textElements = Array.from(document.querySelectorAll<HTMLElement>(".work-refractable"));
-      textElements.forEach(prepareRefractedElement);
-      refractedElementsRef.current = textElements;
-
       const scopeRoot =
         document.querySelector<HTMLElement>("[data-work-fluid-scope='true']") ??
         document.querySelector<HTMLElement>("main") ??
         document.body;
+      const textElements = Array.from(scopeRoot.querySelectorAll<HTMLElement>(".work-refractable"));
+      textElements.forEach(prepareRefractedElement);
+      refractedElementsRef.current = textElements;
+
+      if (interactionMode === "text-only") {
+        clearBlockOverlays();
+        return;
+      }
+
       const allCandidates = Array.from(scopeRoot.querySelectorAll<HTMLElement>("*")).filter(isVisualBlockCandidate);
       const mediaTags = new Set(["IMG", "VIDEO", "CANVAS", "SVG"]);
       const mediaCandidates = allCandidates.filter((node) => mediaTags.has(node.tagName));
@@ -545,7 +555,7 @@ function WaterCursor({ size = "md", disabledOnWork = false }: WaterCursorProps) 
       clearRefractedElements();
       document.body.classList.remove("has-water-cursor");
     };
-  }, [shouldRender, size]);
+  }, [interactionMode, shouldRender, size]);
 
   if (!shouldRender) return null;
 

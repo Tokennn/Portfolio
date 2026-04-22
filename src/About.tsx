@@ -37,7 +37,7 @@ import voyageCardImage from "./Voyage.png";
 import musicCardImage from "./Musique.png";
 import modeCardImage from "./Mode.png";
 import LanguageToggle from "./components/LanguageToggle";
-import FluidGlass from "./components/FluidGlass";
+import WaterCursor from "./components/WaterCursor";
 import { useLanguage } from "./context/LanguageContext";
 import { useTextReveal } from "./hooks/useTextReveal";
 
@@ -195,16 +195,6 @@ function About() {
   useTextReveal({ observeMutations: false, watch: language });
 
   const copy = aboutCopy[language];
-  const fluidGlassMode: "lens" | "bar" | "cube" = "lens";
-  const fluidGlassLensProps: Record<string, unknown> = {
-    scale: 0.25,
-    ior: 1.15,
-    thickness: 5,
-    chromaticAberration: 0.1,
-    anisotropy: 0.01
-  };
-  const fluidGlassBarProps: Record<string, unknown> = {};
-  const fluidGlassCubeProps: Record<string, unknown> = {};
   const outsideItems = copy.outsideItems ?? [];
   const outsideHeadingLines = copy.outsideHeadingLines;
   const outsideStackMinHeight = Math.max(500, outsideItems.length * 200);
@@ -225,6 +215,11 @@ function About() {
   const rafAudioRef = useRef<number | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isReactive, setIsReactive] = useState(false);
+  const [cursorEnabled, setCursorEnabled] = useState(() => {
+    if (typeof window === "undefined") return false;
+    const coarsePointer = window.matchMedia("(pointer: coarse)").matches;
+    return !coarsePointer;
+  });
   const autoPlayAttempted = useRef(false);
   const outsideStackRef = useRef<HTMLDivElement | null>(null);
   const toolsGridRef = useRef<HTMLDivElement | null>(null);
@@ -259,6 +254,25 @@ function About() {
     mediaQuery.addEventListener("change", updateViewport);
     return () => mediaQuery.removeEventListener("change", updateViewport);
   }, []);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const coarsePointerQuery = window.matchMedia("(pointer: coarse)");
+    const update = () => {
+      setCursorEnabled(!coarsePointerQuery.matches);
+    };
+    update();
+    coarsePointerQuery.addEventListener("change", update);
+    return () => coarsePointerQuery.removeEventListener("change", update);
+  }, []);
+
+  useEffect(() => {
+    if (!cursorEnabled || typeof document === "undefined") return;
+    document.body.classList.add("work-hide-cursor");
+    return () => {
+      document.body.classList.remove("work-hide-cursor");
+    };
+  }, [cursorEnabled]);
 
   useLayoutEffect(() => {
     const target = toolsCardRef.current;
@@ -838,8 +852,10 @@ function About() {
   return (
     <div
       className="about-liquid-scope font-boxing relative min-h-screen overflow-hidden bg-gradient-to-br from-[#f8f3ea] via-[#f2e6d7] to-[#fdf8ef] text-[#0f0f0f] px-4 md:px-8 pt-28 pb-12 md:py-16"
+      data-work-fluid-scope="true"
       lang={language === "fr" ? "fr" : "en"}
     >
+      {cursorEnabled && <WaterCursor size="md" interactionMode="text-only" />}
       <audio ref={audioRef} src={islandAudioSrc} preload="auto" playsInline />
       <div className="pointer-events-none absolute inset-0 opacity-70 bg-[radial-gradient(circle_at_18%_16%,rgba(255,255,255,0.85),transparent_38%),radial-gradient(circle_at_82%_6%,rgba(253,230,205,0.45),transparent_46%),radial-gradient(circle_at_24%_80%,rgba(210,175,140,0.28),transparent_50%)]" />
       <div className="fixed inset-x-0 top-0 z-50 flex flex-col gap-2 pt-[calc(env(safe-area-inset-top,0px)+8px)] sm:hidden">
@@ -929,10 +945,10 @@ function About() {
       <header className="relative z-20 max-w-6xl mx-auto mt-2 mb-10 md:mt-4 md:mb-14">
         <nav className="work-menu-glass mx-auto w-full max-w-[760px] px-4 py-3 md:px-6 md:py-4">
           <div className="flex items-center justify-center gap-2 md:gap-4">
-            <Link to="/" className="work-menu-link">{copy.nav.home}</Link>
-            <Link to="/work" className="work-menu-link">{copy.nav.work}</Link>
-            <Link to="/about" className="work-menu-link is-active">{copy.nav.about}</Link>
-            <Link to="/contact" className="work-menu-link">{copy.nav.contact}</Link>
+            <Link to="/" className="work-menu-link work-refractable">{copy.nav.home}</Link>
+            <Link to="/work" className="work-menu-link work-refractable">{copy.nav.work}</Link>
+            <Link to="/about" className="work-menu-link is-active work-refractable">{copy.nav.about}</Link>
+            <Link to="/contact" className="work-menu-link work-refractable">{copy.nav.contact}</Link>
           </div>
         </nav>
       </header>
@@ -943,20 +959,20 @@ function About() {
             <div className="relative z-10 grid gap-10 md:grid-cols-[1.2fr_0.8fr]">
               <div className="space-y-7">
                 <div className="flex flex-col gap-4">
-                  <span className="w-fit rounded-full border border-[#d5c5ad] bg-white/90 px-4 py-2 text-xs font-amazing font-semibold uppercase tracking-[0.3em] text-[#0f0f0f]">
+                  <span className="work-refractable w-fit rounded-full border border-[#d5c5ad] bg-white/90 px-4 py-2 text-xs font-amazing font-semibold uppercase tracking-[0.3em] text-[#0f0f0f]">
                   {copy.badge}
                   </span>
-                  <h1 className="font-amazing text-4xl md:text-5xl font-black text-[#0a0a0a] leading-tight">
+                  <h1 className="work-refractable font-amazing text-4xl md:text-5xl font-black text-[#0a0a0a] leading-tight">
                     {copy.title}
                   </h1>
                 </div>
 
                 <div className="space-y-5 text-base md:text-lg text-[#1f1f1f] leading-relaxed max-w-2xl">
-                  <p data-reveal="text" className="font-amazing">{copy.intro}</p>
-                  <h2 className="font-amazing text-4xl md:text-5xl font-black text-[#0a0a0a] leading-tight">
+                  <p data-reveal="text" className="work-refractable font-amazing">{copy.intro}</p>
+                  <h2 className="work-refractable font-amazing text-4xl md:text-5xl font-black text-[#0a0a0a] leading-tight">
                     {copy.schoolTitle}
                   </h2>
-                  <p data-reveal="text" className="font-amazing">{copy.schoolBody}</p>
+                  <p data-reveal="text" className="work-refractable font-amazing">{copy.schoolBody}</p>
                 </div>
 
                 <div className="grid gap-4 sm:grid-cols-2">
@@ -969,12 +985,12 @@ function About() {
                     </p>
                   </div> */}
                   <div className="liquid-glass-edge rounded-[26px] border border-[#e6d9c6] bg-white/80 p-6 shadow-[0_14px_40px_rgba(52,34,18,0.10)] transition-transform transition-shadow duration-500 ease-[cubic-bezier(.16,1,.3,1)] hover:-translate-y-1 hover:shadow-[0_20px_50px_rgba(52,34,18,0.16)]">
-                    <h2 className="text-sm font-amazing font-semibold uppercase tracking-[0.24em] text-[#0f0f0f] mb-3">
+                    <h2 className="work-refractable text-sm font-amazing font-semibold uppercase tracking-[0.24em] text-[#0f0f0f] mb-3">
                       {copy.valuesTitle}
                     </h2>
                   <ul className="space-y-3 text-sm md:text-base font-amazing text-[#3a3a3a] leading-relaxed">
                     {copy.values.map((value) => (
-                      <li key={value}>• {value}</li>
+                      <li key={value} className="work-refractable">• {value}</li>
                     ))}
                   </ul>
                   </div>
@@ -1030,10 +1046,10 @@ function About() {
                           </Tooltip>
                         </Marker>
                       </MapContainer>
-                      <span className="pointer-events-none absolute left-3 bottom-3 rounded-full bg-white/90 px-3 py-1 text-xs font-semibold text-[#2f2f2f] shadow-[0_6px_16px_rgba(52,34,18,0.12)]">
+                      <span className="work-refractable pointer-events-none absolute left-3 bottom-3 rounded-full bg-white/90 px-3 py-1 text-xs font-semibold text-[#2f2f2f] shadow-[0_6px_16px_rgba(52,34,18,0.12)]">
                         {copy.locationValue}
                       </span>
-                      <span className="pointer-events-none absolute right-3 bottom-3 text-[9px] font-semibold uppercase tracking-[0.2em] text-[#6b6b6b]">
+                      <span className="work-refractable pointer-events-none absolute right-3 bottom-3 text-[9px] font-semibold uppercase tracking-[0.2em] text-[#6b6b6b]">
                         © OpenStreetMap contributors © CARTO
                       </span>
                     </div>
@@ -1055,22 +1071,22 @@ function About() {
                         />
                       </div>
                       <div>
-                        <p className="text-xs font-semibold uppercase tracking-[0.26em] text-[#6b6b6b]">{copy.snapshotLabel}</p>
-                        <p className="text-lg font-black text-[#0a0a0a] leading-tight">Quentin / Contreau</p>
+                        <p className="work-refractable text-xs font-semibold uppercase tracking-[0.26em] text-[#6b6b6b]">{copy.snapshotLabel}</p>
+                        <p className="work-refractable text-lg font-black text-[#0a0a0a] leading-tight">Quentin / Contreau</p>
                       </div>
                     </div>
 
                     <dl className="grid grid-cols-2 gap-x-6 gap-y-4 text-sm">
                       <div>
-                        <dt className="text-xs uppercase tracking-[0.26em] text-[#6b6b6b]">{copy.locationLabel}</dt>
-                        <dd className="font-semibold text-[#0f0f0f] mt-1">{copy.locationValue}</dd>
+                        <dt className="work-refractable text-xs uppercase tracking-[0.26em] text-[#6b6b6b]">{copy.locationLabel}</dt>
+                        <dd className="work-refractable font-semibold text-[#0f0f0f] mt-1">{copy.locationValue}</dd>
                       </div>
                       <div>
-                        <dt className="text-xs uppercase tracking-[0.26em] text-[#6b6b6b]">{copy.roleLabel}</dt>
-                        <dd className="font-semibold text-[#0f0f0f] mt-1">{copy.roleValue}</dd>
+                        <dt className="work-refractable text-xs uppercase tracking-[0.26em] text-[#6b6b6b]">{copy.roleLabel}</dt>
+                        <dd className="work-refractable font-semibold text-[#0f0f0f] mt-1">{copy.roleValue}</dd>
                       </div>
                       <div>
-                        <dt className="text-xs uppercase tracking-[0.26em] text-[#6b6b6b]">{copy.techLabel}</dt>
+                        <dt className="work-refractable text-xs uppercase tracking-[0.26em] text-[#6b6b6b]">{copy.techLabel}</dt>
                         <dd className="mt-1">
                           <div className="stack-marquee border border-[#e2d6c3] bg-white/80 px-4 py-2 shadow-[0_8px_24px_rgba(52,34,18,0.10)]">
                             <div className="stack-marquee-track text-xs md:text-sm font-semibold uppercase tracking-[0.24em] text-[#0f0f0f]">
@@ -1085,23 +1101,23 @@ function About() {
                         </dd>
                       </div>
                       <div>
-                        <dt className="text-xs uppercase tracking-[0.26em] text-[#6b6b6b]">{copy.statusLabel}</dt>
+                        <dt className="work-refractable text-xs uppercase tracking-[0.26em] text-[#6b6b6b]">{copy.statusLabel}</dt>
                         <dd className="mt-1 flex items-center gap-2 font-semibold text-[#0f0f0f]">
                           <span className="relative flex h-2.5 w-2.5" aria-hidden="true">
                             <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#2bbf6a]/50" />
                             <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-[#2bbf6a] shadow-[0_0_0_4px_rgba(43,191,106,0.18)]" />
                           </span>
-                          <span>{copy.statusValue}</span>
+                          <span className="work-refractable">{copy.statusValue}</span>
                         </dd>
                       </div>
                     </dl>
 
                     <div className="pt-2">
-                      <p className="text-xs uppercase tracking-[0.26em] text-[#6b6b6b] mb-3">{copy.keywordsLabel}</p>
+                      <p className="work-refractable text-xs uppercase tracking-[0.26em] text-[#6b6b6b] mb-3">{copy.keywordsLabel}</p>
                       <div className="flex flex-wrap gap-2">
                         {copy.keywords.map((label) => (
                           <span key={label} className="keyword-liquid-chip" aria-label={label}>
-                            <span className="keyword-liquid-chip__text">{label}</span>
+                            <span className="keyword-liquid-chip__text work-refractable">{label}</span>
                           </span>
                         ))}
                       </div>
@@ -1110,12 +1126,12 @@ function About() {
                 </div>
 
                 <div className="liquid-glass-edge rounded-[30px] border border-[#e6d9c6] bg-white/80 p-7 shadow-[0_18px_60px_rgba(52,34,18,0.10)] reveal-up delay-2 transition-transform transition-shadow duration-500 ease-[cubic-bezier(.16,1,.3,1)] hover:-translate-y-1 hover:shadow-[0_26px_80px_rgba(52,34,18,0.16)]">
-                  <h2 className="text-sm font-amazing font-semibold uppercase tracking-[0.24em] text-[#0f0f0f] mb-4">
+                  <h2 className="work-refractable text-sm font-amazing font-semibold uppercase tracking-[0.24em] text-[#0f0f0f] mb-4">
                     {copy.contributeTitle}
                   </h2>
                   <ul className="space-y-3 text-sm md:text-base font-amazing text-[#3a3a3a] leading-relaxed">
                     {copy.contributeItems.map((item) => (
-                      <li key={item}>• {item}</li>
+                      <li key={item} className="work-refractable">• {item}</li>
                     ))}
                   </ul>
                 </div>
@@ -1150,27 +1166,6 @@ function About() {
             </div>
           </section>
         </div>
-
-        <section className="relative isolate overflow-hidden rounded-[32px] border border-[#dccfb9] bg-white/90 p-4 md:p-6 shadow-[0_24px_70px_rgba(52,34,18,0.14)] reveal-up">
-          <div className="mb-4 md:mb-6">
-            <h2 className="font-amazing text-2xl md:text-3xl font-black text-[#0a0a0a] leading-tight">
-              {language === "fr" ? "Démo FluidGlass (React Bits)" : "FluidGlass Demo (React Bits)"}
-            </h2>
-            <p className="mt-2 font-amazing text-sm md:text-base text-[#3a3a3a]">
-              {language === "fr"
-                ? "Intégration TypeScript + Tailwind avec mode lens par défaut et props configurables."
-                : "TypeScript + Tailwind integration with default lens mode and configurable props."}
-            </p>
-          </div>
-          <div className="relative h-[600px]">
-            <FluidGlass
-              mode={fluidGlassMode}
-              lensProps={fluidGlassLensProps}
-              barProps={fluidGlassBarProps}
-              cubeProps={fluidGlassCubeProps}
-            />
-          </div>
-        </section>
 
         <div className="-mt-6 -mb-2 flex justify-center">
           <div className="flex items-center gap-4 rounded-full border border-[#e6d9c6] bg-white/85 px-5 py-2 shadow-[0_10px_30px_rgba(52,34,18,0.12)]">
@@ -1230,18 +1225,18 @@ function About() {
         >
           <div className="relative w-full overflow-visible self-start rounded-[28px] border border-[#dccfb9] bg-white/80 p-6 md:p-7">
             <div className="mb-3">
-              <h2 className="about-panel-title">
+              <h2 className="about-panel-title work-refractable">
                 {copy.processTitle}
               </h2>
             </div>
-            <p data-reveal="text" className="font-amazing text-sm md:text-base text-[#3a3a3a] leading-relaxed text-justify">{copy.processBody}</p>
+            <p data-reveal="text" className="work-refractable font-amazing text-sm md:text-base text-[#3a3a3a] leading-relaxed text-justify">{copy.processBody}</p>
           </div>
           <div
             ref={toolsCardRef}
             className="w-full relative overflow-visible self-start rounded-[28px] border border-[#dccfb9] bg-white/80 p-6 md:p-7"
           >
             <div className="mb-3">
-              <h2 className="about-panel-title">
+              <h2 className="about-panel-title work-refractable">
                 {copy.toolsTitle}
               </h2>
             </div>
@@ -1570,7 +1565,7 @@ function About() {
             <div className="outside-stage-heading">
               <h2 ref={outsideTitleRef} className="outside-stage-title" aria-label={copy.outsideTitle}>
                 {outsideHeadingLines.map((line, index) => (
-                  <span key={`${line}-${index}`} className="outside-stage-title-line">
+                  <span key={`${line}-${index}`} className="outside-stage-title-line work-refractable">
                     {line}
                   </span>
                 ))}
@@ -1611,8 +1606,8 @@ function About() {
                             </>
                           ) : (
                         <>
-                          <span className="outside-card-label">{item.title}</span>
-                          <p className="outside-card-text">{item.text}</p>
+                          <span className="outside-card-label work-refractable">{item.title}</span>
+                          <p className="outside-card-text work-refractable">{item.text}</p>
                         </>
                       )}
                         </div>
@@ -1626,14 +1621,14 @@ function About() {
         </section>
 
         <div className="flex justify-center py-0">
-          <p className="text-center text-[10px] md:text-xs font-amazing tracking-[0.14em] md:tracking-[0.12em] text-[#6b6b6b] leading-relaxed px-3 max-w-[320px] md:max-w-none md:whitespace-nowrap">
+          <p className="work-refractable text-center text-[10px] md:text-xs font-amazing tracking-[0.14em] md:tracking-[0.12em] text-[#6b6b6b] leading-relaxed px-3 max-w-[320px] md:max-w-none md:whitespace-nowrap">
            {copy.contactTagline}
           </p>
         </div>
 
         <div className="mt-4 border-t border-[#e6d9c6] pt-4 text-[11px] md:text-xs text-[#6b6b6b]">
           <div className="flex flex-col items-center text-center gap-3 md:flex-row md:items-center md:justify-between md:text-left">
-            <p className="font-amazing tracking-[0.08em]">{copy.footerRights}</p>
+            <p className="work-refractable font-amazing tracking-[0.08em]">{copy.footerRights}</p>
             <div className="flex flex-wrap items-center justify-center gap-3 md:gap-5">
               <span className="inline-flex items-center justify-center gap-2 font-amazing tracking-[0.08em]">
                 {copy.footerBuiltWith}
