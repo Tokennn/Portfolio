@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from 'react';
+import { useCallback, useEffect, useRef, useState, type CSSProperties, type PointerEvent as ReactPointerEvent } from 'react';
 import { Link } from 'react-router-dom';
 import LanguageToggle from './components/LanguageToggle';
 import WaterCursor from './components/WaterCursor';
@@ -140,6 +140,11 @@ function Work() {
   const [isSwitching, setIsSwitching] = useState(false);
   const [isPreviewVisible, setIsPreviewVisible] = useState(false);
   const [isMobilePreviewOpen, setIsMobilePreviewOpen] = useState(false);
+  const [projectCursor, setProjectCursor] = useState<{ active: boolean; x: number; y: number }>({
+    active: false,
+    x: -999,
+    y: -999
+  });
   const [cursorEnabled, setCursorEnabled] = useState(() => {
     if (typeof window === 'undefined') return false;
     const coarsePointer = window.matchMedia('(pointer: coarse)').matches;
@@ -160,6 +165,7 @@ function Work() {
   const opensExternalLink = activeProject.link !== '#';
   const mobilePreviewTitle = copy.mobilePreviewTitle;
   const mobilePreviewCloseLabel = copy.mobilePreviewCloseLabel;
+  const cursorLabel = copy.cursorLabel;
 
   const previousProjects = projects.slice(0, activeIndex);
   const nextProjects = projects.slice(activeIndex + 1);
@@ -228,6 +234,11 @@ function Work() {
   }, [cursorEnabled]);
 
   useEffect(() => {
+    if (cursorEnabled) return;
+    setProjectCursor({ active: false, x: -999, y: -999 });
+  }, [cursorEnabled]);
+
+  useEffect(() => {
     if (!didMountRef.current) {
       didMountRef.current = true;
       return;
@@ -252,16 +263,26 @@ function Work() {
     video.currentTime = 0;
   }, [attemptMobilePreviewPlayback, isMobilePreviewOpen, isMobileNotchPreviewProject]);
 
-  const handleProjectMediaEnter = () => {
+  const handleProjectMediaEnter = (event: ReactPointerEvent<HTMLDivElement>) => {
     if (activeProject.previewVideo) {
       setIsPreviewVisible(true);
     }
+
+    if (!cursorEnabled || event.pointerType === 'touch') return;
+    setProjectCursor({ active: true, x: event.clientX, y: event.clientY });
   };
 
   const handleProjectMediaLeave = () => {
     if (activeProject.previewVideo) {
       setIsPreviewVisible(false);
     }
+
+    setProjectCursor(prev => ({ ...prev, active: false }));
+  };
+
+  const handleProjectMediaMove = (event: ReactPointerEvent<HTMLDivElement>) => {
+    if (!cursorEnabled || event.pointerType === 'touch') return;
+    setProjectCursor({ active: true, x: event.clientX, y: event.clientY });
   };
 
   const handleSwipePointerDown = (event: ReactPointerEvent<HTMLAnchorElement>) => {
@@ -354,6 +375,20 @@ function Work() {
       </div>
 
       {cursorEnabled && <WaterCursor size="md" />}
+      {cursorEnabled && (
+        <div
+          aria-hidden="true"
+          className={`project-cursor ${projectCursor.active ? 'is-active' : ''}`}
+          style={
+            {
+              '--cursor-x': `${projectCursor.x}px`,
+              '--cursor-y': `${projectCursor.y}px`
+            } as CSSProperties
+          }
+        >
+          <div className="project-cursor__bubble">{cursorLabel}</div>
+        </div>
+      )}
 
       {activeProject.previewVideo && (
         <div
@@ -497,6 +532,7 @@ function Work() {
                     <div className="absolute inset-4 rounded-[26px] border border-[#e2d6c3]/80 shadow-[0_14px_40px_rgba(52,34,18,0.12)] pointer-events-none" />
                     <div
                       onPointerEnter={handleProjectMediaEnter}
+                      onPointerMove={handleProjectMediaMove}
                       onPointerLeave={handleProjectMediaLeave}
                       className={`relative overflow-hidden rounded-[24px] border border-[#f1e4d2]/70 bg-white shadow-[0_20px_60px_rgba(52,34,18,0.12)] transition duration-700 ease-[cubic-bezier(.16,1,.3,1)] group-hover:-translate-y-1 group-hover:shadow-[0_20px_60px_rgba(52,34,18,0.18)] ${cursorEnabled ? 'project-cursor-target' : 'cursor-pointer'}`}
                     >

@@ -635,6 +635,40 @@ function WaterCursor({ size = "md", disabledOnWork = false }: WaterCursorProps) 
           filter: "blur(0.45px)"
         }}
       />
+      <div
+        className="absolute left-1/2 top-1/2"
+        style={{
+          width: "14px",
+          height: "14px",
+          transform: "translate(-50%, -50%)",
+          opacity: 0.58
+        }}
+      >
+        <span
+          style={{
+            position: "absolute",
+            left: "50%",
+            top: "50%",
+            width: "14px",
+            height: "1px",
+            transform: "translate(-50%, -50%)",
+            background: "rgba(0,0,0,0.72)",
+            boxShadow: "0 0 4px rgba(0,0,0,0.18)"
+          }}
+        />
+        <span
+          style={{
+            position: "absolute",
+            left: "50%",
+            top: "50%",
+            width: "1px",
+            height: "14px",
+            transform: "translate(-50%, -50%)",
+            background: "rgba(0,0,0,0.72)",
+            boxShadow: "0 0 4px rgba(0,0,0,0.18)"
+          }}
+        />
+      </div>
     </div>,
     document.body
   );
