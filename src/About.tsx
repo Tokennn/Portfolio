@@ -220,7 +220,6 @@ function About() {
     const coarsePointer = window.matchMedia("(pointer: coarse)").matches;
     return !coarsePointer;
   });
-  const autoPlayAttempted = useRef(false);
   const outsideStackRef = useRef<HTMLDivElement | null>(null);
   const toolsGridRef = useRef<HTMLDivElement | null>(null);
   const toolsCardRef = useRef<HTMLDivElement | null>(null);
@@ -806,16 +805,6 @@ function About() {
       dataArrayRef.current = null;
       sourceRef.current = null;
     };
-  }, []);
-
-  useEffect(() => {
-    if (autoPlayAttempted.current) return;
-    autoPlayAttempted.current = true;
-    const audio = audioRef.current;
-    if (!audio) return;
-    audio.play().catch(() => {
-      setIsPlaying(false);
-    });
   }, []);
 
   useEffect(() => {
