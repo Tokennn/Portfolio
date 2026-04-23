@@ -38,8 +38,11 @@ import musicCardImage from "./Musique.png";
 import modeCardImage from "./Mode.png";
 import LanguageToggle from "./components/LanguageToggle";
 import WaterCursor from "./components/WaterCursor";
+import GradualBlur from "./components/GradualBlur";
 import { useLanguage } from "./context/LanguageContext";
 import { useTextReveal } from "./hooks/useTextReveal";
+
+gsap.registerPlugin(ScrollTrigger);
 
 const stackItems = ["React", "TypeScript", "GSAP", "Framer", "Tailwind", "UI / UX", "lenis"];
 const lyonPosition: [number, number] = [45.749977593867, 4.8232436066254225];
@@ -218,7 +221,10 @@ function About() {
   const [cursorEnabled, setCursorEnabled] = useState(() => {
     if (typeof window === "undefined") return false;
     const coarsePointer = window.matchMedia("(pointer: coarse)").matches;
-    return !coarsePointer;
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const nav = window.navigator as Navigator & { deviceMemory?: number };
+    const lowPower = (window.navigator.hardwareConcurrency || 0) <= 6 || (nav.deviceMemory || 8) <= 4;
+    return !coarsePointer && !reducedMotion && !lowPower;
   });
   const outsideStackRef = useRef<HTMLDivElement | null>(null);
   const toolsGridRef = useRef<HTMLDivElement | null>(null);
@@ -257,12 +263,19 @@ function About() {
   useEffect(() => {
     if (typeof window === "undefined") return;
     const coarsePointerQuery = window.matchMedia("(pointer: coarse)");
+    const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
     const update = () => {
-      setCursorEnabled(!coarsePointerQuery.matches);
+      const nav = window.navigator as Navigator & { deviceMemory?: number };
+      const lowPower = (window.navigator.hardwareConcurrency || 0) <= 6 || (nav.deviceMemory || 8) <= 4;
+      setCursorEnabled(!coarsePointerQuery.matches && !reducedMotionQuery.matches && !lowPower);
     };
     update();
     coarsePointerQuery.addEventListener("change", update);
-    return () => coarsePointerQuery.removeEventListener("change", update);
+    reducedMotionQuery.addEventListener("change", update);
+    return () => {
+      coarsePointerQuery.removeEventListener("change", update);
+      reducedMotionQuery.removeEventListener("change", update);
+    };
   }, []);
 
   useEffect(() => {
@@ -360,7 +373,8 @@ function About() {
   useEffect(() => {
     if (typeof window === "undefined") return;
     if (!outsideCardHeight && !outsideViewportHeight && !outsideStackHeight) return;
-    ScrollTrigger.refresh();
+    const refreshId = window.setTimeout(() => ScrollTrigger.refresh(), 80);
+    return () => window.clearTimeout(refreshId);
   }, [outsideCardHeight, outsideViewportHeight, outsideStackHeight]);
 
   useEffect(() => {
@@ -372,7 +386,6 @@ function About() {
     const title = outsideTitleRef.current;
     const triggerTarget = outsideCard;
     if (!triggerTarget || !stack || !viewport) return;
-    gsap.registerPlugin(ScrollTrigger);
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const lineTargets = title ? Array.from(title.querySelectorAll<HTMLElement>(".outside-stage-title-line")) : [];
     const titleTargets: HTMLElement[] = title ? (lineTargets.length ? lineTargets : [title]) : [];
@@ -811,8 +824,6 @@ function About() {
     if (typeof window === "undefined") return;
     const container = outsideStackRef.current;
     if (!container) return;
-    gsap.registerPlugin(ScrollTrigger);
-
     const ctx = gsap.context(() => {
       gsap.set(container, { willChange: "transform" });
     }, container);
@@ -847,6 +858,22 @@ function About() {
       {cursorEnabled && <WaterCursor size="md" interactionMode="text-only" />}
       <audio ref={audioRef} src={islandAudioSrc} preload="auto" playsInline />
       <div className="pointer-events-none absolute inset-0 opacity-70 bg-[radial-gradient(circle_at_18%_16%,rgba(255,255,255,0.85),transparent_38%),radial-gradient(circle_at_82%_6%,rgba(253,230,205,0.45),transparent_46%),radial-gradient(circle_at_24%_80%,rgba(210,175,140,0.28),transparent_50%)]" />
+      <GradualBlur
+        target="page"
+        position="bottom"
+        height="8.5rem"
+        strength={2.6}
+        divCount={8}
+        curve="ease-out"
+        exponential={true}
+        opacity={1}
+        animated={false}
+        zIndex={20}
+        style={{
+          transform: "scaleX(1.18)",
+          transformOrigin: "bottom center"
+        }}
+      />
       <div className="fixed inset-x-0 top-0 z-50 flex flex-col gap-2 pt-[calc(env(safe-area-inset-top,0px)+8px)] sm:hidden">
         <div className="flex justify-center">
           <button

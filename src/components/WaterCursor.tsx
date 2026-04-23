@@ -353,12 +353,36 @@ function WaterCursor({ size = "md", disabledOnWork = false, interactionMode = "f
       const ringBandPx = Math.max(2.4, lensRadius * 0.052);
       const contactSlackPx = Math.max(0.35, lensRadius * 0.004);
       const contactFalloffPx = Math.max(4.2, lensRadius * 0.065);
+      const textInfluenceMargin = lensRadius + contactFalloffPx + ringBandPx + contactSlackPx + 42;
       const elements = refractedElementsRef.current;
       const blockElements = refractedBlockElementsRef.current;
 
       for (const element of elements) {
         const chars = refractedCharMapRef.current.get(element);
         if (!chars?.length) continue;
+        const elementRect = element.getBoundingClientRect();
+        const isElementFar =
+          x < elementRect.left - textInfluenceMargin ||
+          x > elementRect.right + textInfluenceMargin ||
+          y < elementRect.top - textInfluenceMargin ||
+          y > elementRect.bottom + textInfluenceMargin;
+
+        if (isElementFar) {
+          for (const char of chars) {
+            const motion = charMotionMap.get(char);
+            if (!motion || motion.influence < 0.01) continue;
+            char.style.transform = "";
+            char.style.filter = "";
+            char.style.textShadow = "";
+            motion.influence = 0;
+            motion.shiftX = 0;
+            motion.shiftY = 0;
+            motion.scale = 1;
+            motion.rotate = 0;
+            motion.chroma = 0;
+          }
+          continue;
+        }
 
         for (const char of chars) {
           const rect = char.getBoundingClientRect();
