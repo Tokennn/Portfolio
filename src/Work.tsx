@@ -166,6 +166,7 @@ function Work() {
   const mobilePreviewTitle = copy.mobilePreviewTitle;
   const mobilePreviewCloseLabel = copy.mobilePreviewCloseLabel;
   const cursorLabel = copy.cursorLabel;
+  const showProjectCursor = cursorEnabled && !(isNotchProject && previewVisible);
 
   const previousProjects = projects.slice(0, activeIndex);
   const nextProjects = projects.slice(activeIndex + 1);
@@ -375,7 +376,7 @@ function Work() {
       </div>
 
       {cursorEnabled && <WaterCursor size="md" />}
-      {cursorEnabled && (
+      {showProjectCursor && (
         <div
           aria-hidden="true"
           className={`project-cursor ${projectCursor.active ? 'is-active' : ''}`}

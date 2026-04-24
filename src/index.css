@@ -708,11 +708,11 @@
     display: inline-flex;
     flex-direction: column;
     gap: 0.06em;
-    text-transform: uppercase;
-    font-family: "Impact", "Arial Black", sans-serif;
-    font-size: clamp(2.1rem, 9vw, 6.4rem);
-    line-height: 0.84;
-    letter-spacing: 0.01em;
+    font-family: "Amazing Maret", "Inter", system-ui, -apple-system, sans-serif;
+    font-size: clamp(2rem, 6vw, 3.8rem);
+    font-weight: 900;
+    line-height: 1;
+    letter-spacing: 0.08em;
     color: #0a0a0a;
   }
 
@@ -724,6 +724,25 @@
     line-height: 0.84;
     letter-spacing: 0.01em;
     color: #0a0a0a;
+  }
+
+  .tools-panel-title {
+    margin: 0;
+    font-family: "Amazing Maret", "Inter", system-ui, -apple-system, sans-serif;
+    font-size: clamp(2rem, 6vw, 3.8rem);
+    font-weight: 900;
+    line-height: 1;
+    letter-spacing: 0.08em;
+    color: #0a0a0a;
+  }
+
+  .about-liquid-scope .tools-grid > .group > span {
+    font-family: "Amazing Maret", "Inter", system-ui, -apple-system, sans-serif;
+    font-size: clamp(0.6rem, 1.4vw, 0.72rem);
+    font-weight: 900;
+    line-height: 1.1;
+    letter-spacing: 0.08em;
+    text-transform: none;
   }
 
   .outside-stage-title-line {
@@ -882,9 +901,9 @@
     }
 
     .outside-stage-title {
-      font-size: clamp(2.9rem, 8.2vw, 7.2rem);
-      line-height: 0.8;
-      letter-spacing: 0.012em;
+      font-size: clamp(2rem, 6vw, 3.8rem);
+      line-height: 1;
+      letter-spacing: 0.08em;
     }
 
     .about-panel-title {
@@ -935,9 +954,9 @@
     }
 
     .outside-stage-title {
-      font-size: clamp(1.85rem, 12vw, 3.4rem);
-      line-height: 0.86;
-      letter-spacing: 0.006em;
+      font-size: clamp(2rem, 6vw, 3.8rem);
+      line-height: 1;
+      letter-spacing: 0.08em;
       gap: 0.07em;
     }
 

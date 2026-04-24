@@ -38,7 +38,6 @@ import musicCardImage from "./Musique.png";
 import modeCardImage from "./Mode.png";
 import LanguageToggle from "./components/LanguageToggle";
 import WaterCursor from "./components/WaterCursor";
-import GradualBlur from "./components/GradualBlur";
 import { useLanguage } from "./context/LanguageContext";
 import { useTextReveal } from "./hooks/useTextReveal";
 
@@ -858,22 +857,6 @@ function About() {
       {cursorEnabled && <WaterCursor size="md" interactionMode="text-only" />}
       <audio ref={audioRef} src={islandAudioSrc} preload="auto" playsInline />
       <div className="pointer-events-none absolute inset-0 opacity-70 bg-[radial-gradient(circle_at_18%_16%,rgba(255,255,255,0.85),transparent_38%),radial-gradient(circle_at_82%_6%,rgba(253,230,205,0.45),transparent_46%),radial-gradient(circle_at_24%_80%,rgba(210,175,140,0.28),transparent_50%)]" />
-      <GradualBlur
-        target="page"
-        position="bottom"
-        height="8.5rem"
-        strength={2.6}
-        divCount={8}
-        curve="ease-out"
-        exponential={true}
-        opacity={1}
-        animated={false}
-        zIndex={20}
-        style={{
-          transform: "scaleX(1.18)",
-          transformOrigin: "bottom center"
-        }}
-      />
       <div className="fixed inset-x-0 top-0 z-50 flex flex-col gap-2 pt-[calc(env(safe-area-inset-top,0px)+8px)] sm:hidden">
         <div className="flex justify-center">
           <button
@@ -1241,7 +1224,7 @@ function About() {
         >
           <div className="relative w-full overflow-visible self-start rounded-[28px] border border-[#dccfb9] bg-white/80 p-6 md:p-7">
             <div className="mb-3">
-              <h2 className="about-panel-title work-refractable">
+              <h2 className="tools-panel-title work-refractable">
                 {copy.processTitle}
               </h2>
             </div>
@@ -1252,7 +1235,7 @@ function About() {
             className="w-full relative overflow-visible self-start rounded-[28px] border border-[#dccfb9] bg-white/80 p-6 md:p-7"
           >
             <div className="mb-3">
-              <h2 className="about-panel-title work-refractable">
+              <h2 className="tools-panel-title work-refractable">
                 {copy.toolsTitle}
               </h2>
             </div>
