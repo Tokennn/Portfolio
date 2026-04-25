@@ -2009,6 +2009,34 @@
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.76), 0 10px 18px rgba(52, 34, 18, 0.1);
 }
 
+.work-menu-globe-link {
+  position: absolute;
+  top: 50%;
+  right: 0.9rem;
+  z-index: 2;
+  display: inline-flex;
+  height: 2rem;
+  width: 2rem;
+  transform: translateY(-50%);
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  color: rgba(107, 107, 107, 0.9);
+  transition: color 0.2s ease, background-color 0.2s ease, transform 0.2s ease;
+}
+
+.work-menu-globe-link svg {
+  height: 1.2rem;
+  width: 1.2rem;
+}
+
+.work-menu-globe-link:hover,
+.work-menu-globe-link:focus-visible {
+  color: rgba(82, 82, 82, 0.98);
+  background-color: rgba(255, 255, 255, 0.5);
+  transform: translateY(calc(-50% - 1px));
+}
+
 .click-me-hint {
   font-family: "Caveat", "Marker Felt", "Bradley Hand", "Segoe Print", "Comic Sans MS", cursive;
   font-size: 1.85rem;
@@ -2039,6 +2067,17 @@
     padding: 0.5rem 0.68rem;
     letter-spacing: 0.05em;
     font-size: 0.76rem;
+  }
+
+  .work-menu-globe-link {
+    right: 0.55rem;
+    height: 1.7rem;
+    width: 1.7rem;
+  }
+
+  .work-menu-globe-link svg {
+    height: 1rem;
+    width: 1rem;
   }
 }
 

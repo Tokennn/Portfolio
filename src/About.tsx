@@ -37,6 +37,7 @@ import voyageCardImage from "./Voyage.png";
 import musicCardImage from "./Musique.png";
 import modeCardImage from "./Mode.png";
 import LanguageToggle from "./components/LanguageToggle";
+import GlobeAlt2Icon from "./components/icons/GlobeAlt2Icon";
 import WaterCursor from "./components/WaterCursor";
 import { useLanguage } from "./context/LanguageContext";
 import { useTextReveal } from "./hooks/useTextReveal";
@@ -943,12 +944,19 @@ function About() {
 
       <header className="relative z-20 max-w-6xl mx-auto mt-2 mb-10 md:mt-4 md:mb-14">
         <nav className="work-menu-glass mx-auto w-full max-w-[760px] px-4 py-3 md:px-6 md:py-4">
-          <div className="flex items-center justify-center gap-2 md:gap-4">
+          <div className="flex items-center justify-center gap-2 px-10 md:gap-4 md:px-12">
             <Link to="/" className="work-menu-link work-refractable">{copy.nav.home}</Link>
             <Link to="/work" className="work-menu-link work-refractable">{copy.nav.work}</Link>
             <Link to="/about" className="work-menu-link is-active work-refractable">{copy.nav.about}</Link>
             <Link to="/contact" className="work-menu-link work-refractable">{copy.nav.contact}</Link>
           </div>
+          <a
+            href="https://websong.netlify.app/"
+            className="work-menu-globe-link"
+            aria-label="Ouvrir Websong"
+          >
+            <GlobeAlt2Icon aria-hidden="true" />
+          </a>
         </nav>
       </header>
 
