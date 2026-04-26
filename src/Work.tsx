@@ -160,6 +160,7 @@ function Work() {
   const copy = workCopy[language];
   const projects = copy.projects;
   const activeProject = projects[activeIndex];
+  const disableImageReflection = activeProject.image === mapImage;
   const previewVisible = Boolean(activeProject.previewVideo && isPreviewVisible);
   const isNotchProject = activeProject.title.toLowerCase() === 'notch2.0';
   const isMobileNotchPreviewProject = Boolean(activeProject.previewVideo && isNotchProject);
@@ -543,6 +544,7 @@ function Work() {
                       onPointerEnter={handleProjectMediaEnter}
                       onPointerMove={handleProjectMediaMove}
                       onPointerLeave={handleProjectMediaLeave}
+                      data-water-cursor-ignore={disableImageReflection ? 'true' : undefined}
                       className={`relative overflow-hidden rounded-[24px] border border-[#f1e4d2]/70 bg-white shadow-[0_20px_60px_rgba(52,34,18,0.12)] transition duration-700 ease-[cubic-bezier(.16,1,.3,1)] group-hover:-translate-y-1 group-hover:shadow-[0_20px_60px_rgba(52,34,18,0.18)] ${cursorEnabled ? 'project-cursor-target' : 'cursor-pointer'}`}
                     >
                       <img

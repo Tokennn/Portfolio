@@ -1145,7 +1145,7 @@ function App() {
         <div className="pointer-events-none fixed left-4 top-8 z-30 hidden w-[66vw] max-w-[420px] sm:left-8 sm:top-12 sm:w-[44vw] md:block md:w-[36vw] lg:w-[30vw] xl:w-[26vw]">
           <div
             ref={mediaVideoCardRef}
-            className="media-tilt-card pointer-events-auto touch-manipulation overflow-hidden border border-[#0f0f0f]/10 bg-transparent aspect-[3005/4250]"
+            className="media-tilt-card media-tilt-card--no-reflection pointer-events-auto touch-manipulation overflow-hidden border border-[#0f0f0f]/10 bg-transparent aspect-[3005/4250]"
           >
             <img
               src={digitalGrowthExpertPhoto}
@@ -1221,7 +1221,7 @@ function App() {
         <div className="pointer-events-none fixed right-4 top-8 z-30 hidden w-[46vw] max-w-[760px] sm:right-8 sm:top-10 md:block md:w-[43vw] lg:w-[39vw] xl:w-[36vw]">
           <div
             ref={mediaTopPhotoCardRef}
-            className="media-tilt-card pointer-events-auto overflow-hidden border border-[#0f0f0f]/10 bg-white/10 backdrop-blur-[1px] aspect-[1838/1050]"
+            className="media-tilt-card media-tilt-card--no-reflection pointer-events-auto overflow-hidden border border-[#0f0f0f]/10 bg-white/10 backdrop-blur-[1px] aspect-[1838/1050]"
           >
             <img
               src={notchbarPhoto}

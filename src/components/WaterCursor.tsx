@@ -169,6 +169,9 @@ function WaterCursor({ size = "md", disabledOnWork = false, interactionMode = "f
       if (element.dataset.refractablePrepared === "true") return false;
       if (element.dataset.waterCursorBlockLens === "true") return false;
       if (element.closest("[data-water-cursor-overlay='true']")) return false;
+      if (element.dataset.waterCursorIgnore === "true") return false;
+      if (element.closest("[data-water-cursor-ignore='true']")) return false;
+      if (element.querySelector("[data-water-cursor-ignore='true']")) return false;
 
       const tag = element.tagName;
       if (tag === "SCRIPT" || tag === "STYLE" || tag === "NOSCRIPT") return false;

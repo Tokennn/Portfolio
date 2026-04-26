@@ -1919,6 +1919,11 @@
   mix-blend-mode: soft-light;
 }
 
+.media-tilt-card--no-reflection::before,
+.media-tilt-card--no-reflection::after {
+  display: none;
+}
+
 .media-tilt-card.is-active {
   box-shadow: 0 20px 54px rgba(15, 15, 15, 0.2);
 }
